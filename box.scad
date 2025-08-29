@@ -1,6 +1,6 @@
 include <frame.scad>
 
-module arrange_bottom(width, height, depth, thickness = 0, make_3d=false, spacing_2d=1)
+module arrange_bottom_frame(width, height, depth, thickness = 0, make_3d=false, spacing_2d=1)
 {
     if (make_3d)
     {
@@ -15,7 +15,7 @@ module arrange_bottom(width, height, depth, thickness = 0, make_3d=false, spacin
     
 }
 
-module arrange_top(width, height, depth, thickness = 0, make_3d=false, spacing_2d=1)
+module arrange_top_frame(width, height, depth, thickness = 0, make_3d=false, spacing_2d=1)
 {
     if (make_3d)
     {
@@ -30,7 +30,7 @@ module arrange_top(width, height, depth, thickness = 0, make_3d=false, spacing_2
     }
 }
 
-module arrange_front(width, height, depth, thickness = 0, make_3d=false, spacing_2d=1)
+module arrange_front_frame(width, height, depth, thickness = 0, make_3d=false, spacing_2d=1)
 {
     if (make_3d)
     {
@@ -46,7 +46,7 @@ module arrange_front(width, height, depth, thickness = 0, make_3d=false, spacing
     }
 }
 
-module arrange_back(width, height, depth, thickness = 0, make_3d=false, spacing_2d=1)
+module arrange_back_frame(width, height, depth, thickness = 0, make_3d=false, spacing_2d=1)
 {
     if (make_3d)
     {
@@ -61,7 +61,7 @@ module arrange_back(width, height, depth, thickness = 0, make_3d=false, spacing_
     }
 }
 
-module arrange_left(width, height, depth, thickness = 0, make_3d=false, spacing_2d=1)
+module arrange_left_frame(width, height, depth, thickness = 0, make_3d=false, spacing_2d=1)
 {
     if (make_3d)
     {
@@ -77,7 +77,7 @@ module arrange_left(width, height, depth, thickness = 0, make_3d=false, spacing_
     }
 }
 
-module arrange_right(width, height, depth, thickness = 0, make_3d=false, spacing_2d=1)
+module arrange_right_frame(width, height, depth, thickness = 0, make_3d=false, spacing_2d=1)
 {
     if (make_3d)
     {
@@ -102,54 +102,55 @@ module box(width, height, depth, frame_width=10, thickness = 0, make_3d=false,
 
     //bottom
     if (bottom)
-    arrange_bottom(width, height, depth, thickness, make_3d, spacing_2d)
+    arrange_bottom_frame(width, height, depth, thickness, make_3d, spacing_2d)
     {
         new_width = width - 2*thickness;
         new_depth = depth - 2*thickness;
-        frame(new_width, new_depth, frame_width, thickness, make_3d);
+        frame(new_width, new_depth, frame_width, thickness, make_3d, spacing_2d=spacing_2d);
     }
 
     //top
     if (top)
-    arrange_top(width, height, depth, thickness, make_3d, spacing_2d)
+    arrange_top_frame(width, height, depth, thickness, make_3d, spacing_2d)
     {
         new_width = width - 2*thickness;
         new_depth = depth - 2*thickness;
-        frame(new_width, new_depth, frame_width, thickness, make_3d);
+        frame(new_width, new_depth, frame_width, thickness, make_3d, spacing_2d=spacing_2d);
     }
 
     // front
     if (front)
-    arrange_front(width, height, depth, thickness, make_3d, spacing_2d)
+    arrange_front_frame(width, height, depth, thickness, make_3d, spacing_2d)
     {   
         new_height = height;
         new_width = width;
-        frame(new_width, new_height, frame_width, thickness, make_3d);
+        frame(new_width, new_height, frame_width, thickness, make_3d, spacing_2d=spacing_2d);
     }
 
     // back
     if (back)
-    arrange_back(width, height, depth, thickness, make_3d, spacing_2d)
+    arrange_back_frame(width, height, depth, thickness, make_3d, spacing_2d)
     {   
         new_height = height;
         new_width = width;
-        frame(new_width, new_height, frame_width, thickness, make_3d);
+        frame(new_width, new_height, frame_width, thickness, make_3d, spacing_2d=spacing_2d);
     }
 
     // left
     if (left)
-    arrange_left(width, height, depth, thickness, make_3d, spacing_2d)
+    arrange_left_frame(width, height, depth, thickness, make_3d, spacing_2d)
     {
         new_height = height;
         new_depth = depth - 2*thickness;
-        frame(new_height, new_depth, frame_width, thickness, make_3d);
+        frame(new_height, new_depth, frame_width, thickness, make_3d, spacing_2d=spacing_2d);
     }
 
     // right
-    arrange_right(width, height, depth, thickness, make_3d, spacing_2d)
+    if (right)
+    arrange_right_frame(width, height, depth, thickness, make_3d, spacing_2d)
     {
         new_height = height;
         new_depth = depth - 2*thickness;
-        frame(new_height, new_depth, frame_width, thickness, make_3d);
+        frame(new_height, new_depth, frame_width, thickness, make_3d, spacing_2d=spacing_2d);
     }
 }

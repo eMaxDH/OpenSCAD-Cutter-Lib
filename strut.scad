@@ -13,9 +13,9 @@
 
 include<strut_2d.scad>
 
-module strut(width, height, thickness=0, type=["f", "f"])
+module strut(width, height, thickness=10, type=["f", "f"], make_3d=false)
 {
-    if (thickness > 0)
+    if (make_3d)
         linear_extrude(thickness)
             strut_2d(width, height, type);
     else
