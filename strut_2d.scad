@@ -18,10 +18,7 @@ function calc_connector_shift(size, connector_factor=0.4) =
     let (diagonal = size * sqrt(2))
     let (diagonal_connector = connector_factor * diagonal)
     let (shift_diagonal = diagonal/2 - diagonal_connector/2)
-    shift_diagonal * sin(45);
-    //sqrt(size - (size*connector_factor)/2);
-    
-
+    shift_diagonal * sqrt(2);
 
 module strut_connector(size, type="f", connector_factor=0.3){
     connector_shift = calc_connector_shift(size, connector_factor);
@@ -34,7 +31,7 @@ module strut_connector(size, type="f", connector_factor=0.3){
                      [size, size],
                      [size, 0]]);
             translate([connector_shift, connector_shift, 0])
-              scale([connector_factor, connector_factor ,1.1])
+              scale([connector_factor, connector_factor ,1])
                     polygon([[0,0],
                              [size, size],
                              [size, 0]]);}
@@ -46,7 +43,7 @@ module strut_connector(size, type="f", connector_factor=0.3){
                      [size, size],
                      [size, 0]]);
             translate([connector_shift, connector_shift, 0])
-              scale([connector_factor, connector_factor ,1.1])
+              scale([connector_factor, connector_factor ,1])
                 polygon([[0,0],
                          [size, size],
                          [0, size]]);}
