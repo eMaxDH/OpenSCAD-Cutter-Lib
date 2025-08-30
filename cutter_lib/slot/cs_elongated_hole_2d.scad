@@ -1,10 +1,16 @@
-module create_slot(width, height)
+width=50; //[10:100]
+height=20; //[1:100]
+spacing=0.1; //[0.001:0.1:10]
+
+cs_elongated_hole_2d(width, height, spacing);
+
+module cs_elongated_hole_2d(width, height, spacing=0.001)
 {
-    spacing=0.001;
-    translate([-width/2, 0, 0])
+    square_width = width - height + spacing;
+    translate([-square_width/2, -spacing/2, 0])
     minkowski()
     {
-      square([width, spacing]);
-      circle(height/2-2*spacing);
+      square([square_width, spacing]);
+      circle(height/2-spacing/2);
     }
 }
