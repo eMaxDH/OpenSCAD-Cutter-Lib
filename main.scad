@@ -1,4 +1,5 @@
 include <box.scad>
+include <floor_connector.scad>
 
 make_3d=true;
 
@@ -17,13 +18,51 @@ box_width=290; //[50:1:500]
 box_height=243; //[50:1:500]
 box_depth=243; //[50:1:500]
 
-box(box_width, box_height, box_depth, frame_width=frame_width, thickness=box_thickness, make_3d=make_3d,
+floor_connector_width=box_width+2;
+floor_connector_height=7;
+floor_connector_depth=box_depth+2;
+
+box_base_floor(box_width, box_height, box_depth, frame_width=frame_width, thickness=box_thickness, make_3d=make_3d,
     top=top, bottom=bottom, left=left, right=right, front=front, back=back);
 
-// include <facing.scad>
 
-// facing_thickness=0.5; //[0.1:0.1:2.0]
-// facing_element_width=20; //[5:1:100]
-// facing_element_no=5; //[1:1:20]
+no_floors=2;
 
-// facing(box_width, box_height, facing_element_width, facing_element_no, thickness=facing_thickness, make_3d=make_3d);
+if (make_3d) {
+
+    for (i = [2 : no_floors]) {
+        translate([0, 0, (i-1)*box_height])
+        {
+            create_floor(box_width, box_height, box_depth, frame_width, box_thickness, make_3d,
+                top, bottom, left, right, front, back,
+                floor_connector_width, floor_connector_height, floor_connector_depth);
+        }
+
+        translate([0,0,i*box_height])
+            color("silver")
+            translate([-(floor_connector_width-box_width)/2, -(floor_connector_depth-box_depth)/2, -floor_connector_height/2])
+            floor_connector(floor_connector_width, floor_connector_height, floor_connector_depth, thickness=2, make_3d=make_3d);
+
+    }
+}
+else{
+    for (i = [2 : no_floors]) {
+        translate([0, i*4*box_depth, 0]) {
+            create_floor(box_width, box_height, box_depth, frame_width, box_thickness, make_3d,
+                top, bottom, left, right, front, back,
+                floor_connector_width, floor_connector_height, floor_connector_depth);
+        }
+    }
+}
+
+module create_floor(box_width, box_height, box_depth, frame_width, thickness, make_3d,
+                    top, bottom, left, right, front, back,
+                    floor_connector_width, floor_connector_height, floor_connector_depth)
+{
+    color("silver")
+        translate([-(floor_connector_width-box_width)/2, -(floor_connector_depth-box_depth)/2, -floor_connector_height/2])
+        floor_connector(floor_connector_width, floor_connector_height, floor_connector_depth, thickness=2, make_3d=make_3d);
+
+    box_additional(box_width, box_height, box_depth, frame_width=frame_width, thickness=box_thickness, make_3d=make_3d,
+        top=top, bottom=bottom, left=left, right=right, front=front, back=back);
+}

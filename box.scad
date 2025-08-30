@@ -250,8 +250,6 @@ module box(width, height, depth, frame_width=10, thickness = 0, make_3d=false,
             top=true, bottom=true, left=true, right=true, front=true, back=true,
             spacing_2d=1)
 {
-    t = make_3d ? thickness : 0;
-
     //bottom
     if (bottom)
     arrange_bottom_frame(width, height, depth, thickness, make_3d, spacing_2d)
@@ -334,6 +332,200 @@ module box(width, height, depth, frame_width=10, thickness = 0, make_3d=false,
         set_color_box()
         arrange_right_frame(width, height, depth, thickness, make_3d, spacing_2d)
             frame(new_depth, new_height, frame_width, thickness, make_3d, spacing_2d=spacing_2d);
+        
+        set_color_facing_front()
+        arrange_facing_front_right(width, height, depth, thickness, make_3d, spacing_2d)
+            facing(depth, new_height, facing_element_width, facing_element_no, thickness=facing_thickness, make_3d=make_3d);
+
+        set_color_facing_back()
+        arrange_facing_back_right(width, height, depth, thickness, make_3d, spacing_2d)
+            facing(new_depth-2*facing_thickness, new_height, facing_element_width, facing_element_no-1, thickness=facing_thickness, make_3d=make_3d);
+    }
+}
+
+module box_base_floor(width, height, depth, frame_width=10, thickness = 0, make_3d=false,
+            top=true, bottom=true, left=true, right=true, front=true, back=true,
+            spacing_2d=1)
+{
+    //bottom
+    if (bottom)
+    arrange_bottom_frame(width, height, depth, thickness, make_3d, spacing_2d)
+    {
+        new_width = width - 2*thickness;
+        new_depth = depth - 2*thickness;
+        set_color_box()
+            frame_base_floor(new_width, new_depth, frame_width, thickness, make_3d, spacing_2d=spacing_2d);
+    }
+
+    //top
+    if (top)
+    arrange_top_frame(width, height, depth, thickness, make_3d, spacing_2d)
+    {
+        new_width = width - 2*thickness;
+        new_depth = depth - 2*thickness;
+        set_color_box()
+            frame_base_floor(new_width, new_depth, frame_width, thickness, make_3d, spacing_2d=spacing_2d);
+    }
+
+    // front
+    if (front)
+    {   
+        new_height = height;
+        new_width = width;
+        set_color_box()
+        arrange_front_frame(width, height, depth, thickness, make_3d, spacing_2d)
+            frame_base_floor(new_width, new_height, frame_width, thickness, make_3d, spacing_2d=spacing_2d);
+        
+        set_color_facing_front()
+        arrange_facing_front_front(width, height, depth, thickness, make_3d, spacing_2d)
+            facing(new_width, new_height, facing_element_width, facing_element_no, thickness=facing_thickness, make_3d=make_3d);
+
+        set_color_facing_back()
+        arrange_facing_back_front(width, height, depth, thickness, make_3d, spacing_2d)
+            facing(new_width - 2*thickness - 2*facing_thickness, new_height, facing_element_width, facing_element_no-1, thickness=facing_thickness, make_3d=make_3d);
+    }
+
+    // back
+    if (back)
+    {   
+        new_height = height;
+        new_width = width;
+        set_color_box()
+        arrange_back_frame(width, height, depth, thickness, make_3d, spacing_2d)
+            frame_base_floor(new_width, new_height, frame_width, thickness, make_3d, spacing_2d=spacing_2d);
+        
+        set_color_facing_front()
+        arrange_facing_front_back(width, height, depth, thickness, make_3d, spacing_2d)
+            facing(new_width, new_height, facing_element_width, facing_element_no, thickness=facing_thickness, make_3d=make_3d);
+        
+        set_color_facing_back()
+        arrange_facing_back_back(width, height, depth, thickness, make_3d, spacing_2d)
+            facing(new_width - 2*thickness - 2*facing_thickness, new_height, facing_element_width, facing_element_no-1, thickness=facing_thickness, make_3d=make_3d);
+    }
+
+    // left
+    if (left)
+    {
+        new_height = height;
+        new_depth = depth - 2*thickness;
+        set_color_box()
+        arrange_left_frame(width, height, depth, thickness, make_3d, spacing_2d)
+            frame_base_floor(new_depth, new_height, frame_width, thickness, make_3d, spacing_2d=spacing_2d);
+            
+        set_color_facing_front()
+        arrange_facing_front_left(width, height, depth, thickness, make_3d, spacing_2d)
+            facing(depth, new_height, facing_element_width, facing_element_no, thickness=facing_thickness, make_3d=make_3d);
+
+        set_color_facing_back()
+        arrange_facing_back_left(width, height, depth, thickness, make_3d, spacing_2d)
+            facing(new_depth-2*facing_thickness, new_height, facing_element_width, facing_element_no-1, thickness=facing_thickness, make_3d=make_3d);
+    }
+
+    // right
+    if (right)
+    {
+        new_height = height;
+        new_depth = depth - 2*thickness;
+        set_color_box()
+        arrange_right_frame(width, height, depth, thickness, make_3d, spacing_2d)
+            frame_base_floor(new_depth, new_height, frame_width, thickness, make_3d, spacing_2d=spacing_2d);
+        
+        set_color_facing_front()
+        arrange_facing_front_right(width, height, depth, thickness, make_3d, spacing_2d)
+            facing(depth, new_height, facing_element_width, facing_element_no, thickness=facing_thickness, make_3d=make_3d);
+
+        set_color_facing_back()
+        arrange_facing_back_right(width, height, depth, thickness, make_3d, spacing_2d)
+            facing(new_depth-2*facing_thickness, new_height, facing_element_width, facing_element_no-1, thickness=facing_thickness, make_3d=make_3d);
+    }
+}
+
+module box_additional(width, height, depth, frame_width=10, thickness = 0, make_3d=false,
+            top=true, bottom=true, left=true, right=true, front=true, back=true,
+            spacing_2d=1)
+{
+    //bottom
+    if (bottom)
+    arrange_bottom_frame(width, height, depth, thickness, make_3d, spacing_2d)
+    {
+        new_width = width - 2*thickness;
+        new_depth = depth - 2*thickness;
+        set_color_box()
+            frame_additional(new_width, new_depth, frame_width, thickness, make_3d, spacing_2d=spacing_2d);
+    }
+
+    //top
+    if (top)
+    arrange_top_frame(width, height, depth, thickness, make_3d, spacing_2d)
+    {
+        new_width = width - 2*thickness;
+        new_depth = depth - 2*thickness;
+        set_color_box()
+            frame_additional(new_width, new_depth, frame_width, thickness, make_3d, spacing_2d=spacing_2d);
+    }
+
+    // front
+    if (front)
+    {   
+        new_height = height;
+        new_width = width;
+        set_color_box()
+        arrange_front_frame(width, height, depth, thickness, make_3d, spacing_2d)
+            frame_additional(new_width, new_height, frame_width, thickness, make_3d, spacing_2d=spacing_2d);
+        
+        set_color_facing_front()
+        arrange_facing_front_front(width, height, depth, thickness, make_3d, spacing_2d)
+            facing(new_width, new_height, facing_element_width, facing_element_no, thickness=facing_thickness, make_3d=make_3d);
+
+        set_color_facing_back()
+        arrange_facing_back_front(width, height, depth, thickness, make_3d, spacing_2d)
+            facing(new_width - 2*thickness - 2*facing_thickness, new_height, facing_element_width, facing_element_no-1, thickness=facing_thickness, make_3d=make_3d);
+    }
+
+    // back
+    if (back)
+    {   
+        new_height = height;
+        new_width = width;
+        set_color_box()
+        arrange_back_frame(width, height, depth, thickness, make_3d, spacing_2d)
+            frame_additional(new_width, new_height, frame_width, thickness, make_3d, spacing_2d=spacing_2d);
+        
+        set_color_facing_front()
+        arrange_facing_front_back(width, height, depth, thickness, make_3d, spacing_2d)
+            facing(new_width, new_height, facing_element_width, facing_element_no, thickness=facing_thickness, make_3d=make_3d);
+        
+        set_color_facing_back()
+        arrange_facing_back_back(width, height, depth, thickness, make_3d, spacing_2d)
+            facing(new_width - 2*thickness - 2*facing_thickness, new_height, facing_element_width, facing_element_no-1, thickness=facing_thickness, make_3d=make_3d);
+    }
+
+    // left
+    if (left)
+    {
+        new_height = height;
+        new_depth = depth - 2*thickness;
+        set_color_box()
+        arrange_left_frame(width, height, depth, thickness, make_3d, spacing_2d)
+            frame_additional(new_depth, new_height, frame_width, thickness, make_3d, spacing_2d=spacing_2d);
+            
+        set_color_facing_front()
+        arrange_facing_front_left(width, height, depth, thickness, make_3d, spacing_2d)
+            facing(depth, new_height, facing_element_width, facing_element_no, thickness=facing_thickness, make_3d=make_3d);
+
+        set_color_facing_back()
+        arrange_facing_back_left(width, height, depth, thickness, make_3d, spacing_2d)
+            facing(new_depth-2*facing_thickness, new_height, facing_element_width, facing_element_no-1, thickness=facing_thickness, make_3d=make_3d);
+    }
+
+    // right
+    if (right)
+    {
+        new_height = height;
+        new_depth = depth - 2*thickness;
+        set_color_box()
+        arrange_right_frame(width, height, depth, thickness, make_3d, spacing_2d)
+            frame_additional(new_depth, new_height, frame_width, thickness, make_3d, spacing_2d=spacing_2d);
         
         set_color_facing_front()
         arrange_facing_front_right(width, height, depth, thickness, make_3d, spacing_2d)
