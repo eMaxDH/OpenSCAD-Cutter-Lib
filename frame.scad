@@ -1,5 +1,6 @@
-include<strut.scad>
+include <strut.scad>
 
+// include <frame.scad>
 // frame(100, 50, thickness=7, make_3d=true);
 
 module arrange_bottom_strut(width, height, frame_width, thickness, make_3d, spacing_2d)
@@ -62,67 +63,92 @@ module arrange_right_strut(width, height, frame_width, thickness, make_3d, spaci
     }
 }
 
-module frame(width, height, frame_width=10, thickness = 0, make_3d=false, spacing_2d=1)
+module frame(width, height, frame_width=10, thickness = 0, hole_radius=2, hole_distance=[10,10],
+                make_3d=false, spacing_2d=1)
 {
     // Create bottom strut
     color("red")
     arrange_bottom_strut(width, height, frame_width, thickness, make_3d, spacing_2d)
-        strut(width=width, height=frame_width, thickness=thickness, type=["f", "f"], make_3d=make_3d);
+        strut(width=width, height=frame_width, thickness=thickness, type=["f", "f"],
+                hole_radius=hole_radius, hole_distance=hole_distance[0],
+                make_3d=make_3d);
 
     translate([0,0,0])
-        strut(width=width, height=frame_width, thickness=thickness, type=["f", "f"], make_3d=make_3d);
+        strut(width=width, height=frame_width, thickness=thickness, type=["f", "f"],
+                hole_radius=hole_radius, hole_distance=hole_distance[0],
+                make_3d=make_3d);
 
     // Create top strut
     color("orange")
     arrange_top_strut(width, height, frame_width, thickness, make_3d, spacing_2d)
     {
-        strut(width=width, height=frame_width, thickness=thickness, type=["f", "f"], make_3d=make_3d);
+        strut(width=width, height=frame_width, thickness=thickness, type=["f", "f"],
+                hole_radius=hole_radius, hole_distance=hole_distance[0],
+                make_3d=make_3d);
     }
 
     // Create left strut
     color("green")
     arrange_left_strut(width, height, frame_width, thickness, make_3d, spacing_2d)
-        strut(width=height, height=frame_width, thickness=thickness, type=["m", "m"], make_3d=make_3d);
+        strut(width=height, height=frame_width, thickness=thickness, type=["m", "m"],
+                hole_radius=hole_radius, hole_distance=hole_distance[1],
+                make_3d=make_3d);
 
     // Create right strut
     color("violet")
     arrange_right_strut(width, height, frame_width, thickness, make_3d, spacing_2d)
-        strut(width=height, height=frame_width, thickness=thickness, type=["m", "m"], make_3d=make_3d);
+        strut(width=height, height=frame_width, thickness=thickness, type=["m", "m"],
+                hole_radius=hole_radius, hole_distance=hole_distance[1],
+                make_3d=make_3d);
 
 }
 
-module frame_base_floor(width, height, frame_width=10, thickness = 0, make_3d=false, spacing_2d=1)
+module frame_base_floor(width, height, frame_width=10, thickness = 0, hole_radius=2, hole_distance=[10,10],
+                             make_3d=false, spacing_2d=1)
 {
     // Create bottom strut
     color("red")
     arrange_bottom_strut(width, height, frame_width, thickness, make_3d, spacing_2d)
-        strut(width=width, height=frame_width, thickness=thickness, type=["f", "f"], make_3d=make_3d);
+        strut(width=width, height=frame_width, thickness=thickness, type=["f", "f"],
+                hole_radius=hole_radius, hole_distance=hole_distance[0],
+                make_3d=make_3d);
 
     translate([0,0,0])
-        strut(width=width, height=frame_width, thickness=thickness, type=["f", "f"], make_3d=make_3d);
+        strut(width=width, height=frame_width, thickness=thickness, type=["f", "f"],
+                hole_radius=hole_radius, hole_distance=hole_distance[0],
+                make_3d=make_3d);
 
     // Create top strut
     color("orange")
     arrange_top_strut(width, height, frame_width, thickness, make_3d, spacing_2d)
     {
-        strut(width=width, height=frame_width, thickness=thickness, type=["f", "f"], make_3d=make_3d);
+        strut(width=width, height=frame_width, thickness=thickness, type=["f", "f"],
+                hole_radius=hole_radius, hole_distance=hole_distance[0],
+                make_3d=make_3d);
         mirror([0,1,0])
-            strut(width=width, height=frame_width, thickness=thickness, type=["f", "f"], make_3d=make_3d);
+            strut(width=width, height=frame_width, thickness=thickness, type=["f", "f"],
+                hole_radius=hole_radius, hole_distance=hole_distance[0],
+                make_3d=make_3d);
     }
 
     // Create left strut
     color("green")
     arrange_left_strut(width, height, frame_width, thickness, make_3d, spacing_2d)
-        strut(width=height, height=frame_width, thickness=thickness, type=["m", "m"], make_3d=make_3d);
+        strut(width=height, height=frame_width, thickness=thickness, type=["m", "m"],
+                hole_radius=hole_radius, hole_distance=hole_distance[1],
+                make_3d=make_3d);
 
     // Create right strut
     color("violet")
     arrange_right_strut(width, height, frame_width, thickness, make_3d, spacing_2d)
-        strut(width=height, height=frame_width, thickness=thickness, type=["m", "m"], make_3d=make_3d);
+        strut(width=height, height=frame_width, thickness=thickness, type=["m", "m"],
+                hole_radius=hole_radius, hole_distance=hole_distance[1],
+                make_3d=make_3d);
 
 }
 
-module frame_additional(width, height, frame_width=10, thickness = 0, make_3d=false, spacing_2d=1)
+module frame_additional(width, height, frame_width=10, thickness = 0, hole_radius=2, hole_distance=[10,10],
+        make_3d=false, spacing_2d=1)
 {
     // // Create bottom strut
     // color("red")
@@ -136,20 +162,28 @@ module frame_additional(width, height, frame_width=10, thickness = 0, make_3d=fa
     color("orange")
     arrange_top_strut(width, height, frame_width, thickness, make_3d, spacing_2d)
     {
-        strut(width=width, height=frame_width, thickness=thickness, type=["f", "f"], make_3d=make_3d);
+        strut(width=width, height=frame_width, thickness=thickness, type=["f", "f"],
+                hole_radius=hole_radius, hole_distance=hole_distance[0],
+                make_3d=make_3d);
         mirror([0,1,0])
-            strut(width=width, height=frame_width, thickness=thickness, type=["f", "f"], make_3d=make_3d);
+            strut(width=width, height=frame_width, thickness=thickness, type=["f", "f"],
+                hole_radius=hole_radius, hole_distance=hole_distance[0],
+                make_3d=make_3d);
     }
 
     // Create left strut
     color("green")
     arrange_left_strut(width, height, frame_width, thickness, make_3d, spacing_2d)
-        strut(width=height, height=frame_width, thickness=thickness, type=["m", "m"], make_3d=make_3d);
+        strut(width=height, height=frame_width, thickness=thickness, type=["m", "m"],
+                hole_radius=hole_radius, hole_distance=hole_distance[1],
+                make_3d=make_3d);
 
     // Create right strut
     color("violet")
     arrange_right_strut(width, height, frame_width, thickness, make_3d, spacing_2d)
-        strut(width=height, height=frame_width, thickness=thickness, type=["m", "m"], make_3d=make_3d);
+        strut(width=height, height=frame_width, thickness=thickness, type=["m", "m"],
+                hole_radius=hole_radius, hole_distance=hole_distance[1],
+                make_3d=make_3d);
 
 }
 
