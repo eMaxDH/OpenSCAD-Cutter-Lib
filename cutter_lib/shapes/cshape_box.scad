@@ -7,20 +7,20 @@ height= 10;
 depth= 10;
 thickness = 1;
 
-cshape_box_arrange(width, height, depth, thickness = 0, make_3d=make_3d, spacing_2d=1)
+cshape_box_arrange(width, height, depth, thickness = thickness, make_3d=make_3d, spacing_2d=1)
 {
     // 0: top
-    cs_test_face(width=width, height=height, number=0);
+    cs_test_face(width=width-2*thickness, height=height-2*thickness, thickness=thickness, number=0, make_3d=make_3d);
     // 1: back
-    cs_test_face(width=width, height=height, number=1);
+    cs_test_face(width=width, height=height, thickness=thickness, number=1, make_3d=make_3d);
     // 2: left
-    cs_test_face(width=width, height=height, number=2);
+    cs_test_face(width=width, height=height-2*thickness, thickness=thickness, number=2, make_3d=make_3d);
     // 3: bottom
-    cs_test_face(width=width, height=height, number=3);
+    cs_test_face(width=width-2*thickness, height=height-2*thickness, thickness=thickness, number=3, make_3d=make_3d);
     // 4: right
-    cs_test_face(width=width, height=height, number=4);
+    cs_test_face(width=width, height=height-2*thickness, thickness=thickness, number=4, make_3d=make_3d);
     // 5: front
-    cs_test_face(width=width, height=height, number=5);
+    cs_test_face(width=width, height=height, thickness=thickness, number=5, make_3d=make_3d);
 }
 
 echo(str("get_cshape_box_2d_size: ",get_cshape_box_2d_size(width=width, 
@@ -35,15 +35,17 @@ echo(str("get_cshape_box_2d_size: ",get_cshape_box_2d_size(width=width,
 //       |   |    
 //    --- --- --- 
 //   |   | 3 |   |
-//    --- --- --- 
+//    ---o--- --- 
 //       |   |    
 //   x    ---     
 //
-//  x: origin
+//  x: 2d-origin
+//  o: 3d-origin
 module cshape_box_arrange_bottom_frame(width, height, depth, thickness = 0, make_3d=false, spacing_2d=1)
 {
     if (make_3d)
     {
+        echo("cshape_box_arrange_bottom_frame::thickness = ", thickness);
         translate([thickness, thickness, 0])
             children();
     }
@@ -62,18 +64,19 @@ module cshape_box_arrange_bottom_frame(width, height, depth, thickness = 0, make
 //       |   |    
 //    --- --- --- 
 //   |   |   |   |
-//    --- --- --- 
+//    ---o--- --- 
 //       |   |    
 //   x    ---     
 //
-//  x: origin
+//  x: 2d-origin
+//  o: 3d-origin
 module cshape_box_arrange_top_frame(width, height, depth, thickness = 0, make_3d=false, spacing_2d=1)
 {
     if (make_3d)
     {
-        translate([thickness, thickness, height])
-            // mirror([0, 0, 1])
+        translate([thickness, depth-thickness, height])
             rotate([180,0,0])
+            // mirror([0, 0, 1])
                 children();
     }
     else
@@ -91,18 +94,18 @@ module cshape_box_arrange_top_frame(width, height, depth, thickness = 0, make_3d
 //       |   |    
 //    --- --- --- 
 //   |   |   |   |
-//    --- --- --- 
+//    ---o--- --- 
 //       | 5 |    
 //   x    ---     
 //
-//  x: origin
+//  x: 2d-origin
+//  o: 3d-origin
 module cshape_box_arrange_front_frame(width, height, depth, thickness = 0, make_3d=false, spacing_2d=1)
 {
     if (make_3d)
     {
-        translate([0, 0, 0])
-            mirror([0, 1, 0])
-            rotate([90, 0, 0])
+        translate([0, 0, height])
+            rotate([-90, 0, 0])
                 children();
     }
     else
@@ -120,16 +123,17 @@ module cshape_box_arrange_front_frame(width, height, depth, thickness = 0, make_
 //       | 1 |    
 //    --- --- --- 
 //   |   |   |   |
-//    --- --- --- 
+//    ---o--- --- 
 //       |   |    
 //   x    ---     
 //
-//  x: origin
+//  x: 2d-origin
+//  o: 3d-origin
 module cshape_box_arrange_back_frame(width, height, depth, thickness = 0, make_3d=false, spacing_2d=1)
 {
     if (make_3d)
     {
-        translate([0,depth,0])
+        translate([0, depth, 0])
             rotate([90,0,0])
                 children();
     }
@@ -148,19 +152,18 @@ module cshape_box_arrange_back_frame(width, height, depth, thickness = 0, make_3
 //       |   |    
 //    --- --- --- 
 //   | 2 |   |   |
-//    --- --- --- 
+//    ---o--- --- 
 //       |   |    
 //   x    ---     
 //
-//  x: origin
+//  x: 2d-origin
+//  o: 3d-origin
 module cshape_box_arrange_left_frame(width, height, depth, thickness = 0, make_3d=false, spacing_2d=1)
 {
     if (make_3d)
     {
-        translate([0,depth-thickness,0])
-            mirror([1,0,0])
-                rotate([0,-90,0])
-                rotate([0,0,-90])
+        translate([0,thickness,height])
+                rotate([0,90,0])
                 children();
     }
     else
@@ -186,9 +189,8 @@ module cshape_box_arrange_right_frame(width, height, depth, thickness = 0, make_
 {
     if (make_3d)
     {
-        translate([width,depth-thickness,0])
+        translate([width,thickness,0])
                 rotate([0,-90,0])
-                rotate([0,0,-90])
                 children();
     }
     else
@@ -239,17 +241,17 @@ module cshape_box_arrange_right_frame(width, height, depth, thickness = 0, make_
 //    x----- /    --> x
 module cshape_box_arrange(width, height, depth, thickness = 0, make_3d=false, spacing_2d=1)
 {
-    cshape_box_arrange_top_frame(width, height, depth, thickness, make_3d, spacing_2d)
+    cshape_box_arrange_top_frame(width=width, height=height, depth=depth, thickness=thickness, make_3d=make_3d, spacing_2d=spacing_2d)
         children(0);
-    cshape_box_arrange_back_frame(width, height, depth, thickness, make_3d, spacing_2d)
+    cshape_box_arrange_back_frame(width=width, height=height, depth=depth, thickness=thickness, make_3d=make_3d, spacing_2d=spacing_2d)
         children(1);
-    cshape_box_arrange_left_frame(width, height, depth, thickness, make_3d, spacing_2d)
+    cshape_box_arrange_left_frame(width=width, height=height, depth=depth, thickness=thickness, make_3d=make_3d, spacing_2d=spacing_2d)
         children(2);
-    cshape_box_arrange_bottom_frame(width, height, depth, thickness, make_3d, spacing_2d)
+    cshape_box_arrange_bottom_frame(width=width, height=height, depth=depth, thickness=thickness, make_3d=make_3d, spacing_2d=spacing_2d)
         children(3);
-    cshape_box_arrange_right_frame(width, height, depth, thickness, make_3d, spacing_2d)
+    cshape_box_arrange_right_frame(width=width, height=height, depth=depth, thickness=thickness, make_3d=make_3d, spacing_2d=spacing_2d)
         children(4);
-    cshape_box_arrange_front_frame(width, height, depth, thickness, make_3d, spacing_2d)
+    cshape_box_arrange_front_frame(width=width, height=height, depth=depth, thickness=thickness, make_3d=make_3d, spacing_2d=spacing_2d)
         children(5);
 }
 
