@@ -15,13 +15,13 @@ use <strut_2d.scad>
 
 make_3d = false; // [false:true]
 
-width = 100; //[10:10:200]
+width = 150; //[10:10:200]
 height = 20; //[5:5:100]
 thickness = 10; //[1:1:20]
 
-hole_radius=10;
-hole_distance=100;
-hole_length=5;
+hole_radius=6;
+hole_distance=80;
+hole_length=8;
 
 strut(width, height, thickness=thickness, type=["f", "f"],
         hole_radius=hole_radius, hole_distance=hole_distance, hole_length=hole_length,

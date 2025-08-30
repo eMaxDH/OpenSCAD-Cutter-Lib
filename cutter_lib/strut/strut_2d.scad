@@ -11,10 +11,10 @@
 //    ------------------------------------
 //    <---             100             -->
 
-//include <strut_2d.scad>
+//use <strut_2d.scad>
 //strut_2d(100, 10, type=["f", "f"]);
 
-include <slot_2d.scad>
+use <../slot/cs_elongated_hole_2d.scad>
 
 function calc_connector_shift(size, connector_factor=0.4) = 
     let (diagonal = size * sqrt(2))
@@ -93,13 +93,13 @@ module make_holes(strut_width, hole_radius, hole_distance, hole_length=0)
         {
             translate(positions[0])
                 if (hole_length > 0)
-                    create_slot(hole_length, hole_radius);
+                    cs_elongated_hole_2d(hole_length, hole_radius);
                 else
                     circle(hole_radius);
 
             translate(positions[1])
                 if (hole_length > 0)
-                    create_slot(hole_length, hole_radius);
+                    cs_elongated_hole_2d(hole_length, hole_radius);
                 else
                     circle(hole_radius);
         }
