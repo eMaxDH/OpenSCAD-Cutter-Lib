@@ -11,6 +11,7 @@
 //    ------------------------------------
 //    <---             100             -->
 
+//include <strut_2d.scad>
 //strut_2d(100, 10, type=["f", "f"]);
 
 
@@ -18,7 +19,7 @@ function calc_connector_shift(size, connector_factor=0.4) =
     let (diagonal = size * sqrt(2))
     let (diagonal_connector = connector_factor * diagonal)
     let (shift_diagonal = diagonal/2 - diagonal_connector/2)
-    shift_diagonal * sqrt(2);
+    shift_diagonal / sqrt(2);
 
 module strut_connector(size, type="f", connector_factor=0.3){
     connector_shift = calc_connector_shift(size, connector_factor);
