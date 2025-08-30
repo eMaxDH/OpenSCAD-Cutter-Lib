@@ -1,4 +1,77 @@
 use <../surfaces/cs_test_face.scad>
+//
+// This OpenSCAD file provides parametric tools and examples for generating and arranging
+// the 2D net (unfolding) and alternative 2D arrangements for a customizable rectangular box
+// with a specific thickness. The code modularly constructs each **box face** individually
+// and positions them systematically according to either the “fold” method (which matches
+// traditional box unfolding) or a “move” method (an alternative arrangement for visual clarity
+// or fabrication needs). Key face sizes and layout dimensions are calculated automatically
+// from the provided parameters for width, height, depth, and material thickness.
+//
+// ## Structure and Features
+//
+// **Parametric Design**
+// The script defines variables for
+// box dimensions (`width`, `height`, `depth`), face thickness (`thickness`), and layout spacing.
+//   This ensures all face sizes and 2D layouts are generated consistently for any box size.
+//
+// **Unfolded and Arranged Nets**
+// Functions like 'get_cshape_box_face_size_fold' and 
+// 'get_cshape_box_face_size_move' calculate exact face dimensions according to the chosen
+// unfolding strategy—folded (classic cross shape) or moved (alternative orientation).
+//
+// **Automated Layout Positioning**
+// Modules place each face at its correct 2D coordinate and orientation, referencing the box
+// folding logic. Faces are rendered using the included `cs_test_face` function, which is sourced
+// from the external file `<../surfaces/cs_test_face.scad>`, allowing easy substitution with
+// custom face visuals or features.
+//
+// **Customization and Visualization**
+// Configuration options such as `make_3d` toggle between pure 2D representation (useful for laser
+// cutting, fabrication, or diagramming) and 3D preview. Text labels ("fold", "move") clarify which
+// arrangement is being viewed.
+//
+// ## Usage and Purpose
+//
+// This template is ideal for users designing flat-packed box patterns, prototyping folding cartons,
+// or automating packaging layouts. By modifying input parameters, designers can rapidly create box nets
+// for fabrication or illustration, with face arrangements that suit both assembling instructions
+// and cutting strategies.
+//
+//        ---
+//       | 0 |
+//        ---
+//       | 1 |
+//    --- --- ---  ^
+//   | 2 | 3 | 4 | | depth
+//    --- --- ---  v
+//       | 5 |<-> height
+//        ---
+//        <-> width
+// 
+//  thickness: thickness of the plate
+// 
+// 
+//  The origin of a face is defind in the corner of a face,
+//  e.g. marked with an 'o' for face 1.
+//        ---
+//       |   |
+//        ---
+//       | 1 |
+//    ---o--- ---  
+//   |   |   |   |
+//    --- --- ---  
+//       |   |
+//        ---
+//
+//  the folded box with origin x 
+//
+//       -----      
+//     /  0   /
+//    /----- / |
+//    |  5  | 4|    ^y
+//    |     | /    /
+//    x----- /    --> x
 
 make_3d=false;
 
