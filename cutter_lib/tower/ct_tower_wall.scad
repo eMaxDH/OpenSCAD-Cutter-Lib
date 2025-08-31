@@ -25,7 +25,7 @@ ct_tower_wall_example(width=wall_width, height=wall_height,
                       visibile_layers=visibile_layers, make_3d=make_3d);
 
 module ct_tower_wall_example(width, height, wall_thickness=wall_thickness, 
-                             wall_depth=1, frame_overlap=frame_overlap,
+                             wall_depth=1, frame_overlap=false,
                              visibile_layers=[], make_3d=make_3d)
 {
     strut_size = get_ct_tower_wall_strut_size(width=width, height=height, thickness=wall_thickness,

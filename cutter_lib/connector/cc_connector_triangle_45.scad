@@ -1,3 +1,4 @@
+use <../layer/cl_layer.scad>
 use <cc_connector_triangle_45_2d.scad>
 
 make_3d=false;
@@ -31,16 +32,19 @@ cc_connector_triangle_45(size, type, connector_factor, thickness, make_3d);
 
 
 module cc_connector_triangle_45(size, type="f", connector_factor=0.3, thickness=1,
-                       make_3d=false)
+                                layer=0, visibile_layers=[], make_3d=false)
 {
-    if (make_3d)
+    apply_cl_layer_visibility(layer=layer, visibile_layers=visibile_layers)
     {
-        linear_extrude(thickness)
+        if (make_3d)
+        {
+            linear_extrude(thickness)
+                cc_connector_triangle_45_2d(size=size, type=type, connector_factor=connector_factor);
+            
+        }
+        else
+        {
             cc_connector_triangle_45_2d(size=size, type=type, connector_factor=connector_factor);
-        
-    }
-    else
-    {
-        cc_connector_triangle_45_2d(size=size, type=type, connector_factor=connector_factor);
+        }
     }
 }
