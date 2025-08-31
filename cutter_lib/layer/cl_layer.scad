@@ -20,7 +20,7 @@ module apply_cl_layer_visibility(layer=0, visibile_layers=[])
 module cl_layer_info(visibile_layers=[], name ="obeject", size=10)
 {
     color("gold")
-    translate([0,-size,0])
+    translate([0,-2*size,0])
     {
         %text(str("rendered layers: ", visibile_layers), size=size*0.8);
     }
