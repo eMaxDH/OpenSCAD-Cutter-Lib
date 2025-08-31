@@ -1,9 +1,4 @@
 use <../layer/cl_layer.scad>
-use <../surfaces/cs_test_surface.scad>
-
-use <../shapes/cshape_box.scad>
-use <../shapes/cshape_frame.scad>
-use <../shapes/cshape_array.scad>
 
 use <ct_tower_floor.scad>
 
