@@ -535,7 +535,7 @@ module cshape_box_arrange_back_frame_move(width, height, depth, thickness = 0, m
     }
     else
     {
-        translate([height + 2*spacing_2d,
+        translate([depth + 2*spacing_2d,
                    3*spacing_2d + height + depth,
                    0])
                 children();
@@ -591,7 +591,7 @@ module cshape_box_arrange_right_frame_move(width, height, depth, thickness = 0, 
     }
     else
     {
-        translate([height + width + 3*spacing_2d,
+        translate([depth + width + 3*spacing_2d,
                    height + 2*spacing_2d,
                    0])
                 children();
