@@ -22,6 +22,6 @@ module cl_layer_info(visibile_layers=[], name ="obeject", size=10)
     color("gold")
     translate([0,-size,0])
     {
-        %text(str("visible layers: ", visibile_layers), size=size*0.8);
+        %text(str("rendered layers: ", visibile_layers), size=size*0.8);
     }
 }
