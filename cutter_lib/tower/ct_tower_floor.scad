@@ -29,7 +29,8 @@ ct_tower_floor_example(floor_size[0], floor_size[2], floor_size[1],
                           make_3d=make_3d);
 
 module ct_tower_floor_example(width, height, depth, wall_thickness=1, frame_overlap=false,
-                          make_3d=false, spacing_2d=1)
+                              test_faces=true,
+                              visibile_layers=visibile_layers, make_3d=false, spacing_2d=1)
 {
     size_face_move = get_cshape_box_face_size_move(width=width, height=height, depth=depth, 
                                                    thickness=wall_thickness);
@@ -123,11 +124,11 @@ module ct_tower_floor_arrange(width, height, depth, wall_thickness=1,
 
 
 
-function get_ct_tower_floor_2d_size(basement_width, basement_height, basement_depth, wall_depth, spacing_2d=1) =
-    get_cshape_box_2d_size_move(width=basement_width, 
-                height=basement_height,
-                depth=basement_depth,
-                thickness=wall_depth,
-                spacing_2d=spacing_2d);
+function get_ct_tower_floor_2d_size(width, height, depth, wall_thickness, spacing_2d=1) =
+    get_cshape_box_2d_size_move(width=width, 
+                                height=height,
+                                depth=depth,
+                                thickness=wall_thickness,
+                                spacing_2d=spacing_2d);
 
 
