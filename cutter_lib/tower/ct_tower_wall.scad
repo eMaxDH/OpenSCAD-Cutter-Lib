@@ -1,3 +1,4 @@
+use <../layer/cl_layer.scad>
 use <../surfaces/cs_test_face.scad>
 
 use <../shapes/cshape_box.scad>
@@ -21,6 +22,11 @@ tower_wall_2d_size = get_ct_tower_wall_2d_size(wall_width, wall_height);
 //     translate([0,0,0.1])
 //     cube(tower_wall_2d_size + [0,0,0.1]);
 
+layer=0;
+visibile_layers=[0];
+
+cl_layer_info(visibile_layers);
+
 strut_size = get_cshape_frame_strut_size(width=wall_width, height=wall_height, frame_width=wall_thickness, overlap=frame_overlap);
 
 ct_tower_wall(width=wall_width, height=wall_height, 
@@ -29,19 +35,24 @@ ct_tower_wall(width=wall_width, height=wall_height,
               make_3d=make_3d)
 {
     // 0: top frame strut
-    cs_test_face(width=strut_size[0][0], height=strut_size[0][1], thickness=wall_depth, number=0, make_3d=make_3d);
+    cs_test_face(width=strut_size[0][0], height=strut_size[0][1], thickness=wall_depth, number=0,
+                 layer=0, visibile_layers=visibile_layers, make_3d=make_3d);
     // 1: left frame strut
-    cs_test_face(width=strut_size[1][0], height=strut_size[1][1], thickness=wall_depth, number=1, make_3d=make_3d);
+    cs_test_face(width=strut_size[1][0], height=strut_size[1][1], thickness=wall_depth, number=1,
+                 layer=0, visibile_layers=visibile_layers, make_3d=make_3d);
     // 2: right frame strut
-    cs_test_face(width=strut_size[2][0], height=strut_size[2][1], thickness=wall_depth, number=2, make_3d=make_3d);
+    cs_test_face(width=strut_size[2][0], height=strut_size[2][1], thickness=wall_depth, number=2, 
+                 layer=0, visibile_layers=visibile_layers, make_3d=make_3d);
     // 3: bottom frame strut
-    cs_test_face(width=strut_size[3][0], height=strut_size[3][1], thickness=wall_depth, number=3, make_3d=make_3d);
+    cs_test_face(width=strut_size[3][0], height=strut_size[3][1], thickness=wall_depth, number=3, 
+                 layer=0, visibile_layers=visibile_layers, make_3d=make_3d);
 
     // 4: front
-    cs_test_face(width=wall_width, height=wall_height, thickness=wall_depth, number=4, face_color=[1,0,0,0.1], make_3d=make_3d);
+    cs_test_face(width=wall_width, height=wall_height, thickness=wall_depth, number=4, face_color=[1,0,0,0.1], 
+                 layer=1, visibile_layers=visibile_layers, make_3d=make_3d);
     // 5: back
-    cs_test_face(width=wall_width, height=wall_height, thickness=wall_depth, number=5, face_color=[0,1,0,0.1], make_3d=make_3d);
-    
+    cs_test_face(width=wall_width, height=wall_height, thickness=wall_depth, number=5, face_color=[0,1,0,0.1], 
+                 layer=2, visibile_layers=visibile_layers, make_3d=make_3d);
 }
 
 //  A tower wall is made out of 3 parts, the front, frame, and back layer.
@@ -81,13 +92,13 @@ ct_tower_wall(width=wall_width, height=wall_height,
 //                t: wall_depth      aka thickness (chshape_frame)
 //
 //
-module ct_tower_wall(width, height, wall_depth = 0.1, wall_thickness=1, frame_overlap=false, make_3d=false, spacing_2d=1)
+module ct_tower_wall(width, height, wall_depth = 0.1, wall_thickness=1, frame_overlap=false,
+                     make_3d=false, spacing_2d=1)
 {
     no_children = $children;
     frame_layer = [0,3];
     front_layer = 4;
     back_layer = 5;
-
     if (make_3d)
     {
         cshape_frame_arrange(width=width, height=height, frame_width = wall_thickness, thickness = wall_depth, overlap=frame_overlap, make_3d=make_3d, spacing_2d=1)
@@ -123,10 +134,10 @@ module ct_tower_wall(width, height, wall_depth = 0.1, wall_thickness=1, frame_ov
             children(3);
         }
         if (no_children >= front_layer)
-            translate([wall_width + spacing_2d, 0, 0])
+            translate([0, 0, wall_depth*1.5])
                 children(4);
         if (no_children >= back_layer)
-            translate([2*wall_width + 2*spacing_2d, 0, 0])
+            translate([0, 0, -wall_depth*1.5])
                 children(5);
     }
 }
