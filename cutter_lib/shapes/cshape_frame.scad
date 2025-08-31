@@ -1,4 +1,4 @@
-use <../surfaces/cs_test_face.scad>
+use <../surfaces/cs_test_surface.scad>
 
 
 make_3d=false;
@@ -16,13 +16,13 @@ size_strut = get_cshape_frame_strut_size(width, height, frame_width, overlap = o
 cshape_frame_arrange(width, height, frame_width, thickness = thickness, overlap=overlap, make_3d=make_3d, spacing_2d=1)
 {
     // 0: top
-    cs_test_face(width=size_strut[0][0], height=size_strut[0][1], thickness=thickness, number=0, make_3d=make_3d);
+    cs_test_surface(width=size_strut[0][0], height=size_strut[0][1], thickness=thickness, number=0, make_3d=make_3d);
     // 1: left
-    cs_test_face(width=size_strut[1][0], height=size_strut[1][1], thickness=thickness, number=1, make_3d=make_3d);
+    cs_test_surface(width=size_strut[1][0], height=size_strut[1][1], thickness=thickness, number=1, make_3d=make_3d);
     // 2: right
-    cs_test_face(width=size_strut[2][0], height=size_strut[2][1], thickness=thickness, number=2, make_3d=make_3d);
+    cs_test_surface(width=size_strut[2][0], height=size_strut[2][1], thickness=thickness, number=2, make_3d=make_3d);
     // 3: bottom
-    cs_test_face(width=size_strut[3][0], height=size_strut[3][1], thickness=thickness, number=3, make_3d=make_3d);
+    cs_test_surface(width=size_strut[3][0], height=size_strut[3][1], thickness=thickness, number=3, make_3d=make_3d);
 }
 
 //

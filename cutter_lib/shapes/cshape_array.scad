@@ -1,4 +1,4 @@
-use <../surfaces/cs_test_face.scad>
+use <../surfaces/cs_test_surface.scad>
 
 
 make_3d=true;
@@ -38,19 +38,19 @@ cshape_array_arrange(width, height,
                      make_3d=make_3d, spacing_2d=1)
 {
     // 0
-    cs_test_face(width=size_strut[0][0], height=size_strut[0][1], thickness=thickness, number=0, make_3d=make_3d);
+    cs_test_surface(width=size_strut[0][0], height=size_strut[0][1], thickness=thickness, number=0, make_3d=make_3d);
     // 1
-    cs_test_face(width=size_strut[1][0], height=size_strut[1][1], thickness=thickness, number=1, make_3d=make_3d);
+    cs_test_surface(width=size_strut[1][0], height=size_strut[1][1], thickness=thickness, number=1, make_3d=make_3d);
     // 2
-    cs_test_face(width=size_strut[2][0], height=size_strut[2][1], thickness=thickness, number=2, make_3d=make_3d);
+    cs_test_surface(width=size_strut[2][0], height=size_strut[2][1], thickness=thickness, number=2, make_3d=make_3d);
     // 3
-    cs_test_face(width=size_strut[3][0], height=size_strut[3][1], thickness=thickness, number=3, make_3d=make_3d);
+    cs_test_surface(width=size_strut[3][0], height=size_strut[3][1], thickness=thickness, number=3, make_3d=make_3d);
     // 4
-    cs_test_face(width=size_strut[3][0], height=size_strut[3][1], thickness=thickness, number=4, make_3d=make_3d);
+    cs_test_surface(width=size_strut[3][0], height=size_strut[3][1], thickness=thickness, number=4, make_3d=make_3d);
     // 5
-    cs_test_face(width=size_strut[3][0], height=size_strut[3][1], thickness=thickness, number=5, make_3d=make_3d);
+    cs_test_surface(width=size_strut[3][0], height=size_strut[3][1], thickness=thickness, number=5, make_3d=make_3d);
     // 6
-    cs_test_face(width=size_strut[3][0], height=size_strut[3][1], thickness=thickness, number=6, make_3d=make_3d);
+    cs_test_surface(width=size_strut[3][0], height=size_strut[3][1], thickness=thickness, number=6, make_3d=make_3d);
 }
 
 //

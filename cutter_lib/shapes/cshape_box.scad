@@ -1,4 +1,4 @@
-use <../surfaces/cs_test_face.scad>
+use <../surfaces/cs_test_surface.scad>
 //
 // This OpenSCAD file provides parametric tools and examples for generating and arranging
 // the 2D net (unfolding) and alternative 2D arrangements for a customizable rectangular box
@@ -22,8 +22,8 @@ use <../surfaces/cs_test_face.scad>
 //
 // **Automated Layout Positioning**
 // Modules place each face at its correct 2D coordinate and orientation, referencing the box
-// folding logic. Faces are rendered using the included `cs_test_face` function, which is sourced
-// from the external file `<../surfaces/cs_test_face.scad>`, allowing easy substitution with
+// folding logic. Faces are rendered using the included `cs_test_surface` function, which is sourced
+// from the external file `<../surfaces/cs_test_surface.scad>`, allowing easy substitution with
 // custom face visuals or features.
 //
 // **Customization and Visualization**
@@ -102,17 +102,17 @@ echo(str("size_face_fold: ",size_face_fold));
 cshape_box_arrange_fold(width, height, depth, thickness = thickness, make_3d=make_3d, spacing_2d=1)
 {
     // 0: top
-    cs_test_face(width=size_face_fold[0][0], height=size_face_fold[0][1], thickness=thickness, number=0, make_3d=make_3d);
+    cs_test_surface(width=size_face_fold[0][0], height=size_face_fold[0][1], thickness=thickness, number=0, make_3d=make_3d);
     // 1: back
-    cs_test_face(width=size_face_fold[1][0], height=size_face_fold[1][1], thickness=thickness, number=1, make_3d=make_3d);
+    cs_test_surface(width=size_face_fold[1][0], height=size_face_fold[1][1], thickness=thickness, number=1, make_3d=make_3d);
     // 2: left
-    cs_test_face(width=size_face_fold[2][0], height=size_face_fold[2][1], thickness=thickness, number=2, make_3d=make_3d);
+    cs_test_surface(width=size_face_fold[2][0], height=size_face_fold[2][1], thickness=thickness, number=2, make_3d=make_3d);
     // 3: bottom
-    cs_test_face(width=size_face_fold[3][0], height=size_face_fold[3][1], thickness=thickness, number=3, make_3d=make_3d);
+    cs_test_surface(width=size_face_fold[3][0], height=size_face_fold[3][1], thickness=thickness, number=3, make_3d=make_3d);
     // 4: right
-    cs_test_face(width=size_face_fold[4][0], height=size_face_fold[4][1], thickness=thickness, number=4, make_3d=make_3d);
+    cs_test_surface(width=size_face_fold[4][0], height=size_face_fold[4][1], thickness=thickness, number=4, make_3d=make_3d);
     // 5: front
-    cs_test_face(width=size_face_fold[5][0], height=size_face_fold[5][1], thickness=thickness, number=5, make_3d=make_3d);
+    cs_test_surface(width=size_face_fold[5][0], height=size_face_fold[5][1], thickness=thickness, number=5, make_3d=make_3d);
 }
 
 translate([size_unfold[0], -depth*1.1, 0]) {
@@ -126,17 +126,17 @@ translate([size_unfold[0], 0, 0])
 cshape_box_arrange_move(width, height, depth, thickness = thickness, make_3d=make_3d, spacing_2d=1)
 {
     // 0: top
-    cs_test_face(width=size_face_move[0][0], height=size_face_move[0][1], thickness=thickness, number=0, make_3d=make_3d);
+    cs_test_surface(width=size_face_move[0][0], height=size_face_move[0][1], thickness=thickness, number=0, make_3d=make_3d);
     // 1: back
-    cs_test_face(width=size_face_move[1][0], height=size_face_move[1][1], thickness=thickness, number=1, make_3d=make_3d);
+    cs_test_surface(width=size_face_move[1][0], height=size_face_move[1][1], thickness=thickness, number=1, make_3d=make_3d);
     // 2: left
-    cs_test_face(width=size_face_move[2][0], height=size_face_move[2][1], thickness=thickness, number=2, make_3d=make_3d);
+    cs_test_surface(width=size_face_move[2][0], height=size_face_move[2][1], thickness=thickness, number=2, make_3d=make_3d);
     // 3: bottom
-    cs_test_face(width=size_face_move[3][0], height=size_face_move[3][1], thickness=thickness, number=3, make_3d=make_3d);
+    cs_test_surface(width=size_face_move[3][0], height=size_face_move[3][1], thickness=thickness, number=3, make_3d=make_3d);
     // 4: right
-    cs_test_face(width=size_face_move[4][0], height=size_face_move[4][1], thickness=thickness, number=4, make_3d=make_3d);
+    cs_test_surface(width=size_face_move[4][0], height=size_face_move[4][1], thickness=thickness, number=4, make_3d=make_3d);
     // 5: front
-    cs_test_face(width=size_face_move[5][0], height=size_face_move[5][1], thickness=thickness, number=5, make_3d=make_3d);
+    cs_test_surface(width=size_face_move[5][0], height=size_face_move[5][1], thickness=thickness, number=5, make_3d=make_3d);
 }
 
 

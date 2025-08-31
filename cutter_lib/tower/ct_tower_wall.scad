@@ -1,5 +1,5 @@
 use <../layer/cl_layer.scad>
-use <../surfaces/cs_test_face.scad>
+use <../surfaces/cs_test_surface.scad>
 
 use <../shapes/cshape_box.scad>
 use <../shapes/cshape_frame.scad>
@@ -37,23 +37,23 @@ module ct_tower_wall_example(width, height, wall_thickness=wall_thickness,
                           make_3d=make_3d)
         {
             // 0: top frame strut
-            cs_test_face(width=strut_size[0][0], height=strut_size[0][1], thickness=wall_depth, number=0,
+            cs_test_surface(width=strut_size[0][0], height=strut_size[0][1], thickness=wall_depth, number=0,
                         layer=0, visibile_layers=visibile_layers, make_3d=make_3d);
             // 1: left frame strut
-            cs_test_face(width=strut_size[1][0], height=strut_size[1][1], thickness=wall_depth, number=1,
+            cs_test_surface(width=strut_size[1][0], height=strut_size[1][1], thickness=wall_depth, number=1,
                         layer=0, visibile_layers=visibile_layers, make_3d=make_3d);
             // 2: right frame strut
-            cs_test_face(width=strut_size[2][0], height=strut_size[2][1], thickness=wall_depth, number=2, 
+            cs_test_surface(width=strut_size[2][0], height=strut_size[2][1], thickness=wall_depth, number=2, 
                         layer=0, visibile_layers=visibile_layers, make_3d=make_3d);
             // 3: bottom frame strut
-            cs_test_face(width=strut_size[3][0], height=strut_size[3][1], thickness=wall_depth, number=3, 
+            cs_test_surface(width=strut_size[3][0], height=strut_size[3][1], thickness=wall_depth, number=3, 
                         layer=0, visibile_layers=visibile_layers, make_3d=make_3d);
 
             // 4: front
-            cs_test_face(width=width, height=height, thickness=wall_depth, number=4, face_color=[1,0,0,0.1], 
+            cs_test_surface(width=width, height=height, thickness=wall_depth, number=4, face_color=[1,0,0,0.1], 
                         layer=1, visibile_layers=visibile_layers, make_3d=make_3d);
             // 5: back
-            cs_test_face(width=width, height=height, thickness=wall_depth, number=5, face_color=[0,1,0,0.1], 
+            cs_test_surface(width=width, height=height, thickness=wall_depth, number=5, face_color=[0,1,0,0.1], 
                         layer=2, visibile_layers=visibile_layers, make_3d=make_3d);
         }
 }
@@ -64,23 +64,23 @@ module ct_tower_wall_example(width, height, wall_thickness=wall_thickness,
 //               make_3d=make_3d)
 // {
 //     // 0: top frame strut
-//     cs_test_face(width=strut_size[0][0], height=strut_size[0][1], thickness=wall_depth, number=0,
+//     cs_test_surface(width=strut_size[0][0], height=strut_size[0][1], thickness=wall_depth, number=0,
 //                  layer=0, visibile_layers=visibile_layers, make_3d=make_3d);
 //     // 1: left frame strut
-//     cs_test_face(width=strut_size[1][0], height=strut_size[1][1], thickness=wall_depth, number=1,
+//     cs_test_surface(width=strut_size[1][0], height=strut_size[1][1], thickness=wall_depth, number=1,
 //                  layer=0, visibile_layers=visibile_layers, make_3d=make_3d);
 //     // 2: right frame strut
-//     cs_test_face(width=strut_size[2][0], height=strut_size[2][1], thickness=wall_depth, number=2, 
+//     cs_test_surface(width=strut_size[2][0], height=strut_size[2][1], thickness=wall_depth, number=2, 
 //                  layer=0, visibile_layers=visibile_layers, make_3d=make_3d);
 //     // 3: bottom frame strut
-//     cs_test_face(width=strut_size[3][0], height=strut_size[3][1], thickness=wall_depth, number=3, 
+//     cs_test_surface(width=strut_size[3][0], height=strut_size[3][1], thickness=wall_depth, number=3, 
 //                  layer=0, visibile_layers=visibile_layers, make_3d=make_3d);
 
 //     // 4: front
-//     cs_test_face(width=wall_width, height=wall_height, thickness=wall_depth, number=4, face_color=[1,0,0,0.1], 
+//     cs_test_surface(width=wall_width, height=wall_height, thickness=wall_depth, number=4, face_color=[1,0,0,0.1], 
 //                  layer=1, visibile_layers=visibile_layers, make_3d=make_3d);
 //     // 5: back
-//     cs_test_face(width=wall_width, height=wall_height, thickness=wall_depth, number=5, face_color=[0,1,0,0.1], 
+//     cs_test_surface(width=wall_width, height=wall_height, thickness=wall_depth, number=5, face_color=[0,1,0,0.1], 
 //                  layer=2, visibile_layers=visibile_layers, make_3d=make_3d);
 // }
 
@@ -177,4 +177,4 @@ function get_ct_tower_wall_2d_size(width, height, spacing_2d=1) =
 function get_ct_tower_wall_strut_size(width, height, thickness, overlap) =
     get_cshape_frame_strut_size(width=width, height=height,
                                 frame_width=thickness, 
-                                overlap=frame_overlap);
+                                overlap=overlap);

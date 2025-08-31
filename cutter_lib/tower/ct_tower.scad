@@ -1,5 +1,5 @@
 use <../layer/cl_layer.scad>
-use <../surfaces/cs_test_face.scad>
+use <../surfaces/cs_test_surface.scad>
 
 use <../shapes/cshape_box.scad>
 use <../shapes/cshape_frame.scad>
@@ -30,7 +30,7 @@ spacing_2d=1;
 
 ct_tower(make_3d=make_3d, spacing_2d=spacing_2d)
 {
-    ct_tower_basement(width=floor_size[0], height=floor_size[2], depth=floor_size[1], wall_thickness=wall_thickness,
+    ct_tower_floor(width=floor_size[0], height=floor_size[2], depth=floor_size[1], wall_thickness=wall_thickness,
                       visibile_layers=visibile_layers, make_3d=make_3d);
 }
 
