@@ -29,7 +29,7 @@ cl_layer_info(visibile_layers);
 
 strut_size = get_cshape_frame_strut_size(width=wall_width, height=wall_height, frame_width=wall_thickness, overlap=frame_overlap);
 
-ct_tower_wall(width=wall_width, height=wall_height, 
+ct_tower_wall_arrange(width=wall_width, height=wall_height, 
               wall_depth=1, wall_thickness=wall_thickness,
               frame_overlap=frame_overlap,
               make_3d=make_3d)
@@ -92,7 +92,7 @@ ct_tower_wall(width=wall_width, height=wall_height,
 //                t: wall_depth      aka thickness (chshape_frame)
 //
 //
-module ct_tower_wall(width, height, wall_depth = 0.1, wall_thickness=1, frame_overlap=false,
+module ct_tower_wall_arrange(width, height, wall_depth = 0.1, wall_thickness=1, frame_overlap=false,
                      make_3d=false, spacing_2d=1)
 {
     no_children = $children;
@@ -116,7 +116,7 @@ module ct_tower_wall(width, height, wall_depth = 0.1, wall_thickness=1, frame_ov
             translate([0, 0, wall_depth])
                 children(4);
         if (no_children >= back_layer)
-            translate([wall_width, 0, 0])
+            translate([width, 0, 0])
             rotate([0,180,0])
                 children(5);
     }
@@ -144,3 +144,8 @@ module ct_tower_wall(width, height, wall_depth = 0.1, wall_thickness=1, frame_ov
 
 function get_ct_tower_wall_2d_size(width, height, spacing_2d=1) =
     [3*width + 3*spacing_2d, height + spacing_2d, 0];
+
+function get_ct_tower_wall_strut_size(wall_width, wall_height, wall_thickness, overlap) =
+    get_cshape_frame_strut_size(width=wall_width, height=wall_height,
+                                             frame_width=wall_thickness, 
+                                             overlap=frame_overlap);
