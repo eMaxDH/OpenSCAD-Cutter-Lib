@@ -16,6 +16,8 @@ no_elements = 7;
 
 element_padding = 10;
 
+array_plane = "xy"; //["xy", "xz", "yz"]
+
 element_size = get_cshape_array_element_size(width, height,
                                              no_elements=no_elements, no_elements_x=no_elements_x,
                                              element_padding=element_padding);
@@ -31,6 +33,7 @@ size_strut = [element_size,
 cshape_array_arrange(width, height,
                      no_elements_x=no_elements_x,
                      element_padding=element_padding,
+                     array_plane=array_plane,
                      thickness=thickness,
                      make_3d=make_3d, spacing_2d=1)
 {
@@ -51,24 +54,51 @@ cshape_array_arrange(width, height,
 }
 
 //
-//    ----------------------   ^
-//    |  4   | 5    | 6    |   |
+//     --------------------    ^
+//    |  3   | 4    | 5    |   |
 //    |      |      |      |   |
 //    |--------------------|   |height
 //    |  0   | 1    | 2    |   |
 //    |      |      |      |   |
-//    x---------------------   v
+//    x--------------------    v
 //           
-//    <--- width --->
+//    <---    width    --->
 //  x: origin
 //
 //  ^ y 
 //  |   
 //  ---> x
+//
+//  element_padding
+//  
+//  ------------------------------|
+//  |  4       |   |   |  5       |
+//  |          |   |   |          |
+//  |          |   |   |          |
+//  |          |   |   |          |
+//  |-----------   |   -----------|
+//  |              |              | 
+//  |-----------------------------|
+//  |              |              | 
+//  |-----------   |   -----------|
+//  |  2       |   |   |  3       |
+//  |          |   |   |          |
+//  |          |   |   |          |
+//  |-----------   |   -----------|
+//  |              |              |
+//  |-----------------------------|
+//  |              |              |
+//  |-----------   |   ---------- |
+//  |  0       |   |   |  1       |
+//  |          |   |   |          |
+//  |          |   |   |          |
+//  |          |   |   |          |
+//   -----------------------------|
 module cshape_array_arrange(width, height,
                             no_elements_x=0,
                             element_padding=0,
                             thickness=1,
+                            array_plane="xy",
                             make_3d=false, spacing_2d=1)
 {   
     no_elements = $children;
@@ -94,8 +124,28 @@ module cshape_array_arrange(width, height,
                 {
                     x = i_x*(d_x + element_padding / array_size[0]);
                     y = i_y*(d_y + element_padding / array_size[1]);
-                    translate([x, y, 0])
-                    children(i);
+                    if (array_plane == "xy")
+                    {
+                        translate([x, y, 0])
+                            children(i);
+                    }
+                    else if (array_plane == "xz")
+                    {
+                        rotate([90,0,0])
+                        translate([x, y, 0])
+                            children(i);
+                    }
+                    else if (array_plane == "yz")
+                    {
+                        rotate([90,0,90])
+                        translate([x, y, 0])
+                            children(i);
+                    }
+                    else
+                    {
+                        color("red")
+                        text(str("[ERROR] cshape_array_arrange: undefined array_plane: ", array_plane));
+                    }
                 }
             }
             else
@@ -105,7 +155,7 @@ module cshape_array_arrange(width, height,
                     x = i_x*(element_size[0] + spacing_2d); 
                     y = i_y*(element_size[1] + spacing_2d);
                     translate([x, y, 0])
-                    children(i);
+                        children(i);
                 }
             }
         }
