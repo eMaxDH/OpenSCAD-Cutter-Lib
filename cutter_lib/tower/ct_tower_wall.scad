@@ -42,8 +42,45 @@ ct_tower_wall(width=wall_width, height=wall_height,
     // 5: back
     cs_test_face(width=wall_width, height=wall_height, thickness=wall_depth, number=5, face_color=[0,1,0,0.1], make_3d=make_3d);
     
-}   
+}
 
+//  A tower wall is made out of 3 parts, the front, frame, and back layer.
+//
+//  Layers
+//  ----
+//                ^ surface normal 
+//          ----------------------     <- front
+//  ^ z    |                      |    <- frame
+//  |       ----------------------     <- back
+//                v surface normal
+//
+//   INFO: The back layer is arranged so that the surface normal (z-axis) points in the -z direction of the wall coordinatesystem.
+//
+//  Dimensions
+//  ---- 
+//
+//         <--       width      --> 
+//          ----------------------  ^                <- front
+//  ^ z    |                      | |  wall_depth    <- frame
+//  |       ----------------------  v                <- back
+//  --> x
+//
+//
+//         <--        width       --> 
+//          ------------------------    ^    
+//         |     frame              |   |
+//         |    ----------------    |   |
+//         | wt |              |    |   |height 
+//         |<-->|              |    |   | 
+//         |    |              |    |   |
+//         |    ----------------    |   | 
+//  ^ y    |                      t |   | 
+//  |       ------------------------    v
+//  --> x
+//               wt: wall_thickness  aka frame_width (chsape_frame)
+//                t: wall_depth      aka thickness (chshape_frame)
+//
+//
 module ct_tower_wall(width, height, wall_depth = 0.1, wall_thickness=1, frame_overlap=false, make_3d=false, spacing_2d=1)
 {
     no_children = $children;
