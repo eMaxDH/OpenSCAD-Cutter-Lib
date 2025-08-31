@@ -10,21 +10,19 @@ thickness = 4;
 frame_width=5;
 overlap=false;
 
-size_struc = [[width,frame_width],
-              [height-2*frame_width,frame_width],
-              [height-2*frame_width,frame_width],
-              [width,frame_width]];
+
+size_strut = get_cshape_frame_strut_size(width, height, frame_width, overlap = overlap);
 
 cshape_frame_arrange(width, height, frame_width, thickness = thickness, overlap=overlap, make_3d=make_3d, spacing_2d=1)
 {
     // 0: top
-    cs_test_face(width=size_struc[0][0], height=size_struc[0][1], thickness=thickness, number=0, make_3d=make_3d);
+    cs_test_face(width=size_strut[0][0], height=size_strut[0][1], thickness=thickness, number=0, make_3d=make_3d);
     // 1: left
-    cs_test_face(width=size_struc[1][0], height=size_struc[1][1], thickness=thickness, number=1, make_3d=make_3d);
+    cs_test_face(width=size_strut[1][0], height=size_strut[1][1], thickness=thickness, number=1, make_3d=make_3d);
     // 2: right
-    cs_test_face(width=size_struc[2][0], height=size_struc[2][1], thickness=thickness, number=2, make_3d=make_3d);
+    cs_test_face(width=size_strut[2][0], height=size_strut[2][1], thickness=thickness, number=2, make_3d=make_3d);
     // 3: bottom
-    cs_test_face(width=size_struc[3][0], height=size_struc[3][1], thickness=thickness, number=3, make_3d=make_3d);
+    cs_test_face(width=size_strut[3][0], height=size_strut[3][1], thickness=thickness, number=3, make_3d=make_3d);
 }
 
 //
@@ -57,7 +55,7 @@ module arrange_top_strut(width, height, frame_width, thickness, overlap=false, m
     }
     else
     {
-        translate([spacing_2d, 3*frame_width + 3*spacing_2d, 0])
+        translate([0, 3*frame_width + 3*spacing_2d, 0])
                 children();
     }
 }
@@ -77,7 +75,7 @@ module arrange_bottom_strut(width, height, frame_width, thickness, overlap=false
     }
     else
     {
-        translate([spacing_2d,0,0])
+        translate([0,0,0])
             children();
     }
 }
@@ -97,7 +95,7 @@ module arrange_left_strut(width, height, frame_width, thickness, overlap=false, 
     }
     else
     {
-        translate([spacing_2d, 2*frame_width + 2*spacing_2d, 0])
+        translate([0, 2*frame_width + 2*spacing_2d, 0])
                 children();
     }
 }
@@ -117,7 +115,7 @@ module arrange_right_strut(width, height, frame_width, thickness, overlap=false,
     }
     else
     {
-        translate([spacing_2d, frame_width + spacing_2d, 0])
+        translate([0, frame_width + spacing_2d, 0])
                 children();
     }
 }
@@ -143,3 +141,20 @@ module cshape_frame_arrange(width, height, frame_width, thickness = thickness, o
     arrange_bottom_strut(width=width, height=height, frame_width=frame_width, thickness=thickness, overlap=overlap, make_3d=make_3d, spacing_2d=spacing_2d)
         children(3);
 }
+
+function get_cshape_frame_strut_size(width, height, frame_width, overlap = false) =
+    (overlap)
+    ?
+        [
+            [width,frame_width],
+            [height,frame_width],
+            [height,frame_width],
+            [width,frame_width]
+        ]
+    : 
+        [
+            [width,frame_width],
+            [height-2*frame_width,frame_width],
+            [height-2*frame_width,frame_width],
+            [width,frame_width]
+        ];

@@ -1,0 +1,98 @@
+use <../surfaces/cs_test_face.scad>
+
+use <../shapes/cshape_box.scad>
+use <../shapes/cshape_frame.scad>
+use <../shapes/cshape_array.scad>
+
+make_3d=true;
+
+wall_width = 200;
+wall_height = 50;
+wall_depth=1;
+
+wall_thickness = 10;
+
+frame_overlap = true;
+
+tower_wall_2d_size = get_ct_tower_wall_2d_size(wall_width, wall_height);
+
+// if (make_3d==false)
+//     color("lightgreen")
+//     translate([0,0,0.1])
+//     cube(tower_wall_2d_size + [0,0,0.1]);
+
+strut_size = get_cshape_frame_strut_size(width=wall_width, height=wall_height, frame_width=wall_thickness, overlap=frame_overlap);
+
+ct_tower_wall(width=wall_width, height=wall_height, 
+              wall_depth=1, wall_thickness=wall_thickness,
+              frame_overlap=frame_overlap,
+              make_3d=make_3d)
+{
+    // 0: top frame strut
+    cs_test_face(width=strut_size[0][0], height=strut_size[0][1], thickness=wall_depth, number=0, make_3d=make_3d);
+    // 1: left frame strut
+    cs_test_face(width=strut_size[1][0], height=strut_size[1][1], thickness=wall_depth, number=1, make_3d=make_3d);
+    // 2: right frame strut
+    cs_test_face(width=strut_size[2][0], height=strut_size[2][1], thickness=wall_depth, number=2, make_3d=make_3d);
+    // 3: bottom frame strut
+    cs_test_face(width=strut_size[3][0], height=strut_size[3][1], thickness=wall_depth, number=3, make_3d=make_3d);
+
+    // 4: front
+    cs_test_face(width=wall_width, height=wall_height, thickness=wall_depth, number=4, face_color=[1,0,0,0.1], make_3d=make_3d);
+    // 5: back
+    cs_test_face(width=wall_width, height=wall_height, thickness=wall_depth, number=5, face_color=[0,1,0,0.1], make_3d=make_3d);
+    
+}   
+
+module ct_tower_wall(width, height, wall_depth = 0.1, wall_thickness=1, frame_overlap=false, make_3d=false, spacing_2d=1)
+{
+    no_children = $children;
+    frame_layer = [0,3];
+    front_layer = 4;
+    back_layer = 5;
+
+    if (make_3d)
+    {
+        cshape_frame_arrange(width=width, height=height, frame_width = wall_thickness, thickness = wall_depth, overlap=frame_overlap, make_3d=make_3d, spacing_2d=1)
+        {
+            // 0: top
+            children(0);
+            // 1: left
+            children(1);
+            // 2: right
+            children(2);
+            // 3: bottom
+            children(3);
+        }
+        if (no_children >= front_layer)
+            translate([0, 0, wall_depth])
+                children(4);
+        if (no_children >= back_layer)
+            translate([wall_width, 0, 0])
+            rotate([0,180,0])
+                children(5);
+    }
+    else
+    {
+        cshape_frame_arrange(width=width, height=height, frame_width = wall_thickness, thickness = wall_depth, overlap=frame_overlap, make_3d=make_3d, spacing_2d=1)
+        {
+            // 0: top
+            children(0);
+            // 1: left
+            children(1);
+            // 2: right
+            children(2);
+            // 3: bottom
+            children(3);
+        }
+        if (no_children >= front_layer)
+            translate([wall_width + spacing_2d, 0, 0])
+                children(4);
+        if (no_children >= back_layer)
+            translate([2*wall_width + 2*spacing_2d, 0, 0])
+                children(5);
+    }
+}
+
+function get_ct_tower_wall_2d_size(width, height, spacing_2d=1) =
+    [3*width + 3*spacing_2d, height + spacing_2d, 0];

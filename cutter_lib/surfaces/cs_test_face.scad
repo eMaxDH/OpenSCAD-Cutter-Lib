@@ -12,7 +12,7 @@ number=10;
 
 cs_test_face(width=width, height=height, thickness=thickness, number=number, make_3d=make_3d);
 
-module cs_test_face(width, height, thickness=1, number=0, make_3d=false) {
+module cs_test_face(width, height, thickness=1, number=0, face_color="", make_3d=false) {
     if (make_3d)
     {
         color("red")
@@ -20,9 +20,14 @@ module cs_test_face(width, height, thickness=1, number=0, make_3d=false) {
         linear_extrude(thickness/10)
             cs_test_face_2d_top(width=width, height=height, number=number);
 
-        color(cs_testface_get_color(number))
-        linear_extrude(thickness)
-            cs_test_face_2d_middle(width=width, height=height, number=number);
+        if (face_color == "")
+            color(cs_testface_get_color(number))
+            linear_extrude(thickness)
+                cs_test_face_2d_middle(width=width, height=height, number=number);
+        else
+            color(face_color)
+            linear_extrude(thickness)
+                cs_test_face_2d_middle(width=width, height=height, number=number);
 
         color("green")
         translate([0, 0, -thickness/10])
@@ -30,6 +35,6 @@ module cs_test_face(width, height, thickness=1, number=0, make_3d=false) {
             cs_test_face_2d_bottom(width=width, height=height, number=number);
     }
     else
-        cs_test_face_2d(width=width, height=height, number=number);
+        cs_test_face_2d(width=width, height=height, number=number, face_color=face_color);
 }
 

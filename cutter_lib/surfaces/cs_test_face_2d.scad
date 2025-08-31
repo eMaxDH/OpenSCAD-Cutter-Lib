@@ -10,9 +10,14 @@ colors = [
 
 default_color = "gray";
 
-function cs_testface_get_color(number) = (number < 6 && number >= 0) ? colors[number] : default_color;
+function cs_testface_get_color(number) =
+    (number < 6 && number >= 0)
+    ? 
+        colors[number]
+    : 
+        default_color;
 
-module cs_test_face_2d(width, height, number=0) {
+module cs_test_face_2d(width, height, number=0, face_color="") {
 
     text_size = get_cs_test_face_2d_text_size(width, height);
 
@@ -20,8 +25,12 @@ module cs_test_face_2d(width, height, number=0) {
     translate([width/2,height/2,1])
         text(str(number,"."), size=text_size, halign="center", valign="center");
     
-    color(cs_testface_get_color(number))
-    square([width, height], center=false);
+    if (face_color == "")
+        color(cs_testface_get_color(number))
+            square([width, height], center=false);
+    else
+        color(face_color)
+            square([width, height], center=false);
     
     color("green")
     translate([width/2,height/2,-1])
