@@ -60,7 +60,7 @@ module ct_tower_wall_example(width, height, wall_thickness=wall_thickness,
                 // new_size=[width, height, wall_depth];
                 cs_test_surface(width=new_size[0], height=new_size[1], thickness=new_size[2], number=4, face_color=[1,0,0,0.1], 
                             layer=1, visibile_layers=visibile_layers, make_3d=make_3d);
-                        }
+            }
             // 5: back
             cs_test_surface(width=width, height=height, thickness=wall_depth, number=5, face_color=[0,1,0,0.1], 
                         layer=2, visibile_layers=visibile_layers, make_3d=make_3d);

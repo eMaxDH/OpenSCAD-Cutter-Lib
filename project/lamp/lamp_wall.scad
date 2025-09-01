@@ -2,6 +2,7 @@ use <../../cutter_lib/layer/cl_layer.scad>
 use <../../cutter_lib/surfaces/cs_test_surface.scad>
 
 use <../../cutter_lib/shapes/cshape_array.scad>
+use <../../cutter_lib/shapes/cshape_padding.scad>
 
 use <../../cutter_lib/strut/cs_strut_triangle_45.scad>
 use <../../cutter_lib/tower/ct_tower_wall.scad>
@@ -85,8 +86,13 @@ module lamp_wall_example(width, height, wall_thickness=wall_thickness,
             lamp_wall_front(width=width, height=height,
                         layer=1, visibile_layers=visibile_layers, make_3d=make_3d);
             // 5: back
-            lamp_wall_back(width=width, height=height,
-                        layer=2, visibile_layers=visibile_layers, make_3d=make_3d);
+            {
+                padding=[wall_depth];
+                new_size = get_cshape_padding_new_object_size(size=[width, height, 0], padding=padding);
+                cshape_padding(padding=padding, new_size=new_size, show_placeholder=true)
+                lamp_wall_back(width=new_size[0], height=new_size[1],
+                            layer=2, visibile_layers=visibile_layers, make_3d=make_3d);
+            }
         }
 }
 
