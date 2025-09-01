@@ -1,28 +1,40 @@
-//
-// Create a strut with connectors
-//
-// Example
-// -------
-//     strut(100, 10, type=["f", "m"]);  
-//         __________________________
-//  ^     /                          \_
-// 10   _|                             |
-//  v  /                                \
-//    ------------------------------------
-//    <---             100             -->
 
-//include <strut_2d.scad>
-//strut_2d(100, 10, type=["f", "f"]);
+size = 100;//[10:100]
+type = "f"; //["f", "m"]
+connector_factor = 0.4; //[0.1:0.1:1]
 
+cc_connector_triangle_45_2d(size, type, connector_factor);
 
-function calc_connector_shift(size, connector_factor=0.4) = 
+// connector 1
+// type f
+//        ____...
+//       /
+//      /    
+//    _|  <- in the middle of the diagnoal
+//   /       the factor specifies the connector size in comparrision to the diagonal
+//  /  45°
+//  ---------...
+
+// connector 1
+// type m
+//        ____...
+//       /|       ^
+//     _/         |   
+//    |   |       | size    
+//   /            | 
+//  /     |       |  
+//  ---------...  v
+// |<-  ->| size
+
+function cc_connector_triangle_45_2d_shift(size, connector_factor=0.4) = 
     let (diagonal = size * sqrt(2))
     let (diagonal_connector = connector_factor * diagonal)
     let (shift_diagonal = diagonal/2 - diagonal_connector/2)
     shift_diagonal / sqrt(2);
 
-module strut_connector(size, type="f", connector_factor=0.3){
-    connector_shift = calc_connector_shift(size, connector_factor);
+
+module cc_connector_triangle_45_2d(size, type="f", connector_factor=0.3){
+    connector_shift = cc_connector_triangle_45_2d_shift(size, connector_factor);
   
   
     if (type == "f")
@@ -53,14 +65,4 @@ module strut_connector(size, type="f", connector_factor=0.3){
     {
         echo("Unspecified type!");
     }
-}
-
-
-module strut_2d(width, height, type=["f", "f"]){
-    strut_connector(height, type=type[0]);
-    translate([height, 0, 0])
-        square([width-2*height, height]);
-    translate([width, 0, 0])
-        mirror([1,0,0])
-            strut_connector(height, type=type[1]);
 }
