@@ -2,11 +2,11 @@ use <../layer/cl_layer.scad>
 
 use <../surfaces/cs_test_surface.scad>
 
-make_3d=false;
+make_3d=true;
 
-width = 10; //[10:50]
-height = 15; //[10:50]
-thickness = 2; //[1:5]
+width = 20; //[10:40]
+height = 30; //[10:40]
+thickness = 5; //[3:10]
 
 number=1;
 
@@ -15,46 +15,53 @@ visibile_layers=[0];
 
 cl_layer_info(visibile_layers);
 
+padding_x = 2;//[0:5]
+padding_y = 2;//[0:5]
+padding_z = 2;//[0:5]
+
 // num example
-margin_num = 5;
-chsape_margin_tutorial(margin_num, str("margin: ", margin_num), layer, visibile_layers, make_3d);
+padding_num = padding_x;
+cshape_padding_tutorial(padding_num, str("padding: ", padding_num), layer, visibile_layers, make_3d);
 
 // 1d example
-margin_1d = [5];
+padding_1d = [padding_x];
 translate([50, 0, 0])
-chsape_margin_tutorial(margin_1d, str("margin: ", margin_1d), layer, visibile_layers, make_3d);
+cshape_padding_tutorial(padding_1d, str("padding: ", padding_1d), layer, visibile_layers, make_3d);
 
 // 2d example
-margin_2d = [5, 3];
-translate([100, 0, 0])
-chsape_margin_tutorial(margin_2d, str("margin: ", margin_2d), layer, visibile_layers, make_3d);
+padding_2d = [padding_x, padding_y];
+translate([50, 50, 0])
+cshape_padding_tutorial(padding_2d, str("padding: ", padding_2d), layer, visibile_layers, make_3d);
 
 // 3d example
-margin_3d = [5, 3, 2];
-translate([150, 0, 0])
-chsape_margin_tutorial(margin_3d, str("margin: ", margin_3d), layer, visibile_layers, make_3d);
+padding_3d = [padding_x, padding_y, padding_z];
+translate([0, 50, 0])
+cshape_padding_tutorial(padding_3d, str("padding: ", padding_3d), layer, visibile_layers, make_3d);
 
-module chsape_margin_tutorial(margin=0, text="chsape_margin_tutorial", 
+module cshape_padding_tutorial(padding=0, text="cshape_padding_tutorial", 
                               layer=0, visibile_layers=[], make_3d=false)
 {
-    width = 10;
-    height = 15;
-    thickness = 2;
+    // width = 10;
+    // height = 15;
+    // thickness = 2;
 
     linear_extrude(1)
         text(text, size=4);
 
     translate([0,10,0])
     {
-        cshape_margin(margin, size=[width, height, thickness], show_placeholder=true)
-        cs_test_surface(width=width, height=height, thickness=thickness, number=number,
+        new_size = get_cshape_padding_new_object_size(size=[width, height, thickness],
+                                                 padding=padding);
+        echo(str("[cshape_padding_tutorial] ", text, " new_size = ", new_size));
+        cshape_padding(padding, size=new_size, show_placeholder=true)
+        cs_test_surface(width=new_size[0], height=new_size[1], thickness=new_size[2], number=number,
                     layer=layer, visibile_layers=visibile_layers,
                     make_3d=make_3d);
     }
 }
 
 
-module cshape_margin(margin, size=undef, show_placeholder=false) {
+module cshape_padding(padding, size=undef, show_placeholder=false) {
     // --- placeholder  ---
     // if (is_undef(size) && show_placeholder==true)
     // {
@@ -63,148 +70,161 @@ module cshape_margin(margin, size=undef, show_placeholder=false) {
     if (show_placeholder && !is_undef(size))
     {
         color([0.8,0.8,1,0.8])
-            if (is_num(margin))
+            if (is_num(padding))
             {
                 difference()
                     {
-                        cube([size[0] + 2*margin, size[1], 0.001]);
-                        translate([0, 0, -margin/2])
+                        cube([size[0] + 2*padding, size[1], 0.001]);
+                        translate([0, 0, -padding/2])
                         {
-                            translate([margin/2, (size[1])/2, 0])
+                            translate([padding/2, (size[1])/2, 0])
                             rotate([0, 0, 90])
-                            linear_extrude(margin, v=[0,0,1])
-                                text("MARGIN", valign="center", halign="center", size=margin/3);
+                            linear_extrude(padding, v=[0,0,1])
+                                text("padding", valign="center", halign="center", size=padding/3);
 
-                            translate([size[0] + 3/2*margin, (size[1])/2, 0])
+                            translate([size[0] + 3/2*padding, (size[1])/2, 0])
                             rotate([0, 0, -90])
-                            linear_extrude(margin, v=[0,0,1])
-                                text("MARGIN", valign="center", halign="center", size=margin/3);
+                            linear_extrude(padding, v=[0,0,1])
+                                text("padding", valign="center", halign="center", size=padding/3);
                         }
                     }
             }
-            else if (is_list(margin))
-                if (len(margin) == 1)
+            else if (is_list(padding))
+                if (len(padding) == 1)
                 {
                     difference()
                     {
-                        cube([size[0] + 2*margin[0], size[1], 0.001]);
-                        translate([0, 0, -margin[0]/2])
+                        cube([size[0] + 2*padding[0], size[1], 0.001]);
+                        translate([0, 0, -padding[0]/2])
                         {
-                            translate([margin[0]/2, (size[1])/2, 0])
+                            translate([padding[0]/2, (size[1])/2, 0])
                             rotate([0, 0, 90])
-                            linear_extrude(margin[0], v=[0,0,1])
-                                text("MARGIN", valign="center", halign="center", size=margin[0]/3);
+                            linear_extrude(padding[0], v=[0,0,1])
+                                text("padding", valign="center", halign="center", size=padding[0]/3);
 
-                            translate([size[0] + 3/2*margin[0], (size[1])/2, 0])
+                            translate([size[0] + 3/2*padding[0], (size[1])/2, 0])
                             rotate([0, 0, -90])
-                            linear_extrude(margin[0], v=[0,0,1])
-                                text("MARGIN", valign="center", halign="center", size=margin[0]/3);
+                            linear_extrude(padding[0], v=[0,0,1])
+                                text("padding", valign="center", halign="center", size=padding[0]/3);
                         }
                     }
                 }
-                else if (len(margin) == 2)
+                else if (len(padding) == 2)
                 {
                     difference()
                     {
-                        cube([size[0] + 2*margin[0], size[1] + 2*margin[1], 0.001]);
-                        translate([0, 0, -margin[0]/2])
+                        cube([size[0] + 2*padding[0], size[1] + 2*padding[1], 0.001]);
+                        translate([0, 0, -padding[0]/2])
                         {
                             // left
-                            translate([margin[0]/2, size[1]/2 + margin[1], 0])
+                            translate([padding[0]/2, size[1]/2 + padding[1], 0])
                             rotate([0, 0, 90])
-                            linear_extrude(margin[0], v=[0,0,1])
-                                text("MARGIN", valign="center", halign="center", size=margin[0]/3);
+                            linear_extrude(padding[0], v=[0,0,1])
+                                text("padding", valign="center", halign="center", size=padding[0]/3);
 
                             // right
-                            translate([size[0] + 3/2*margin[0], size[1]/2 + margin[1], 0])
+                            translate([size[0] + 3/2*padding[0], size[1]/2 + padding[1], 0])
                             rotate([0, 0, -90])
-                            linear_extrude(margin[0], v=[0,0,1])
-                                text("MARGIN", valign="center", halign="center", size=margin[0]/3);
+                            linear_extrude(padding[0], v=[0,0,1])
+                                text("padding", valign="center", halign="center", size=padding[0]/3);
 
                             // top
-                            translate([size[0]/2 + margin[0], size[1] + 3/2*margin[1], 0])
-                            linear_extrude(margin[0], v=[0,0,1])
-                                text("MARGIN", valign="center", halign="center", size=margin[0]/3);
+                            translate([size[0]/2 + padding[0], size[1] + 3/2*padding[1], 0])
+                            linear_extrude(padding[0], v=[0,0,1])
+                                text("padding", valign="center", halign="center", size=padding[0]/3);
 
                             // bottom
-                            translate([size[0]/2 + margin[0], margin[1]/2, 0])
-                            linear_extrude(margin[0], v=[0,0,1])
-                                text("MARGIN", valign="center", halign="center", size=margin[0]/3);
+                            translate([size[0]/2 + padding[0], padding[1]/2, 0])
+                            linear_extrude(padding[0], v=[0,0,1])
+                                text("padding", valign="center", halign="center", size=padding[0]/3);
                         }
                     }
                 }
-                else if (len(margin) == 3)
+                else if (len(padding) == 3)
                 {
                     difference()
                     {
                         {
                             difference() {
-                                cube([size[0] + 2*margin[0], size[1] + 2*margin[1], size[2] + 2*margin[2]]);
-                                translate(margin_3d)
-                                    cube([size[0], size[1], size[2] + 2*margin[2]]);
+                                cube([size[0] + 2*padding[0], size[1] + 2*padding[1], size[2] + 2*padding[2]]);
+                                translate([padding[0], padding[1], -padding[2]/2])
+                                    cube([size[0], size[1], size[2] + 4*padding[2]]);
                             }
                         }
-                        translate([0, 0, -margin[2]/2])
+                        translate([0, 0, -padding[2]/2])
                         {
                             // left
-                            translate([margin[0]/2, size[1]/2 + margin[1], -margin[2]])
+                            translate([padding[0]/2, size[1]/2 + padding[1], -padding[2]])
                             rotate([0, 0, 90])
-                            linear_extrude(4*margin[2] + size[2], v=[0,0,1])
-                                text("MARGIN", valign="center", halign="center", size=margin[0]/3);
+                            linear_extrude(4*padding[2] + size[2], v=[0,0,1])
+                                text("padding", valign="center", halign="center", size=padding[0]/3);
 
                             // right
-                            translate([size[0] + 3/2*margin[0], size[1]/2 + margin[1], -margin[2]])
+                            translate([size[0] + 3/2*padding[0], size[1]/2 + padding[1], -padding[2]])
                             rotate([0, 0, -90])
-                            linear_extrude(4*margin[2] + size[2], v=[0,0,1])
-                                text("MARGIN", valign="center", halign="center", size=margin[0]/3);
+                            linear_extrude(4*padding[2] + size[2], v=[0,0,1])
+                                text("padding", valign="center", halign="center", size=padding[0]/3);
 
                             // top
-                            translate([size[0]/2 + margin[0], size[1] + 3/2*margin[1], -margin[2]])
-                            linear_extrude(4*margin[2] + size[2], v=[0,0,1])
-                                text("MARGIN", valign="center", halign="center", size=margin[0]/3);
+                            translate([size[0]/2 + padding[0], size[1] + 3/2*padding[1], -padding[2]])
+                            linear_extrude(4*padding[2] + size[2], v=[0,0,1])
+                                text("padding", valign="center", halign="center", size=padding[0]/3);
 
                             // bottom
-                            translate([size[0]/2 + margin[0], margin[1]/2, -margin[2]])
-                            linear_extrude(4*margin[2] + size[2], v=[0,0,1])
-                                text("MARGIN", valign="center", halign="center", size=margin[0]/3);
+                            translate([size[0]/2 + padding[0], padding[1]/2, -padding[2]])
+                            linear_extrude(4*padding[2] + size[2], v=[0,0,1])
+                                text("padding", valign="center", halign="center", size=padding[0]/3);
                         }
                     }
                 }
                 else
-                    echo(str("[ERROR] margin: ", margin));
+                    echo(str("[ERROR] padding: ", padding));
             else
-                echo(str("[ERROR] margin: ", margin));
+                echo(str("[ERROR] padding: ", padding));
     }
 
     // ~~~ placeholder ~~~
 
-    if (is_num(margin))
+    if (is_num(padding))
     {
-        translate([margin, 0, 0])
+        translate([padding, 0, 0])
             children();
     }
-    else if (is_list(margin))
+    else if (is_list(padding))
     {
-        if (len(margin) == 1)
+        if (len(padding) == 1)
         {
-            translate([margin[0], 0, 0])
+            translate([padding[0], 0, 0])
                 children();
         }
-        else if (len(margin) == 2)
+        else if (len(padding) == 2)
         {
-            translate([margin[0], margin[1], 0])
+            translate([padding[0], padding[1], 0])
                 children();
         }
-        else if (len(margin) == 3)
+        else if (len(padding) == 3)
         {
-            translate([margin[0], margin[1], margin[2]])
+            translate([padding[0], padding[1], padding[2]])
                     children();
         }
         else
             translate([0, -10, 0])
             color("red")
             linear_extrude(1)
-                %text(str("[ERROR] cshape_margin: margin can only be a number or an array with a length of 1, 2, or 3. margin = ", margin),
+                %text(str("[ERROR] cshape_padding: padding can only be a number or an array with a length of 1, 2, or 3. padding = ", padding),
                     size=8);
     }
 }
+
+function get_cshape_padding_new_object_size(size, padding) =
+    is_num(padding) == true 
+    ?   [size[0]-2*padding, size[1], size[2]]
+    :   is_list(padding) == true
+        ?   len(padding) == 1
+            ?   [size[0]-2*padding[0], size[1], size[2]]
+            :   len(padding) == 2
+                ?   [size[0]-2*padding[0], size[1]-2*padding[1], size[2]]
+                :   len(padding) == 3
+                    ?   [size[0]-2*padding[0], size[1]-2*padding[1], size[2]-2*padding[2]]
+                        : undef
+        : undef;
