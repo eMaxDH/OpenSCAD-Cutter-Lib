@@ -4,6 +4,7 @@ use <../surfaces/cs_test_surface.scad>
 use <../shapes/cshape_box.scad>
 use <../shapes/cshape_frame.scad>
 use <../shapes/cshape_array.scad>
+use <../shapes/cshape_padding.scad>
 
 make_3d=true;
 
@@ -14,6 +15,8 @@ wall_depth=1;
 wall_thickness = 10;
 
 frame_overlap = true;
+
+front_padding = [0, 0];
 
 layer=0;
 visibile_layers=[0];
@@ -50,8 +53,14 @@ module ct_tower_wall_example(width, height, wall_thickness=wall_thickness,
                         layer=0, visibile_layers=visibile_layers, make_3d=make_3d);
 
             // 4: front
-            cs_test_surface(width=width, height=height, thickness=wall_depth, number=4, face_color=[1,0,0,0.1], 
-                        layer=1, visibile_layers=visibile_layers, make_3d=make_3d);
+            {
+                
+                new_size = get_cshape_padding_new_object_size(size=[width, height, wall_depth], padding=front_padding);
+                cshape_padding(padding=front_padding, new_size=new_size, show_placeholder=true)
+                // new_size=[width, height, wall_depth];
+                cs_test_surface(width=new_size[0], height=new_size[1], thickness=new_size[2], number=4, face_color=[1,0,0,0.1], 
+                            layer=1, visibile_layers=visibile_layers, make_3d=make_3d);
+                        }
             // 5: back
             cs_test_surface(width=width, height=height, thickness=wall_depth, number=5, face_color=[0,1,0,0.1], 
                         layer=2, visibile_layers=visibile_layers, make_3d=make_3d);
