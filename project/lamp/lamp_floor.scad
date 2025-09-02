@@ -170,6 +170,16 @@ module lamp_floor_basement(width, height, depth, wall_thickness=1,
                     use_construction_color=use_construction_color,
                     make_3d=make_3d);
     }
+    frame_thickness=6;
+    frame_width=2;
+    translate([-frame_width,
+               -frame_width, 
+               height - frame_thickness/2])
+        lamp_silver_ring(width=width + 2*frame_width,
+                         height=depth + 2*frame_width,
+                         thickness=frame_thickness,
+                         frame_width=frame_width,
+                         make_3d=make_3d);
 }
 
 module lamp_floor_middle_part(width, height, depth, wall_thickness=1,
@@ -226,6 +236,16 @@ module lamp_floor_middle_part(width, height, depth, wall_thickness=1,
                     use_construction_color=use_construction_color,
                     make_3d=make_3d);
     }
+    frame_thickness=6;
+    frame_width=2;
+    translate([-frame_width,
+               -frame_width, 
+               height - frame_thickness/2])
+        lamp_silver_ring(width=width + 2*frame_width,
+                         height=depth + 2*frame_width,
+                         thickness=frame_thickness,
+                         frame_width=frame_width,
+                         make_3d=make_3d);
 }
 
 module lamp_floor_top(width, height, depth, wall_thickness=1,
@@ -281,5 +301,21 @@ module lamp_floor_top(width, height, depth, wall_thickness=1,
                     layer=[0,1,2], visibile_layers=visibile_layers, 
                     use_construction_color=use_construction_color,
                     make_3d=make_3d);
+    }
+}
+
+module lamp_silver_ring(width, height, thickness, frame_width, make_3d=false)
+{
+    if (make_3d)
+    {
+        color("silver")
+        difference()
+        {
+            cube([width, height, thickness]);
+            translate([frame_width, frame_width, -frame_width/2])
+                cube([width - 2*frame_width,
+                    height - 2*frame_width,
+                    thickness + 2*frame_width]);
+        }
     }
 }
