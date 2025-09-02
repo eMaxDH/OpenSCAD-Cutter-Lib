@@ -13,7 +13,7 @@ floor_size = [290,221,243];
 
 wall_thickness = 10; 
 
-visibile_layers = [0];
+visibile_layers = [0,1,2];
 cl_layer_info(visibile_layers);
 
 spacing_2d=1;
