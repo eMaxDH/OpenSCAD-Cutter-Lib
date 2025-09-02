@@ -12,7 +12,7 @@ element_hight = 15;//[10:20]
 
 no_elements_x = 2;//[1:10]
 
-repeat = 7;//[0:100]
+repeat = 7;//[0:50]
 
 element_padding = 2;//[0:5]
 
@@ -40,7 +40,7 @@ else
                                 element_width=element_width, element_hight=element_hight);
     rotate([0,-180,0])
     cshape_array_repeat_example(width=width, height=height,
-                                repeat=repeat, no_elements_x=no_elements_x,
+                                repeat=repeat, no_elements_x=repeat,
                                 element_padding=element_padding,
                                 element_width=element_width, element_hight=element_hight);
 }
@@ -88,10 +88,6 @@ module cshape_array_repeat_example(width, height, repeat,
                                                 no_elements_sum=repeat, no_elements_x=no_elements_x,
                                                 element_padding=element_padding,
                                                 element_width=element_width, element_hight=element_hight);
-
-    // element_size = [element_width-element_padding, element_hight-element_padding];
-
-    echo(str("repeat: element_size: ", element_size));
 
     cshape_array_repeat(width, height,
                         repeat=repeat,
@@ -322,7 +318,7 @@ module cshape_array_repeat(width, height, repeat,
                 {
                     x = i_x*(d_x + element_padding / no_elements[0]);
                     y = i_y*(d_y + element_padding / no_elements[1]);
-                    echo("x,y: ", x, y);
+                    // echo("x,y: ", x, y);
                     if (array_plane == "xy")
                     {
                         translate([x, y, 0])
@@ -378,8 +374,10 @@ function get_cshape_array_element_size(width, height, no_elements_sum, no_elemen
     (element_width > 0)
     ?   (element_hight > 0)
         ?   [dx_elment_width, dx_elment_height]
-        :   [dx_no_element_width, dx_elment_height]
-    :   [dx_no_element_width, dx_no_element_height];
+        :   [dx_elment_width, dx_no_element_height]
+    :   (element_hight > 0)
+        ?   [dx_no_elment_width, dx_element_height]
+        :   [dx_no_element_width, dx_no_element_height];
 
 
 // get_cshape_array_dx

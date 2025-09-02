@@ -50,12 +50,12 @@ module apply_cl_layer_visibility(layer=0, visibile_layers=[])
         // echo(str("id = ", id));
         if (len(id) > 0)
         {
-            echo("render");
+            // echo("render");
             children();
         }
         else
         {
-            echo("NOT render");
+            // echo("NOT render");
             %children();
         }
     }
