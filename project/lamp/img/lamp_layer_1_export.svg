@@ -1,0 +1,722 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="685mm"
+   height="3551mm"
+   viewBox="-4 -3551 685 3551"
+   version="1.1"
+   id="svg6"
+   sodipodi:docname="lamp_layer_1_export.svg"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <defs
+     id="defs10" />
+  <sodipodi:namedview
+     id="namedview8"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="0.078458533"
+     inkscape:cx="1293.677"
+     inkscape:cy="6723.2968"
+     inkscape:window-width="3374"
+     inkscape:window-height="1371"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg6" />
+  <title
+     id="title2">OpenSCAD Model</title>
+  <path
+     d="M 437,-229 H 422 V -1 h 15 z"
+     id="path2232"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="M 421,-229 H 406 V -1 h 15 z"
+     id="path2230"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="M 405,-229 H 390 V -1 h 15 z"
+     id="path2228"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="M 389,-229 H 374 V -1 h 15 z"
+     id="path2226"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="M 373,-229 H 358 V -1 h 15 z"
+     id="path2224"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="M 357,-229 H 342 V -1 h 15 z"
+     id="path2222"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="M 341,-229 H 326 V -1 h 15 z"
+     id="path2220"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="M 325,-229 H 310 V -1 h 15 z"
+     id="path2218"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="M 309,-229 H 294 V -1 h 15 z"
+     id="path2216"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="M 293,-229 H 278 V -1 h 15 z"
+     id="path2214"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="M 277,-229 H 262 V -1 h 15 z"
+     id="path2212"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="M 261,-229 H 246 V -1 h 15 z"
+     id="path2210"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 680,-458 h -15 v 228 h 15 z"
+     id="path2208"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 664,-458 h -15 v 228 h 15 z"
+     id="path2206"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 648,-458 h -15 v 228 h 15 z"
+     id="path2204"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 632,-458 h -15 v 228 h 15 z"
+     id="path2202"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 616,-458 h -15 v 228 h 15 z"
+     id="path2200"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 600,-458 h -15 v 228 h 15 z"
+     id="path2198"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 584,-458 h -15 v 228 h 15 z"
+     id="path2196"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 568,-458 h -15 v 228 h 15 z"
+     id="path2194"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 552,-458 h -15 v 228 h 15 z"
+     id="path2192"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 140,-458 h -15 v 228 h 15 z"
+     id="path2190"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 124,-458 h -15 v 228 h 15 z"
+     id="path2188"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="M 108,-458 H 93 v 228 h 15 z"
+     id="path2186"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="M 92,-458 H 77 v 228 h 15 z"
+     id="path2184"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="M 76,-458 H 61 v 228 h 15 z"
+     id="path2182"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="M 60,-458 H 45 v 228 h 15 z"
+     id="path2180"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="M 44,-458 H 29 v 228 h 15 z"
+     id="path2178"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="M 28,-458 H 13 v 228 h 15 z"
+     id="path2176"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="M 12,-458 H -3 v 228 h 15 z"
+     id="path2174"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 437,-703 h -15 v 228 h 15 z"
+     id="path2172"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 421,-703 h -15 v 228 h 15 z"
+     id="path2170"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 405,-703 h -15 v 228 h 15 z"
+     id="path2168"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 389,-703 h -15 v 228 h 15 z"
+     id="path2166"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 373,-703 h -15 v 228 h 15 z"
+     id="path2164"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 357,-703 h -15 v 228 h 15 z"
+     id="path2162"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 341,-703 h -15 v 228 h 15 z"
+     id="path2160"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 325,-703 h -15 v 228 h 15 z"
+     id="path2158"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 309,-703 h -15 v 228 h 15 z"
+     id="path2156"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 293,-703 h -15 v 228 h 15 z"
+     id="path2154"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 277,-703 h -15 v 228 h 15 z"
+     id="path2152"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 261,-703 h -15 v 228 h 15 z"
+     id="path2150"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 437,-1178 h -15 v 228 h 15 z"
+     id="path2148"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 421,-1178 h -15 v 228 h 15 z"
+     id="path2146"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 405,-1178 h -15 v 228 h 15 z"
+     id="path2144"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 389,-1178 h -15 v 228 h 15 z"
+     id="path2142"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 373,-1178 h -15 v 228 h 15 z"
+     id="path2140"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 357,-1178 h -15 v 228 h 15 z"
+     id="path2138"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 341,-1178 h -15 v 228 h 15 z"
+     id="path2136"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 325,-1178 h -15 v 228 h 15 z"
+     id="path2134"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 309,-1178 h -15 v 228 h 15 z"
+     id="path2132"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 293,-1178 h -15 v 228 h 15 z"
+     id="path2130"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 277,-1178 h -15 v 228 h 15 z"
+     id="path2128"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 261,-1178 h -15 v 228 h 15 z"
+     id="path2126"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 680,-1407 h -15 v 228 h 15 z"
+     id="path2124"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 664,-1407 h -15 v 228 h 15 z"
+     id="path2122"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 648,-1407 h -15 v 228 h 15 z"
+     id="path2120"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 632,-1407 h -15 v 228 h 15 z"
+     id="path2118"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 616,-1407 h -15 v 228 h 15 z"
+     id="path2116"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 600,-1407 h -15 v 228 h 15 z"
+     id="path2114"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 584,-1407 h -15 v 228 h 15 z"
+     id="path2112"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 568,-1407 h -15 v 228 h 15 z"
+     id="path2110"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 552,-1407 h -15 v 228 h 15 z"
+     id="path2108"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 140,-1407 h -15 v 228 h 15 z"
+     id="path2106"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 124,-1407 h -15 v 228 h 15 z"
+     id="path2104"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="M 108,-1407 H 93 v 228 h 15 z"
+     id="path2102"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="M 92,-1407 H 77 v 228 h 15 z"
+     id="path2100"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="M 76,-1407 H 61 v 228 h 15 z"
+     id="path2098"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="M 60,-1407 H 45 v 228 h 15 z"
+     id="path2096"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="M 44,-1407 H 29 v 228 h 15 z"
+     id="path2094"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="M 28,-1407 H 13 v 228 h 15 z"
+     id="path2092"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="M 12,-1407 H -3 v 228 h 15 z"
+     id="path2090"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 437,-1652 h -15 v 228 h 15 z"
+     id="path2088"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 421,-1652 h -15 v 228 h 15 z"
+     id="path2086"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 405,-1652 h -15 v 228 h 15 z"
+     id="path2084"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 389,-1652 h -15 v 228 h 15 z"
+     id="path2082"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 373,-1652 h -15 v 228 h 15 z"
+     id="path2080"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 357,-1652 h -15 v 228 h 15 z"
+     id="path2078"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 341,-1652 h -15 v 228 h 15 z"
+     id="path2076"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 325,-1652 h -15 v 228 h 15 z"
+     id="path2074"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 309,-1652 h -15 v 228 h 15 z"
+     id="path2072"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 293,-1652 h -15 v 228 h 15 z"
+     id="path2070"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 277,-1652 h -15 v 228 h 15 z"
+     id="path2068"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 261,-1652 h -15 v 228 h 15 z"
+     id="path2066"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 437,-2127 h -15 v 228 h 15 z"
+     id="path2064"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 421,-2127 h -15 v 228 h 15 z"
+     id="path2062"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 405,-2127 h -15 v 228 h 15 z"
+     id="path2060"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 389,-2127 h -15 v 228 h 15 z"
+     id="path2058"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 373,-2127 h -15 v 228 h 15 z"
+     id="path2056"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 357,-2127 h -15 v 228 h 15 z"
+     id="path2054"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 341,-2127 h -15 v 228 h 15 z"
+     id="path2052"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 325,-2127 h -15 v 228 h 15 z"
+     id="path2050"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 309,-2127 h -15 v 228 h 15 z"
+     id="path2048"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 293,-2127 h -15 v 228 h 15 z"
+     id="path2046"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 277,-2127 h -15 v 228 h 15 z"
+     id="path2044"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 261,-2127 h -15 v 228 h 15 z"
+     id="path2042"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 680,-2356 h -15 v 228 h 15 z"
+     id="path2040"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 664,-2356 h -15 v 228 h 15 z"
+     id="path2038"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 648,-2356 h -15 v 228 h 15 z"
+     id="path2036"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 632,-2356 h -15 v 228 h 15 z"
+     id="path2034"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 616,-2356 h -15 v 228 h 15 z"
+     id="path2032"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 600,-2356 h -15 v 228 h 15 z"
+     id="path2030"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 584,-2356 h -15 v 228 h 15 z"
+     id="path2028"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 568,-2356 h -15 v 228 h 15 z"
+     id="path2026"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 552,-2356 h -15 v 228 h 15 z"
+     id="path2024"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 140,-2356 h -15 v 228 h 15 z"
+     id="path2022"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 124,-2356 h -15 v 228 h 15 z"
+     id="path2020"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="M 108,-2356 H 93 v 228 h 15 z"
+     id="path2018"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="M 92,-2356 H 77 v 228 h 15 z"
+     id="path2016"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="M 76,-2356 H 61 v 228 h 15 z"
+     id="path2014"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="M 60,-2356 H 45 v 228 h 15 z"
+     id="path2012"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="M 44,-2356 H 29 v 228 h 15 z"
+     id="path2010"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="M 28,-2356 H 13 v 228 h 15 z"
+     id="path2008"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="M 12,-2356 H -3 v 228 h 15 z"
+     id="path2006"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 437,-2601 h -15 v 228 h 15 z"
+     id="path2004"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 421,-2601 h -15 v 228 h 15 z"
+     id="path2002"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 405,-2601 h -15 v 228 h 15 z"
+     id="path2000"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 389,-2601 h -15 v 228 h 15 z"
+     id="path1998"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 373,-2601 h -15 v 228 h 15 z"
+     id="path1996"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 357,-2601 h -15 v 228 h 15 z"
+     id="path1994"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 341,-2601 h -15 v 228 h 15 z"
+     id="path1992"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 325,-2601 h -15 v 228 h 15 z"
+     id="path1990"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 309,-2601 h -15 v 228 h 15 z"
+     id="path1988"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 293,-2601 h -15 v 228 h 15 z"
+     id="path1986"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 277,-2601 h -15 v 228 h 15 z"
+     id="path1984"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 261,-2601 h -15 v 228 h 15 z"
+     id="path1982"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 437,-3076 h -15 v 228 h 15 z"
+     id="path1980"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 421,-3076 h -15 v 228 h 15 z"
+     id="path1978"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 405,-3076 h -15 v 228 h 15 z"
+     id="path1976"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 389,-3076 h -15 v 228 h 15 z"
+     id="path1974"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 373,-3076 h -15 v 228 h 15 z"
+     id="path1972"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 357,-3076 h -15 v 228 h 15 z"
+     id="path1970"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 341,-3076 h -15 v 228 h 15 z"
+     id="path1968"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 325,-3076 h -15 v 228 h 15 z"
+     id="path1966"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 309,-3076 h -15 v 228 h 15 z"
+     id="path1964"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 293,-3076 h -15 v 228 h 15 z"
+     id="path1962"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 277,-3076 h -15 v 228 h 15 z"
+     id="path1960"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 261,-3076 h -15 v 228 h 15 z"
+     id="path1958"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 680,-3305 h -15 v 228 h 15 z"
+     id="path1956"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 664,-3305 h -15 v 228 h 15 z"
+     id="path1954"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 648,-3305 h -15 v 228 h 15 z"
+     id="path1952"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 632,-3305 h -15 v 228 h 15 z"
+     id="path1950"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 616,-3305 h -15 v 228 h 15 z"
+     id="path1948"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 600,-3305 h -15 v 228 h 15 z"
+     id="path1946"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 584,-3305 h -15 v 228 h 15 z"
+     id="path1944"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 568,-3305 h -15 v 228 h 15 z"
+     id="path1942"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 552,-3305 h -15 v 228 h 15 z"
+     id="path1940"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 140,-3305 h -15 v 228 h 15 z"
+     id="path1938"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 124,-3305 h -15 v 228 h 15 z"
+     id="path1936"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="M 108,-3305 H 93 v 228 h 15 z"
+     id="path1934"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="M 92,-3305 H 77 v 228 h 15 z"
+     id="path1932"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="M 76,-3305 H 61 v 228 h 15 z"
+     id="path1930"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="M 60,-3305 H 45 v 228 h 15 z"
+     id="path1928"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="M 44,-3305 H 29 v 228 h 15 z"
+     id="path1926"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="M 28,-3305 H 13 v 228 h 15 z"
+     id="path1924"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="M 12,-3305 H -3 v 228 h 15 z"
+     id="path1922"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 437,-3550 h -15 v 228 h 15 z"
+     id="path1920"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 421,-3550 h -15 v 228 h 15 z"
+     id="path1918"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 405,-3550 h -15 v 228 h 15 z"
+     id="path1916"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 389,-3550 h -15 v 228 h 15 z"
+     id="path1914"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 373,-3550 h -15 v 228 h 15 z"
+     id="path1912"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 357,-3550 h -15 v 228 h 15 z"
+     id="path1910"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 341,-3550 h -15 v 228 h 15 z"
+     id="path1908"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 325,-3550 h -15 v 228 h 15 z"
+     id="path1906"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 309,-3550 h -15 v 228 h 15 z"
+     id="path1904"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 293,-3550 h -15 v 228 h 15 z"
+     id="path1902"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 277,-3550 h -15 v 228 h 15 z"
+     id="path1900"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <path
+     d="m 261,-3550 h -15 v 228 h 15 z"
+     id="path4"
+     style="fill:none;stroke:#ff0000;stroke-opacity:1" />
+  <metadata
+     id="metadata2250">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:title>OpenSCAD Model</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+</svg>

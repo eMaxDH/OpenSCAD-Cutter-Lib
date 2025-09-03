@@ -12,7 +12,7 @@ wall_width = 200;
 wall_height = 50;
 wall_depth=1;
 
-wall_thickness = 10;
+frame_width = 10;
 
 frame_overlap = true;
 
@@ -24,18 +24,18 @@ visibile_layers=[0];
 cl_layer_info(visibile_layers);
 
 ct_tower_wall_example(width=wall_width, height=wall_height,
-                      wall_depth=wall_depth, wall_thickness=wall_thickness,
+                      wall_depth=wall_depth, frame_width=frame_width,
                       visibile_layers=visibile_layers, make_3d=make_3d);
 
-module ct_tower_wall_example(width, height, wall_thickness=wall_thickness, 
+module ct_tower_wall_example(width, height, frame_width=frame_width, 
                              wall_depth=1, frame_overlap=false,
                              visibile_layers=[], make_3d=make_3d)
 {
-    strut_size = get_ct_tower_wall_strut_size(width=width, height=height, thickness=wall_thickness,
+    strut_size = get_ct_tower_wall_strut_size(width=width, height=height, thickness=frame_width,
                                               overlap=frame_overlap);
 
     ct_tower_wall_arrange(width=width, height=height, 
-                          wall_depth=wall_depth, wall_thickness=wall_thickness,
+                          wall_depth=wall_depth, frame_width=frame_width,
                           frame_overlap=frame_overlap,
                           make_3d=make_3d)
         {
@@ -68,7 +68,7 @@ module ct_tower_wall_example(width, height, wall_thickness=wall_thickness,
 }
 
 // ct_tower_wall_arrange(width=wall_width, height=wall_height, 
-//               wall_depth=1, wall_thickness=wall_thickness,
+//               wall_depth=1, frame_width=frame_width,
 //               frame_overlap=frame_overlap,
 //               make_3d=make_3d)
 // {
@@ -126,11 +126,11 @@ module ct_tower_wall_example(width, height, wall_thickness=wall_thickness,
 //  ^ y    |                      t |   | 
 //  |       ------------------------    v
 //  --> x
-//               wt: wall_thickness  aka frame_width (chsape_frame)
+//               wt: frame_width  aka frame_width (chsape_frame)
 //                t: wall_depth      aka thickness (chshape_frame)
 //
 //
-module ct_tower_wall_arrange(width, height, wall_depth = 0.1, wall_thickness=1, frame_overlap=false,
+module ct_tower_wall_arrange(width, height, wall_depth = 0.1, frame_width=1, frame_overlap=false,
                      make_3d=false, spacing_2d=1)
 {
     no_children = $children;
@@ -139,7 +139,7 @@ module ct_tower_wall_arrange(width, height, wall_depth = 0.1, wall_thickness=1, 
     back_layer = 5;
     if (make_3d)
     {
-        cshape_frame_arrange(width=width, height=height, frame_width = wall_thickness, thickness = wall_depth, overlap=frame_overlap, make_3d=make_3d, spacing_2d=1)
+        cshape_frame_arrange(width=width, height=height, frame_width = frame_width, thickness = wall_depth, overlap=frame_overlap, make_3d=make_3d, spacing_2d=1)
         {
             // 0: top
             children(0);
@@ -160,7 +160,7 @@ module ct_tower_wall_arrange(width, height, wall_depth = 0.1, wall_thickness=1, 
     }
     else
     {
-        cshape_frame_arrange(width=width, height=height, frame_width = wall_thickness, thickness = wall_depth, overlap=frame_overlap, make_3d=make_3d, spacing_2d=1)
+        cshape_frame_arrange(width=width, height=height, frame_width = frame_width, thickness = wall_depth, overlap=frame_overlap, make_3d=make_3d, spacing_2d=1)
         {
             // 0: top
             children(0);

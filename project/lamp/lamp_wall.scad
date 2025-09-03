@@ -13,7 +13,7 @@ wall_width = 300;
 wall_height = 200;
 wall_depth=4;
 
-wall_thickness = 10;
+frame_width = 10;
 
 front_element_width = 15;
 front_elements_ratio = 1.5;
@@ -47,7 +47,7 @@ else
     linear_extrude(1)
         text("lamp_wall", halign="right", size = 8);
     lamp_wall(width=wall_width, height=wall_height,
-                        wall_depth=wall_depth, wall_thickness=wall_thickness,
+                        wall_depth=wall_depth, frame_width=frame_width,
                         front_elements_ratio = front_elements_ratio, front_element_width = front_element_width,
                         back_elements_ratio = back_elements_ratio, back_element_width = back_element_width,
                         visibile_layers=visibile_layers, 
@@ -59,7 +59,7 @@ else
         linear_extrude(1)
             text("lamp_wall_middle_part", halign="right", size = 8);
         lamp_wall_middle_part(width=wall_width, height=wall_height,
-                            wall_depth=wall_depth, wall_thickness=wall_thickness,
+                            wall_depth=wall_depth, frame_width=frame_width,
                             front_elements_ratio = front_elements_ratio, front_element_width = front_element_width,
                             back_elements_ratio = back_elements_ratio, back_element_width = back_element_width,
                             visibile_layers=visibile_layers, 
@@ -72,7 +72,7 @@ else
         linear_extrude(1)
             text("lamp_wall_top", halign="right", size = 8);
         lamp_wall_top(width=wall_width, height=wall_height,
-                            wall_depth=wall_depth, wall_thickness=wall_thickness,
+                            wall_depth=wall_depth, frame_width=frame_width,
                             front_elements_ratio = front_elements_ratio, front_element_width = front_element_width,
                             back_elements_ratio = back_elements_ratio, back_element_width = back_element_width,
                             visibile_layers=visibile_layers, 
@@ -81,61 +81,54 @@ else
 }
 
 
-module lamp_wall(width, height, wall_thickness=wall_thickness, 
+module lamp_wall(width, height, frame_width=frame_width, 
                  wall_depth=1, front_layer_overlap=5, back_layer_padding=5,
                  front_elements_ratio = 1.5, front_element_width = 15,
-                 back_elements_ratio = 1.5, back_element_width = 15,
+                 back_elements_ratio = 1.5, back_element_width = 15,                 
+                 hole_radius=[1.5, 1.5, 1.5, 1.5],
+                 hole_distance=[267, 0, 0, 267],
+                 hole_length=5,
                  layer=[0,1,2], visibile_layers=[], 
                  use_construction_color=true, make_3d=make_3d)
 {
-    hole_radius=[1.5,
-                 0,
-                 0,
-                 1.5];
-    hole_distance=[266,
-                   0,
-                   0,
-                   266];
-    hole_length=5;
-
     frame_overlap = true;
 
     strut_size = get_ct_tower_wall_strut_size(width=width, height=height,
-                                              thickness=wall_thickness,
+                                              thickness=frame_width,
                                               overlap=frame_overlap);
 
     front_no_elements = get_lamp_wall_element_no(width, front_element_width, front_elements_ratio);
     back_no_elements = get_lamp_wall_element_no(width, back_element_width, back_elements_ratio);
 
     ct_tower_wall_arrange(width=width, height=height, 
-                          wall_depth=wall_depth, wall_thickness=wall_thickness,
+                          wall_depth=wall_depth, frame_width=frame_width,
                           frame_overlap=frame_overlap,
                           make_3d=make_3d)
         {
             // 0: top
             set_color_frame(use_construction_color, "orange")
-            translate([0,wall_thickness,0])
+            translate([0,frame_width,0])
             mirror([0,1,0])
             cs_strut_triangle_45(width=strut_size[0][0], height=strut_size[0][1], thickness=wall_depth, type=["f", "f"],
                                 hole_radius=hole_radius[0], hole_distance=hole_distance[0], hole_length=hole_length,
                                 layer=layer[0], visibile_layers=visibile_layers, make_3d=make_3d);
             // 1: left
             set_color_frame(use_construction_color, "green")
-            translate([0,wall_thickness,0])
+            translate([0,frame_width,0])
             mirror([0,1,0])
             cs_strut_triangle_45(width=strut_size[1][0], height=strut_size[1][1], thickness=wall_depth, type=["m", "m"],
                                 hole_radius=hole_radius[1], hole_distance=hole_distance[1], hole_length=hole_length,
                                 layer=layer[0], visibile_layers=visibile_layers, make_3d=make_3d);
             // 2: right
             set_color_frame(use_construction_color, "red")
-            translate([0,wall_thickness,0])
+            translate([0,frame_width,0])
             mirror([0,1,0])
             cs_strut_triangle_45(width=strut_size[2][0], height=strut_size[2][1], thickness=wall_depth, type=["m", "m"],
                                 hole_radius=hole_radius[2], hole_distance=hole_distance[2], hole_length=hole_length,
                                 layer=layer[0], visibile_layers=visibile_layers, make_3d=make_3d);
             // 3: bottom
             set_color_frame(use_construction_color, "violet")
-            translate([0,wall_thickness,0])
+            translate([0,frame_width,0])
             mirror([0,1,0])
             cs_strut_triangle_45(width=strut_size[3][0], height=strut_size[3][1], thickness=wall_depth, type=["f", "f"],
                                 hole_radius=hole_radius[3], hole_distance=hole_distance[3], hole_length=hole_length,
@@ -160,41 +153,34 @@ module lamp_wall(width, height, wall_thickness=wall_thickness,
         }
 }
 
-module lamp_wall_basement(width, height, wall_thickness=wall_thickness, 
+module lamp_wall_basement(width, height, frame_width=frame_width, 
                             wall_depth=1, front_layer_overlap=5, back_layer_padding=5,
                             front_elements_ratio = 1.5, front_element_width = 15,
                             back_elements_ratio = 1.5, back_element_width = 15,
+                            hole_radius=[1.5, 0, 0, 1.5],
+                            hole_distance=[267, 0, 0, 267],
+                            hole_length=5,
                             layer=[0,1,2], visibile_layers=[], 
                             use_construction_color=true, make_3d=make_3d)
 {
-    hole_radius=[1.5,
-                 0,
-                 0,
-                 1.5];
-    hole_distance=[266,
-                   0,
-                   0,
-                   266];
-    hole_length=5;
-
     frame_overlap = true;
 
     strut_size = get_ct_tower_wall_strut_size(width=width, height=height,
-                                              thickness=wall_thickness,
+                                              thickness=frame_width,
                                               overlap=frame_overlap);
 
     front_no_elements = get_lamp_wall_element_no(width, front_element_width, front_elements_ratio);
     back_no_elements = get_lamp_wall_element_no(width, back_element_width, back_elements_ratio);
 
     ct_tower_wall_arrange(width=width, height=height, 
-                          wall_depth=wall_depth, wall_thickness=wall_thickness,
+                          wall_depth=wall_depth, frame_width=frame_width,
                           frame_overlap=frame_overlap,
                           make_3d=make_3d)
         {
             // 0: top
             {
                 set_color_frame(use_construction_color, "orange")
-                translate([0,wall_thickness,0])
+                translate([0,frame_width,0])
                 {
                     mirror([0,1,0])
                     cs_strut_triangle_45(width=strut_size[0][0], height=strut_size[0][1], thickness=wall_depth, type=["f", "f"],
@@ -209,21 +195,21 @@ module lamp_wall_basement(width, height, wall_thickness=wall_thickness,
             }
             // 1: left
             set_color_frame(use_construction_color, "green")
-            translate([0,wall_thickness,0])
+            translate([0,frame_width,0])
             mirror([0,1,0])
             cs_strut_triangle_45(width=strut_size[1][0], height=strut_size[1][1], thickness=wall_depth, type=["m", "m"],
                                 hole_radius=hole_radius[1], hole_distance=hole_distance[1], hole_length=hole_length,
                                 layer=layer[0], visibile_layers=visibile_layers, make_3d=make_3d);
             // 2: right
             set_color_frame(use_construction_color, "red")
-            translate([0,wall_thickness,0])
+            translate([0,frame_width,0])
             mirror([0,1,0])
             cs_strut_triangle_45(width=strut_size[2][0], height=strut_size[2][1], thickness=wall_depth, type=["m", "m"],
                                 hole_radius=hole_radius[2], hole_distance=hole_distance[2], hole_length=hole_length,
                                 layer=layer[0], visibile_layers=visibile_layers, make_3d=make_3d);
             // 3: bottom
             set_color_frame(use_construction_color, "violet")
-            translate([0,wall_thickness,0])
+            translate([0,frame_width,0])
             mirror([0,1,0])
             cs_strut_triangle_45(width=strut_size[3][0], height=strut_size[3][1], thickness=wall_depth, type=["f", "f"],
                                 hole_radius=hole_radius[3], hole_distance=hole_distance[3], hole_length=hole_length,
@@ -248,41 +234,34 @@ module lamp_wall_basement(width, height, wall_thickness=wall_thickness,
         }
 }
 
-module lamp_wall_middle_part(width, height, wall_thickness=wall_thickness, 
+module lamp_wall_middle_part(width, height, frame_width=frame_width, 
                             wall_depth=1, front_layer_overlap=5, back_layer_padding=5,
                             front_elements_ratio = 1.5, front_element_width = 15,
                             back_elements_ratio = 1.5, back_element_width = 15,
+                            hole_radius=[1.5, 0, 0, 1.5],
+                            hole_distance=[267, 0, 0, 267],
+                            hole_length=5,
                             layer=[0,1,2], visibile_layers=[], 
                             use_construction_color=true, make_3d=make_3d)
 {
-    hole_radius=[1.5,
-                 0,
-                 0,
-                 1.5];
-    hole_distance=[266,
-                   0,
-                   0,
-                   266];
-    hole_length=5;
-
     frame_overlap = true;
 
     strut_size = get_ct_tower_wall_strut_size(width=width, height=height,
-                                              thickness=wall_thickness,
+                                              thickness=frame_width,
                                               overlap=frame_overlap);
 
     front_no_elements = get_lamp_wall_element_no(width, front_element_width, front_elements_ratio);
     back_no_elements = get_lamp_wall_element_no(width, back_element_width, back_elements_ratio);
 
     ct_tower_wall_arrange(width=width, height=height, 
-                          wall_depth=wall_depth, wall_thickness=wall_thickness,
+                          wall_depth=wall_depth, frame_width=frame_width,
                           frame_overlap=frame_overlap,
                           make_3d=make_3d)
         {
             // 0: top
             {
                 set_color_frame(use_construction_color, "orange")
-                translate([0,wall_thickness,0])
+                translate([0,frame_width,0])
                 {
                     mirror([0,1,0])
                     cs_strut_triangle_45(width=strut_size[0][0], height=strut_size[0][1], thickness=wall_depth, type=["f", "f"],
@@ -297,14 +276,14 @@ module lamp_wall_middle_part(width, height, wall_thickness=wall_thickness,
             }
             // 1: left
             set_color_frame(use_construction_color, "green")
-            translate([0,wall_thickness,0])
+            translate([0,frame_width,0])
             mirror([0,1,0])
             cs_strut_triangle_45(width=strut_size[1][0], height=strut_size[1][1], thickness=wall_depth, type=["m", "m"],
                                 hole_radius=hole_radius[1], hole_distance=hole_distance[1], hole_length=hole_length,
                                 layer=layer[0], visibile_layers=visibile_layers, make_3d=make_3d);
             // 2: right
             set_color_frame(use_construction_color, "red")
-            translate([0,wall_thickness,0])
+            translate([0,frame_width,0])
             mirror([0,1,0])
             cs_strut_triangle_45(width=strut_size[2][0], height=strut_size[2][1], thickness=wall_depth, type=["m", "m"],
                                 hole_radius=hole_radius[2], hole_distance=hole_distance[2], hole_length=hole_length,
@@ -332,41 +311,34 @@ module lamp_wall_middle_part(width, height, wall_thickness=wall_thickness,
         }
 }
 
-module lamp_wall_top(width, height, wall_thickness=wall_thickness, 
+module lamp_wall_top(width, height, frame_width=frame_width, 
                             wall_depth=1, front_layer_overlap=5, back_layer_padding=5,
                             front_elements_ratio = 1.5, front_element_width = 15,
                             back_elements_ratio = 1.5, back_element_width = 15,
+                            hole_radius=[1.5, 0, 0, 1.5],
+                            hole_distance=[267, 0, 0, 267],
+                            hole_length=5,
                             layer=[0,1,2], visibile_layers=[], 
                             use_construction_color=true, make_3d=make_3d)
 {
-    hole_radius=[1.5,
-                 0,
-                 0,
-                 1.5];
-    hole_distance=[266,
-                   0,
-                   0,
-                   266];
-    hole_length=5;
-
     frame_overlap = true;
 
     strut_size = get_ct_tower_wall_strut_size(width=width, height=height,
-                                              thickness=wall_thickness,
+                                              thickness=frame_width,
                                               overlap=frame_overlap);
 
     front_no_elements = get_lamp_wall_element_no(width, front_element_width, front_elements_ratio);
     back_no_elements = get_lamp_wall_element_no(width, back_element_width, back_elements_ratio);
 
     ct_tower_wall_arrange(width=width, height=height, 
-                          wall_depth=wall_depth, wall_thickness=wall_thickness,
+                          wall_depth=wall_depth, frame_width=frame_width,
                           frame_overlap=frame_overlap,
                           make_3d=make_3d)
         {
             // 0: top
             {
                 set_color_frame(use_construction_color, "orange")
-                translate([0,wall_thickness,0])
+                translate([0,frame_width,0])
                 {
                     mirror([0,1,0])
                     cs_strut_triangle_45(width=strut_size[0][0], height=strut_size[0][1], thickness=wall_depth, type=["f", "f"],
@@ -376,14 +348,14 @@ module lamp_wall_top(width, height, wall_thickness=wall_thickness,
             }
             // 1: left
             set_color_frame(use_construction_color, "green")
-            translate([0,wall_thickness,0])
+            translate([0,frame_width,0])
             mirror([0,1,0])
             cs_strut_triangle_45(width=strut_size[1][0], height=strut_size[1][1], thickness=wall_depth, type=["m", "m"],
                                 hole_radius=hole_radius[1], hole_distance=hole_distance[1], hole_length=hole_length,
                                 layer=layer[0], visibile_layers=visibile_layers, make_3d=make_3d);
             // 2: right
             set_color_frame(use_construction_color, "red")
-            translate([0,wall_thickness,0])
+            translate([0,frame_width,0])
             mirror([0,1,0])
             cs_strut_triangle_45(width=strut_size[2][0], height=strut_size[2][1], thickness=wall_depth, type=["m", "m"],
                                 hole_radius=hole_radius[2], hole_distance=hole_distance[2], hole_length=hole_length,
@@ -421,8 +393,6 @@ module lamp_wall_front_level(width, height, thickness=1,
     element_size = get_cshape_array_element_size(width=width, height=height,
                                                 no_elements_sum=no_elements, no_elements_x=no_elements,
                                                 element_width=element_width);
-    
-    echo(str("element_size", element_size));
 
     set_color_facing_front()
     apply_cl_layer_visibility(layer, visibile_layers)

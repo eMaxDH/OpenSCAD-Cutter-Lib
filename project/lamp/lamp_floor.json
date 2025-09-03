@@ -1,0 +1,13 @@
+{
+    "fileFormatVersion": "1",
+    "parameterSets": {
+        "New set 1": {
+            "floor_size": "[300, 250, 230]",
+            "make_3d": "false",
+            "spacing_2d": "1",
+            "use_construction_color": "true",
+            "visibile_layers": "[0, 0, 0]",
+            "wall_thickness": "10"
+        }
+    }
+}

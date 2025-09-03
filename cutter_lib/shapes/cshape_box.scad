@@ -441,7 +441,6 @@ module cshape_box_arrange_bottom_frame_move(width, height, depth, thickness = 0,
 {
     if (make_3d)
     {
-        echo("cshape_box_arrange_bottom_frame_move::thickness = ", thickness);
         translate([thickness, depth-thickness, thickness])
         rotate([180,0,0])
             children();
