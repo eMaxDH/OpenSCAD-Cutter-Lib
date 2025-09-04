@@ -297,9 +297,10 @@ module cshape_array_repeat(width, height, repeat,
                               element_size=element_hight);
 
     element_size = get_cshape_array_element_size(width=width, height=height,
-                        no_elements_sum=no_childen, no_elements_x=no_elements_x,
+                        no_elements_sum=repeat, no_elements_x=no_elements_x,
                         element_padding=element_padding,
                         element_width=element_width, element_hight=element_hight);
+    
     // echo("no_elements: ", no_elements);
     // echo("d_x: ", d_x);
     // echo("d_y: ", d_y);
@@ -428,5 +429,5 @@ function get_cshape_array_dx(width, no_elements_x, element_size) =
     (element_size > 0)
     ?   (no_elements_x > 1)
         ?   (width - (no_elements_x * element_size))/(no_elements_x-1) + element_size
-        :   0
-    :   width / no_elements_x;
+        :   0 // ERROR: At least two elements must be provided.
+    :   width / (no_elements_x);
