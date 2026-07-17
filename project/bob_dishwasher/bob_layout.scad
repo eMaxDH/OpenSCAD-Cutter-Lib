@@ -217,9 +217,8 @@ module bob_plywood_sheet_2(model_width, model_height, model_depth,
     rail_width = plywood_thickness/2;
     rack_corner_radius = bob_rack_corner_radius();
     side_rail_length = bob_rack_side_rail_length(
-        rack[1], rack_corner_radius);
-    back_rail_length = bob_rack_back_rail_length(
-        rack[0], rack_corner_radius);
+        rack[1], rack_corner_radius, rail_width);
+    back_rail_length = bob_rack_back_rail_length(rack[0]);
     rail_cut_width = 3*rail_width+2*spacing;
     runner_region = [
         runner_cut_width+spacing+rail_cut_width,
@@ -288,10 +287,13 @@ module bob_plywood_sheet_2(model_width, model_height, model_depth,
     cl_layout_part(
         [margin,row3_y], rack, "BOB-RACK-BASE",
         sheet_size=sheet_size, margin=margin)
-        removable_tray(
+        bob_rack_base_2d(
             rack,
-            thickness=plywood_thickness/2,
-            make_3d=false);
+            corner_radius=rack_corner_radius,
+            grip_width=min(14, rack[0]/2),
+            grip_depth=4,
+            dish_slots=4,
+            dish_slot_width=2);
 
     // Tray runners / side rails.
     for (i = [0:1])

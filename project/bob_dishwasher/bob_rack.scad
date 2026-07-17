@@ -25,10 +25,13 @@ if (make_3d)
         example_plywood_thickness,
         example_pullout);
 else
-    removable_tray(
+    bob_rack_base_2d(
         example_rack_size,
-        thickness=example_plywood_thickness/2,
-        make_3d=false);
+        corner_radius=bob_rack_corner_radius(),
+        grip_width=min(14, example_rack_size[0]/2),
+        grip_depth=4,
+        dish_slots=4,
+        dish_slot_width=2);
 
 function bob_rack_size(model_width, model_depth, plywood_thickness) =
     [bob_chamber_width(model_width, plywood_thickness)-
@@ -37,10 +40,58 @@ function bob_rack_size(model_width, model_depth, plywood_thickness) =
      4*plywood_thickness];
 
 function bob_rack_corner_radius() = 2;
-function bob_rack_side_rail_length(rack_depth, corner_radius=2) =
-    rack_depth-2*corner_radius;
-function bob_rack_back_rail_length(rack_width, corner_radius=2) =
-    rack_width-2*corner_radius;
+function bob_rack_side_rail_length(
+    rack_depth, front_corner_radius=2, rail_width=2) =
+    rack_depth-front_corner_radius-rail_width;
+function bob_rack_back_rail_length(rack_width) = rack_width;
+
+module bob_rack_outline_2d(size, front_corner_radius=2)
+{
+    assert(size[0] > 2*front_corner_radius &&
+           size[1] > front_corner_radius,
+           "bob_rack_outline_2d: corner radius consumes rack");
+
+    // The grip/front edge is rounded; the rear edge is deliberately square.
+    union() {
+        translate([front_corner_radius, 0])
+            square([
+                size[0]-2*front_corner_radius,
+                size[1]
+            ]);
+        translate([0, front_corner_radius])
+            square([
+                size[0],
+                size[1]-front_corner_radius
+            ]);
+        translate([
+            front_corner_radius,
+            front_corner_radius
+        ])
+            circle(r=front_corner_radius);
+        translate([
+            size[0]-front_corner_radius,
+            front_corner_radius
+        ])
+            circle(r=front_corner_radius);
+    }
+}
+
+module bob_rack_base_2d(size, corner_radius=2,
+                        grip_width=14, grip_depth=4,
+                        dish_slots=4, dish_slot_width=2)
+{
+    difference() {
+        bob_rack_outline_2d(size, corner_radius);
+        translate([size[0]/2, grip_depth/2])
+            finger_grip_2d(grip_width, grip_depth);
+        dish_slot_pattern_2d(
+            [size[0], size[1]-2*grip_depth],
+            dish_slot_width,
+            size[1]/3,
+            dish_slots,
+            margin=4);
+    }
+}
 
 module bob_rack_side_rail_2d(length, plywood_thickness=4)
 {
@@ -66,10 +117,10 @@ module bob_rack_assembly(model_width, model_height, model_depth,
     rack = bob_rack_size(
         model_width, model_depth, plywood_thickness);
     corner_radius = bob_rack_corner_radius();
+    rail_width = plywood_thickness/2;
     side_rail_length = bob_rack_side_rail_length(
-        rack[1], corner_radius);
-    back_rail_length = bob_rack_back_rail_length(
-        rack[0], corner_radius);
+        rack[1], corner_radius, rail_width);
+    back_rail_length = bob_rack_back_rail_length(rack[0]);
     x0 = (model_width-rack[0])/2;
     y0 = 2*plywood_thickness+2*plywood_thickness-pullout;
     chamber_floor_top = 3*plywood_thickness;
@@ -98,19 +149,18 @@ module bob_rack_assembly(model_width, model_height, model_depth,
 
     color([0.78, 0.62, 0.36])
         translate([x0, y0, rack_z])
-            removable_tray(
-                rack,
-                thickness=plywood_thickness/2,
-                corner_radius=corner_radius,
-                grip_width=min(14, rack[0]/2),
-                grip_depth=4,
-                dish_slots=4,
-                dish_slot_width=2,
-                make_3d=true);
+            linear_extrude(plywood_thickness/2)
+                bob_rack_base_2d(
+                    rack,
+                    corner_radius=corner_radius,
+                    grip_width=min(14, rack[0]/2),
+                    grip_depth=4,
+                    dish_slots=4,
+                    dish_slot_width=2);
 
     // Low, robust side rails instead of fragile miniature wire tines.
     color([0.72, 0.54, 0.30])
-    for (x = [x0, x0+rack[0]-plywood_thickness/2])
+    for (x = [x0, x0+rack[0]-rail_width])
         translate([x, y0+corner_radius,
                    rack_z+plywood_thickness/2])
             linear_extrude(plywood_thickness)
@@ -121,8 +171,8 @@ module bob_rack_assembly(model_width, model_height, model_depth,
     // Rear rail closes the rack between the two rounded back corners.
     color([0.72, 0.54, 0.30])
         translate([
-            x0+corner_radius,
-            y0+rack[1]-corner_radius,
+            x0,
+            y0+rack[1]-rail_width,
             rack_z+plywood_thickness/2
         ])
             linear_extrude(plywood_thickness)
