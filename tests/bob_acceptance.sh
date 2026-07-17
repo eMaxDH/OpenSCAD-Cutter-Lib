@@ -88,4 +88,16 @@ openscad \
     -D 'layout_operation="engrave"' \
     "$model"
 
+openscad \
+    -o "$output_dir/bob-plywood-2-engrave.svg" \
+    -D 'output_mode="cut_layout"' \
+    -D 'layout_material="plywood_2"' \
+    -D 'layout_operation="engrave"' \
+    "$model"
+
+for svg in "$output_dir"/*.svg; do
+    test -s "$svg"
+    grep -q '<svg' "$svg"
+done
+
 echo "Bob acceptance renders passed. Outputs: $output_dir"

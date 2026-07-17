@@ -105,10 +105,64 @@ module bob_assembly(exploded=0, debug=false)
     }
 }
 
-selected_output_mode =
-    output_mode == "automatic"
-    ? (make_3d ? "assembly" : "cut_layout")
-    : output_mode;
+// Like the lamp entry module, this keeps one make_3d switch at the top level:
+// true assembles the parts; false places every manufactured part on XY sheets.
+module bob_dishwasher(make_3d=true, output_mode="automatic")
+{
+    selected_output_mode =
+        output_mode == "automatic"
+        ? (make_3d ? "assembly" : "cut_layout")
+        : output_mode;
+
+    if (selected_output_mode == "assembly")
+        bob_assembly();
+    else if (selected_output_mode == "exploded")
+        bob_assembly(exploded=2);
+    else if (selected_output_mode == "debug")
+        bob_assembly(debug=true);
+    else if (selected_output_mode == "cut_layout")
+        bob_cut_layout(
+            model_width, model_height, model_depth,
+            plywood_thickness, veneer_thickness,
+            kerf, fit_clearance,
+            shell_rib_count, shell_corner_radius,
+            shell_front_offset, shell_rear_offset,
+            hinge_pin_diameter, hinge_clearance,
+            hinge_axis_offset,
+            sheet_size, sheet_margin, part_spacing,
+            window_mode, layout_material,
+            layout_operation);
+    else if (selected_output_mode == "calibration")
+        ccal_laser_coupon(
+            plywood_thickness, kerf,
+            hinge_pin_diameter);
+    else if (selected_output_mode == "single_part") {
+        if (single_part_id == "BOB-DOOR-FRAME")
+            bob_door_frame_2d(
+                bob_door_width(
+                    model_width, plywood_thickness),
+                bob_door_height(model_height),
+                max(5, plywood_thickness),
+                min(6, bob_door_width(
+                    model_width, plywood_thickness)*0.12));
+        else if (single_part_id == "BOB-RIB-01")
+            bob_shell_rib_2d(
+                model_width, model_height,
+                plywood_thickness,
+                shell_corner_radius,
+                fit_clearance, kerf);
+        else if (single_part_id == "BOB-CAL-01")
+            ccal_laser_coupon(
+                plywood_thickness, kerf,
+                hinge_pin_diameter);
+        else
+            assert(false, str("Unknown single_part_id: ",
+                              single_part_id));
+    }
+    else
+        assert(false, str("Unknown output_mode: ",
+                          selected_output_mode));
+}
 
 bob_validate_configuration();
 
@@ -117,48 +171,4 @@ echo(str("Bob scale factor: ", scale_factor,
 echo(str("Bob envelope [W,D,H]: ",
          [model_width, model_depth, model_height]));
 
-if (selected_output_mode == "assembly")
-    bob_assembly();
-else if (selected_output_mode == "exploded")
-    bob_assembly(exploded=2);
-else if (selected_output_mode == "debug")
-    bob_assembly(debug=true);
-else if (selected_output_mode == "cut_layout")
-    bob_cut_layout(
-        model_width, model_height, model_depth,
-        plywood_thickness, veneer_thickness,
-        kerf, fit_clearance,
-        shell_rib_count, shell_corner_radius,
-        shell_front_offset, shell_rear_offset,
-        hinge_pin_diameter, hinge_clearance,
-        sheet_size, sheet_margin, part_spacing,
-        window_mode, layout_material,
-        layout_operation);
-else if (selected_output_mode == "calibration")
-    ccal_laser_coupon(
-        plywood_thickness, kerf,
-        hinge_pin_diameter);
-else if (selected_output_mode == "single_part") {
-    if (single_part_id == "BOB-DOOR-FRAME")
-        bob_door_frame_2d(
-            bob_door_width(model_width),
-            bob_door_height(model_height),
-            max(5, plywood_thickness),
-            min(6, bob_door_width(model_width)*0.12));
-    else if (single_part_id == "BOB-RIB-01")
-        bob_shell_rib_2d(
-            model_width, model_height,
-            plywood_thickness,
-            shell_corner_radius,
-            fit_clearance, kerf);
-    else if (single_part_id == "BOB-CAL-01")
-        ccal_laser_coupon(
-            plywood_thickness, kerf,
-            hinge_pin_diameter);
-    else
-        assert(false, str("Unknown single_part_id: ",
-                          single_part_id));
-}
-else
-    assert(false, str("Unknown output_mode: ",
-                      selected_output_mode));
+bob_dishwasher(make_3d, output_mode);

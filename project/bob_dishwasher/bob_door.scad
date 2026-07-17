@@ -14,7 +14,8 @@ example_window_mode = "open"; // [open, transparent_insert]
 /* [Hidden] */
 
 example_model_width = 340 * example_model_height / 490;
-example_door_width = bob_door_width(example_model_width);
+example_door_width = bob_door_width(
+    example_model_width, example_plywood_thickness);
 example_door_height = bob_door_height(example_model_height);
 
 if (make_3d)
@@ -47,7 +48,9 @@ else {
             example_door_height);
 }
 
-function bob_door_width(model_width) = model_width - 4;
+// Leave one plywood thickness at each side for the fixed hinge cheeks.
+function bob_door_width(model_width, plywood_thickness=4) =
+    model_width - 2*plywood_thickness;
 function bob_door_height(model_height) = model_height * 0.84;
 function bob_door_bottom(model_height) = model_height * 0.075;
 function bob_window_size(door_width, door_height) =
@@ -193,25 +196,24 @@ module bob_door_local(door_width, door_height,
 module bob_hinge_supports(model_width, axis_y, axis_z,
                           plywood_thickness=4,
                           pin_diameter=2,
-                          pin_clearance=0.2)
+                          pin_clearance=0.2,
+                          axis_offset=2.5)
 {
     support_width = 2.5*plywood_thickness;
     support_height = 3*plywood_thickness;
-    hole_d = pin_diameter+pin_clearance;
+    hole_y = support_width-axis_offset;
 
     color([0.66, 0.49, 0.28])
     for (x = [0, model_width-plywood_thickness])
-        translate([x, axis_y-support_width/2,
+        translate([x, axis_y-hole_y,
                    axis_z-support_height/2])
-            difference() {
-                cube([plywood_thickness,
-                      support_width, support_height]);
-                translate([-0.1, support_width/2,
-                           support_height/2])
-                    rotate([0,90,0])
-                        cylinder(h=plywood_thickness+0.2,
-                                 d=hole_d);
-            }
+            rotate([90,0,90])
+                linear_extrude(plywood_thickness)
+                    ch_pin_hinge_cheek_2d(
+                        support_width, support_height,
+                        pin_diameter, pin_clearance,
+                        hole_center=[hole_y, support_height/2],
+                        edge_min=1);
 }
 
 module bob_door_assembly(model_width, model_height,
@@ -227,7 +229,7 @@ module bob_door_assembly(model_width, model_height,
                          show_sweep=false,
                          exploded=0)
 {
-    dw = bob_door_width(model_width);
+    dw = bob_door_width(model_width, plywood_thickness);
     dh = bob_door_height(model_height);
     dx = (model_width-dw)/2;
     axis = [0, -hinge_axis_offset, bob_door_bottom(model_height)];
@@ -236,6 +238,10 @@ module bob_door_assembly(model_width, model_height,
            "bob_door_assembly: door_angle must be between 0 and 90 degrees");
     assert(hinge_axis_offset >= veneer_thickness+hinge_clearance,
            "bob_door_assembly: hinge axis is too close to the shell");
+    assert(hinge_axis_offset <=
+           2.5*plywood_thickness-
+           (hinge_pin_diameter+hinge_clearance)/2-1,
+           "bob_door_assembly: hinge hole is too close to the front edge");
     assert(axis[2] >= plywood_thickness,
            "bob_door_assembly: hinge is too close to the base");
 
@@ -244,7 +250,8 @@ module bob_door_assembly(model_width, model_height,
             model_width, axis[1], axis[2],
             plywood_thickness,
             hinge_pin_diameter,
-            hinge_clearance);
+            hinge_clearance,
+            hinge_axis_offset);
         color("silver")
             ch_hinge_pin_preview(
                 model_width,

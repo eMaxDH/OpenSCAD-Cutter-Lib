@@ -46,11 +46,14 @@ module bob_part_label(id, position=[1,1], size=1.8)
 }
 
 module bob_layout_layer_info(material="all", operation="preview",
-                             sheet_size=[300,300])
+                             sheet_size=[300,300], rib_count=4)
 {
     echo(str("[BOB 2D LAYERS] material=", material,
              ", operation=", operation));
-    echo("[BOB 2D LAYERS] plywood cut | veneer cut | veneer engraving");
+    echo("[BOB 2D LAYERS] plywood cut | plywood engraving | veneer cut | veneer engraving");
+    echo(str("[BOB PART MANIFEST] plywood=", 21+rib_count,
+             " cut parts (including ", rib_count,
+             " shell ribs and coupon), veneer=4 cut parts, purchased hinge pin=1"));
 
     %translate([0, sheet_size[1]+7]) {
         color("black")
@@ -75,6 +78,7 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
                            corner_radius=8,
                            pin_diameter=2,
                            pin_clearance=0.2,
+                           hinge_axis_offset=2.5,
                            sheet_size=[300,300],
                            margin=5, spacing=3)
 {
@@ -82,7 +86,7 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
     assert(total_ribs == 6,
            "bob_plywood_sheet_1: current deterministic layout expects four internal ribs");
 
-    dw = bob_door_width(model_width);
+    dw = bob_door_width(model_width, plywood_thickness);
     dh = bob_door_height(model_height);
     base = [model_width-2*plywood_thickness,
             model_depth-2*plywood_thickness];
@@ -159,15 +163,17 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
         [x4, base_y], base,
         "BOB-BASE",
         sheet_size=sheet_size, margin=margin) {
-            square(base);
+            bob_base_2d(
+                model_width, model_depth,
+                plywood_thickness);
             bob_part_label("BOB-BASE");
         }
 
     // Four longitudinal registration stringers, rotated for compact packing.
     for (i = [0:3])
         translate([x4+i*(plywood_thickness+spacing), cage_y])
-            square([plywood_thickness,
-                    model_depth-2*plywood_thickness]);
+            bob_stringer_2d(
+                model_depth, plywood_thickness);
     bob_part_label("BOB-STRINGER x4", [x4, cage_y+1]);
 
     for (i = [0:1])
@@ -181,7 +187,8 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
                 pin_clearance,
                 kerf,
                 hole_center=[
-                    1.25*plywood_thickness,
+                    2.5*plywood_thickness-
+                    hinge_axis_offset,
                     1.5*plywood_thickness],
                 edge_min=1);
     bob_part_label("BOB-HINGE-L/R",
@@ -203,7 +210,13 @@ module bob_plywood_sheet_2(model_width, model_height, model_depth,
     row1_h = max(ch, cd);
     row2_y = margin+row1_h+spacing;
     row3_y = row2_y+ch+spacing;
-    runner_region = [2*plywood_thickness+spacing, cd];
+    runner_cut_width = 2*plywood_thickness+spacing;
+    rail_width = plywood_thickness/2;
+    rail_cut_width = 2*rail_width+spacing;
+    runner_region = [
+        runner_cut_width+spacing+rail_cut_width,
+        cd
+    ];
 
     floor_bound = [cw+2*plywood_thickness, cd];
     boxes = [
@@ -228,7 +241,7 @@ module bob_plywood_sheet_2(model_width, model_height, model_depth,
     cl_layout_part(
         [margin,margin], [cw,ch], "BOB-CHAMBER-REAR",
         sheet_size=sheet_size, margin=margin)
-        square([cw,ch]);
+        bob_chamber_rear_2d(cw, ch);
 
     cl_layout_part(
         [margin+cw+spacing,margin], floor_bound,
@@ -277,14 +290,31 @@ module bob_plywood_sheet_2(model_width, model_height, model_depth,
         translate([margin+rack[0]+spacing+
                    i*(plywood_thickness+spacing),
                    row3_y])
-            tray_runner(
-                cd,
-                width=plywood_thickness,
-                height=plywood_thickness,
-                make_3d=false);
+            translate([plywood_thickness, 0])
+                rotate([0,0,90])
+                    tray_runner(
+                        cd,
+                        width=plywood_thickness,
+                        height=plywood_thickness/2,
+                        stop_height=plywood_thickness/2,
+                        make_3d=false);
     bob_part_label(
         "BOB-TRAY-RUNNER x2",
         [margin+rack[0]+spacing, row3_y+1]);
+
+    // Two low side rails belonging to the removable rack itself.
+    for (i = [0:1])
+        translate([
+            margin+rack[0]+spacing+
+            runner_cut_width+spacing+
+            i*(rail_width+spacing),
+            row3_y])
+            bob_rack_side_rail_2d(
+                rack[1], plywood_thickness);
+    bob_part_label(
+        "BOB-RACK-SIDE-RAIL x2",
+        [margin+rack[0]+spacing+
+         runner_cut_width+spacing, row3_y+1]);
 
     cl_layout_part(
         [margin+rack[0]+2*spacing+runner_region[0],
@@ -293,6 +323,24 @@ module bob_plywood_sheet_2(model_width, model_height, model_depth,
         sheet_size=sheet_size, margin=margin)
         ccal_laser_coupon(
             plywood_thickness, kerf, pin_diameter);
+}
+
+// Engraving geometry is kept at exactly the same sheet coordinates as its
+// matching cut part so cut and engrave SVG exports can be overlaid.
+module bob_plywood_sheet_2_engraving(
+    model_width, model_height, model_depth,
+    plywood_thickness=4,
+    sheet_size=[300,300],
+    margin=5, spacing=3)
+{
+    cw = bob_chamber_width(model_width, plywood_thickness);
+    cd = bob_chamber_depth(model_depth, plywood_thickness);
+    floor_x = margin+cw+spacing;
+
+    translate([
+        floor_x+plywood_thickness+cw/2,
+        margin+cd*0.55])
+        bob_chamber_spray_arm_2d(cw);
 }
 
 module bob_veneer_sheet(model_width, model_height, model_depth,
@@ -308,7 +356,7 @@ module bob_veneer_sheet(model_width, model_height, model_depth,
     wrap = csh_wrap_length(
         model_width, model_height, corner_radius);
     skin_depth = model_depth-front_offset-rear_offset;
-    dw = bob_door_width(model_width);
+    dw = bob_door_width(model_width, plywood_thickness);
     dh = bob_door_height(model_height);
     row2_y = margin+skin_depth+spacing;
 
@@ -382,6 +430,7 @@ module bob_cut_layout(model_width, model_height, model_depth,
                       rear_offset=4,
                       pin_diameter=2,
                       pin_clearance=0.2,
+                      hinge_axis_offset=2.5,
                       sheet_size=[300,300],
                       margin=5, spacing=3,
                       window_mode="open",
@@ -398,10 +447,7 @@ module bob_cut_layout(model_width, model_height, model_depth,
            operation == "engrave" ||
            operation == "preview",
            "bob_cut_layout: unsupported operation");
-    assert(operation != "engrave" || material == "veneer",
-           "bob_cut_layout: engraving exists only on the veneer sheet");
-
-    bob_layout_layer_info(material, operation, sheet_size);
+    bob_layout_layer_info(material, operation, sheet_size, rib_count);
 
     if (material == "all" || material == "plywood_1")
     translate(material == "all" ? [0,0] : [0,0])
@@ -410,7 +456,7 @@ module bob_cut_layout(model_width, model_height, model_depth,
         model_width, model_height, model_depth,
         plywood_thickness, kerf, fit_clearance,
         rib_count, corner_radius,
-        pin_diameter, pin_clearance,
+        pin_diameter, pin_clearance, hinge_axis_offset,
         sheet_size, margin, spacing);
 
     if (material == "all" || material == "plywood_2")
@@ -422,6 +468,16 @@ module bob_cut_layout(model_width, model_height, model_depth,
             model_width, model_height, model_depth,
             plywood_thickness, kerf, fit_clearance,
             pin_diameter,
+            sheet_size, margin, spacing);
+
+    if (material == "all" || material == "plywood_2")
+    translate(material == "all"
+              ? [sheet_size[0]+sheet_gap,0]
+              : [0,0])
+        cl_operation_geometry("engrave", operation)
+        bob_plywood_sheet_2_engraving(
+            model_width, model_height, model_depth,
+            plywood_thickness,
             sheet_size, margin, spacing);
 
     if (material == "all" || material == "veneer")

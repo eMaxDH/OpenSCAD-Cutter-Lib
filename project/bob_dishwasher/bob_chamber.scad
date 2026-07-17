@@ -50,6 +50,24 @@ function bob_chamber_height(model_height, plywood_thickness) =
 function bob_chamber_depth(model_depth, plywood_thickness) =
     model_depth - 4*plywood_thickness;
 
+module bob_chamber_rear_2d(width, height)
+{
+    assert(width > 0 && height > 0,
+           "bob_chamber_rear_2d: dimensions must be positive");
+    square([width, height]);
+}
+
+module bob_chamber_spray_arm_2d(width, line_width=1.2)
+{
+    assert(width > 0 && line_width > 0,
+           "bob_chamber_spray_arm_2d: dimensions must be positive");
+
+    union() {
+        circle(d=3);
+        square([width*0.55, line_width], center=true);
+    }
+}
+
 module bob_chamber_floor_2d(width, depth,
                             plywood_thickness=4,
                             fit_clearance=0.15,
@@ -116,21 +134,36 @@ module bob_chamber_assembly(model_width, model_height, model_depth,
            "bob_chamber_assembly: model is too small for chamber");
 
     color([0.72, 0.74, 0.72]) {
-        // Floor and upper boundary.
+        // Use the actual tabbed profiles. The main floor/top panels sit
+        // between the side walls; only their tabs enter the matching slots.
         translate([x0, y0, z0-exploded])
-            cube([cw, cd, plywood_thickness]);
+            linear_extrude(plywood_thickness)
+                bob_chamber_floor_2d(
+                    cw, cd, plywood_thickness,
+                    fit_clearance=0.15, kerf=0);
         translate([x0, y0, z0+ch-plywood_thickness+exploded])
-            cube([cw, cd, plywood_thickness]);
+            linear_extrude(plywood_thickness)
+                bob_chamber_floor_2d(
+                    cw, cd, plywood_thickness,
+                    fit_clearance=0.15, kerf=0);
 
-        // Rear wall.
-        translate([x0, y0+cd-plywood_thickness+exploded,
+        // The rear closes the outside of the chamber instead of occupying
+        // the last plywood thickness of its interior.
+        translate([x0, y0+cd+plywood_thickness+exploded,
                    z0])
-            cube([cw, plywood_thickness, ch]);
+            rotate([90,0,0])
+                linear_extrude(plywood_thickness)
+                    bob_chamber_rear_2d(cw, ch);
 
-        // Narrow side supports leave the chamber visually open.
-        for (x = [x0, x0+cw-plywood_thickness])
+        // Side walls lie outside the clear chamber width. Their real slot
+        // profiles receive the floor and top tabs without solid collisions.
+        for (x = [x0-plywood_thickness, x0+cw])
             translate([x, y0, z0])
-                cube([plywood_thickness, cd, ch]);
+                rotate([90,0,90])
+                    linear_extrude(plywood_thickness)
+                        bob_chamber_side_2d(
+                            cd, ch, plywood_thickness,
+                            fit_clearance=0.15, kerf=0);
     }
 
     // Simplified spray-arm engraving/preview on the chamber floor.
@@ -138,8 +171,5 @@ module bob_chamber_assembly(model_width, model_height, model_depth,
         translate([model_width/2, y0+cd*0.55,
                    z0+plywood_thickness+0.1])
             linear_extrude(0.4)
-                union() {
-                    circle(d=3);
-                    square([cw*0.55, 1.2], center=true);
-                }
+                bob_chamber_spray_arm_2d(cw);
 }
