@@ -1,6 +1,48 @@
 use <../../cutter_lib/materials/cm_manufacturing.scad>
 use <../../cutter_lib/joints/cj_hidden_tabs.scad>
 
+/* [Example] */
+
+make_3d = true; // [false:true]
+example_model_height = 80; // [70:1:160]
+example_plywood_thickness = 4; // [1:0.5:8]
+example_exploded = 0; // [0:0.5:10]
+
+/* [Hidden] */
+
+example_model_width = 340 * example_model_height / 490;
+example_model_depth = example_model_height;
+example_chamber_width =
+    bob_chamber_width(example_model_width,
+                      example_plywood_thickness);
+example_chamber_height =
+    bob_chamber_height(example_model_height,
+                       example_plywood_thickness);
+example_chamber_depth =
+    bob_chamber_depth(example_model_depth,
+                      example_plywood_thickness);
+
+if (make_3d)
+    bob_chamber_assembly(
+        example_model_width,
+        example_model_height,
+        example_model_depth,
+        example_plywood_thickness,
+        example_exploded);
+else {
+    bob_chamber_floor_2d(
+        example_chamber_width,
+        example_chamber_depth,
+        example_plywood_thickness);
+    translate([
+        example_chamber_width+
+        2*example_plywood_thickness+5, 0])
+        bob_chamber_side_2d(
+            example_chamber_depth,
+            example_chamber_height,
+            example_plywood_thickness);
+}
+
 function bob_chamber_width(model_width, plywood_thickness) =
     model_width - 4*plywood_thickness;
 function bob_chamber_height(model_height, plywood_thickness) =

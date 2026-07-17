@@ -8,6 +8,34 @@ use <bob_door.scad>
 use <bob_chamber.scad>
 use <bob_rack.scad>
 
+/* [Example] */
+
+make_3d = false; // [false:true]
+example_model_height = 80; // [70:1:100]
+example_sheet = "all"; // [all, plywood_1, plywood_2, veneer]
+example_operation = "preview"; // [cut, engrave, preview]
+
+/* [Hidden] */
+
+example_model_width = 340 * example_model_height / 490;
+example_model_depth = example_model_height;
+
+if (make_3d)
+    linear_extrude(0.6)
+        bob_cut_layout(
+            example_model_width,
+            example_model_height,
+            example_model_depth,
+            material=example_sheet,
+            operation=example_operation);
+else
+    bob_cut_layout(
+        example_model_width,
+        example_model_height,
+        example_model_depth,
+        material=example_sheet,
+        operation=example_operation);
+
 module bob_part_label(id, position=[1,1], size=1.8)
 {
     %translate(position) {

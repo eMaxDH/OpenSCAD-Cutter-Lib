@@ -59,9 +59,24 @@ window_mode = "open";
 rack_enabled = true;
 rack_pullout = 0;
 show_veneer = true;
-show_rib_cage = false;
-output_mode = "assembly";
+show_rib_cage = true;
+veneer_opacity = 0.58;
+
+make_3d = true;
+output_mode = "automatic";
 ```
+
+In OpenSCAD's Customizer, leave `output_mode="automatic"` to use the
+`make_3d` checkbox:
+
+- checked: assembled 3D model;
+- unchecked: flat cutting layout.
+
+The saved `bob_dishwasher.json` presets provide default assembly, cutting
+layout, and skeleton-inspection configurations.
+
+If the panel is hidden, enable the **Customizer** panel from OpenSCAD's
+Window/View menu, then save or select a parameter set from the panel.
 
 The validated door range is 0–90 degrees. Positive motion opens the door
 outward and downward. The axis is shifted forward from the shell to clear the
@@ -121,6 +136,11 @@ Other modes are `exploded`, `debug`, `calibration`, and `single_part`.
 `debug` adds the nominal envelope, hinge reference, and sampled door sweep.
 `single_part` supports `BOB-DOOR-FRAME`, `BOB-RIB-01`, and `BOB-CAL-01`.
 Set `show_veneer=false` and `show_rib_cage=true` for structural inspection.
+
+Every Bob `.scad` file can also be opened directly. `bob_body.scad`,
+`bob_door.scad`, `bob_chamber.scad`, `bob_rack.scad`, and `bob_layout.scad`
+contain standalone 2D/3D examples; `bob_config.scad` shows the configured
+outer envelope.
 
 ## Cut and engrave operations
 

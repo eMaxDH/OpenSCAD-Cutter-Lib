@@ -1,6 +1,52 @@
 use <../../cutter_lib/hinges/ch_pin_hinge.scad>
 use <../../cutter_lib/shells/csh_ribbed_veneer.scad>
 
+/* [Example] */
+
+make_3d = true; // [false:true]
+example_model_height = 80; // [70:1:160]
+example_plywood_thickness = 4; // [1:0.5:8]
+example_veneer_thickness = 0.6; // [0.1:0.1:2]
+example_door_angle = 45; // [0:1:90]
+example_show_sweep = false; // [false:true]
+example_window_mode = "open"; // [open, transparent_insert]
+
+/* [Hidden] */
+
+example_model_width = 340 * example_model_height / 490;
+example_door_width = bob_door_width(example_model_width);
+example_door_height = bob_door_height(example_model_height);
+
+if (make_3d)
+    bob_door_assembly(
+        example_model_width,
+        example_model_height,
+        example_plywood_thickness,
+        example_veneer_thickness,
+        example_door_angle,
+        2, 0.2, 2.5,
+        example_window_mode,
+        true, true,
+        example_show_sweep);
+else {
+    bob_door_frame_2d(
+        example_door_width,
+        example_door_height,
+        max(5, example_plywood_thickness),
+        min(6, example_door_width*0.12),
+        example_window_mode);
+    translate([example_door_width+5, 0])
+        bob_door_fascia_2d(
+            example_door_width,
+            example_door_height,
+            min(6, example_door_width*0.12),
+            example_window_mode);
+    translate([example_door_width+5, 0])
+        bob_door_engraving_2d(
+            example_door_width,
+            example_door_height);
+}
+
 function bob_door_width(model_width) = model_width - 4;
 function bob_door_height(model_height) = model_height * 0.84;
 function bob_door_bottom(model_height) = model_height * 0.075;

@@ -1,6 +1,35 @@
 use <../../cutter_lib/trays/ctr_removable_tray.scad>
 use <bob_chamber.scad>
 
+/* [Example] */
+
+make_3d = true; // [false:true]
+example_model_height = 80; // [70:1:160]
+example_plywood_thickness = 4; // [1:0.5:8]
+example_pullout = 0; // [0:1:80]
+
+/* [Hidden] */
+
+example_model_width = 340 * example_model_height / 490;
+example_model_depth = example_model_height;
+example_rack_size = bob_rack_size(
+    example_model_width,
+    example_model_depth,
+    example_plywood_thickness);
+
+if (make_3d)
+    bob_rack_assembly(
+        example_model_width,
+        example_model_height,
+        example_model_depth,
+        example_plywood_thickness,
+        example_pullout);
+else
+    removable_tray(
+        example_rack_size,
+        thickness=example_plywood_thickness/2,
+        make_3d=false);
+
 function bob_rack_size(model_width, model_depth, plywood_thickness) =
     [bob_chamber_width(model_width, plywood_thickness)-
      2*plywood_thickness,
@@ -60,4 +89,3 @@ module bob_rack_assembly(model_width, model_height, model_depth,
             cube([plywood_thickness/2,
                   rack[1], plywood_thickness]);
 }
-
