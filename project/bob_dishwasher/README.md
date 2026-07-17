@@ -323,6 +323,10 @@ The two brown strips near the chamber floor are the rack runners, not part of
 the floor. They support the rack above the chamber floor and stop it at the
 rear. They remain visible when the removable rack is pulled out.
 
+The rack base keeps rounded corners only at its front grip edge. Its rear
+corners are square: the side rails run from the front corner tangencies into a
+full-width rear rail.
+
 ## Validation
 
 The model warns outside the initially recommended 70–160 mm height range. The
