@@ -60,6 +60,8 @@ function bob_door_height(model_height, plywood_thickness=4, door_gap=0.4) =
     model_height - 2*(plywood_thickness+door_gap);
 function bob_door_bottom(plywood_thickness=4, door_gap=0.4) =
     plywood_thickness+door_gap;
+function bob_hinge_axis_z(plywood_thickness=4, door_gap=0.4) =
+    2.5*plywood_thickness-door_gap;
 function bob_window_diameter(door_width, door_height) =
     min(door_width*0.42, door_height*0.32);
 function bob_window_center_z(door_height) = door_height*0.43;
@@ -223,8 +225,12 @@ module bob_door_assembly(model_width, model_height,
     dx = (model_width-dw)/2;
     axis = [
         0, plywood_thickness/2,
-        bob_door_bottom(plywood_thickness, door_gap)
+        bob_hinge_axis_z(
+            plywood_thickness, door_gap)
     ];
+    axis_local_z =
+        axis[2]-bob_door_bottom(
+            plywood_thickness, door_gap);
 
     assert(door_angle >= 0 && door_angle <= 90,
            "bob_door_assembly: door_angle must be between 0 and 90 degrees");
@@ -245,7 +251,7 @@ module bob_door_assembly(model_width, model_height,
 
     translate([dx, axis[1], axis[2]])
         rotate([door_angle,0,0])
-            translate([0, -axis[1], 0])
+            translate([0, -axis[1], -axis_local_z])
                 bob_door_local(
                     dw, dh,
                     plywood_thickness,
@@ -258,7 +264,9 @@ module bob_door_assembly(model_width, model_height,
         translate([dx, axis[1], axis[2]])
             for (a = [0:15:90])
                 %rotate([a,0,0])
-                    translate([0, -axis[1], 0])
+                    translate([
+                        0, -axis[1], -axis_local_z
+                    ])
                         bob_door_local(
                             dw, dh,
                             plywood_thickness,

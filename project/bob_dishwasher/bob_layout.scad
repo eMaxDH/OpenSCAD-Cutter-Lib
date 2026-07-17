@@ -92,7 +92,7 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
     dh = bob_door_height(
         model_height, plywood_thickness, door_gap);
     base = [model_width-2*plywood_thickness,
-            model_depth];
+            model_depth-2*plywood_thickness];
     cap_piece_h = bob_rib_cap_piece_height(
         corner_radius, plywood_thickness);
     side_length = bob_rib_side_length(
@@ -125,12 +125,13 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
     base_x = door_x+dw+spacing;
     cage_x = base_x+base[0]+spacing;
     cage_width = 2*plywood_thickness+spacing;
+    stringer_length = model_depth-plywood_thickness;
 
     boxes = concat(cap_boxes, side_boxes, [
         [door_x, parts_y, dw, dh],
         [base_x, parts_y, base[0], base[1]],
         [cage_x, parts_y, cage_width,
-         model_depth]
+         stringer_length]
     ]);
 
     cl_validate_layout(
@@ -219,12 +220,12 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
             bob_part_label("BOB-BASE");
         }
 
-    // Two full-depth upper stringers; the base replaces the redundant lower
-    // pair as the lower longitudinal structure.
+    // Two upper stringers start one rib thickness behind the front face; the
+    // base replaces the redundant lower pair as longitudinal structure.
     for (i = [0:1])
         translate([cage_x+i*(plywood_thickness+spacing), parts_y])
             bob_stringer_2d(
-                model_depth, plywood_thickness);
+                stringer_length, plywood_thickness);
     bob_part_label("BOB-STRINGER x2", [cage_x, parts_y+1]);
 }
 

@@ -180,10 +180,12 @@ module bob_assembly(exploded=0, debug=false)
     if (debug) {
         // Nominal envelope and hinge-axis clearance references.
         %cube([model_width, model_depth, model_height]);
-        %translate([0, plywood_thickness/2,
-                    bob_door_bottom(
-                        plywood_thickness,
-                        door_perimeter_gap)])
+        %translate([
+            0, plywood_thickness/2,
+            bob_hinge_axis_z(
+                plywood_thickness,
+                door_perimeter_gap)
+        ])
             rotate([0,90,0])
                 cylinder(h=model_width,
                          d=hinge_pin_diameter+
