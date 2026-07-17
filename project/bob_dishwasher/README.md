@@ -64,6 +64,8 @@ veneer_opacity = 0.58;
 
 make_3d = true;
 output_mode = "automatic";
+layout_material = "all";
+layout_operation = "preview";
 ```
 
 In OpenSCAD's Customizer, leave `output_mode="automatic"` to use the
@@ -109,6 +111,7 @@ All cutting sheets:
 openscad -o bob-layout.svg \
   -D 'output_mode="cut_layout"' \
   -D 'layout_material="all"' \
+  -D 'layout_operation="cut"' \
   project/bob_dishwasher/bob_dishwasher.scad
 ```
 
@@ -119,16 +122,19 @@ side. Export individual sheets at the origin for machine preparation:
 openscad -o bob-plywood-1.svg \
   -D 'output_mode="cut_layout"' \
   -D 'layout_material="plywood_1"' \
+  -D 'layout_operation="cut"' \
   project/bob_dishwasher/bob_dishwasher.scad
 
 openscad -o bob-plywood-2.svg \
   -D 'output_mode="cut_layout"' \
   -D 'layout_material="plywood_2"' \
+  -D 'layout_operation="cut"' \
   project/bob_dishwasher/bob_dishwasher.scad
 
 openscad -o bob-veneer.svg \
   -D 'output_mode="cut_layout"' \
   -D 'layout_material="veneer"' \
+  -D 'layout_operation="cut"' \
   project/bob_dishwasher/bob_dishwasher.scad
 ```
 
@@ -150,6 +156,14 @@ Set `layout_operation="preview"` to inspect both operations:
 - blue is engraving geometry;
 - grey/background geometry is a sheet boundary, identifier, or orientation
   arrow and should not be manufactured.
+
+The 2D preview reports the active material and operation in both the OpenSCAD
+console and an on-canvas legend. If only one part is visible, check whether
+`layout_material="veneer"` and `layout_operation="engrave"` are selected:
+that filter intentionally shows only the engraved door fascia. Select
+`layout_material="all"` and `layout_operation="preview"` to see every sheet
+and operation. Because the three sheets span much farther than the assembled
+model, use OpenSCAD's **View All / Zoom to fit** command after changing to 2D.
 
 The door fascia includes the display outline, controls, logo placeholder,
 window seam, lower panel seam, and vent grille. OpenSCAD SVG export does not
