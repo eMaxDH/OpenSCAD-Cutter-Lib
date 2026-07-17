@@ -49,13 +49,15 @@ module bob_rack_assembly(model_width, model_height, model_depth,
                          removable=true,
                          exploded=0)
 {
-    chamber_w = bob_chamber_width(model_width, plywood_thickness);
     chamber_d = bob_chamber_depth(model_depth, plywood_thickness);
     rack = bob_rack_size(
         model_width, model_depth, plywood_thickness);
     x0 = (model_width-rack[0])/2;
     y0 = 2*plywood_thickness+2*plywood_thickness-pullout;
-    z0 = 3*plywood_thickness+exploded;
+    chamber_floor_top = 3*plywood_thickness;
+    runner_height = plywood_thickness/2;
+    runner_z = chamber_floor_top+exploded;
+    rack_z = runner_z+runner_height;
 
     assert(rack[0] > 10 && rack[1] > 10,
            "bob_rack_assembly: rack is too small");
@@ -66,19 +68,18 @@ module bob_rack_assembly(model_width, model_height, model_depth,
 
     // Tray support ledges.
     color([0.60, 0.47, 0.28])
-    for (x = [(model_width-chamber_w)/2,
-              (model_width+chamber_w)/2-plywood_thickness])
+    for (x = [x0, x0+rack[0]-plywood_thickness])
         translate([x, 2*plywood_thickness,
-                   z0-plywood_thickness])
+                   runner_z])
             tray_runner(
                 chamber_d,
                 width=plywood_thickness,
-                height=plywood_thickness/2,
-                stop_height=plywood_thickness/2,
+                height=runner_height,
+                stop_height=runner_height,
                 make_3d=true);
 
     color([0.78, 0.62, 0.36])
-        translate([x0, y0, z0])
+        translate([x0, y0, rack_z])
             removable_tray(
                 rack,
                 thickness=plywood_thickness/2,
@@ -92,7 +93,8 @@ module bob_rack_assembly(model_width, model_height, model_depth,
     // Low, robust side rails instead of fragile miniature wire tines.
     color([0.72, 0.54, 0.30])
     for (x = [x0, x0+rack[0]-plywood_thickness/2])
-        translate([x, y0, z0+plywood_thickness/2])
+        translate([x, y0,
+                   rack_z+plywood_thickness/2])
             linear_extrude(plywood_thickness)
                 bob_rack_side_rail_2d(
                     rack[1], plywood_thickness);
