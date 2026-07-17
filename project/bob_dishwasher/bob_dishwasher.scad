@@ -41,9 +41,11 @@ part_spacing = 3; // [0.5:0.5:10]
 /* [Door and hinge] */
 
 door_angle = 90; // [0:1:90]
+door_perimeter_gap = 0.4; // [0:0.1:2]
 hinge_pin_diameter = 2; // [0.5:0.1:5]
 hinge_clearance = 0.2; // [0:0.05:1]
-hinge_axis_offset = 2.5; // [0.5:0.1:10]
+// Distance from the cheek's rear edge to its hinge-hole centre.
+hinge_axis_offset = 2.5; // [1.5:0.1:8]
 show_hinge = true; // [false:true]
 show_door_sweep = false; // [false:true]
 window_mode = "open"; // [open, transparent_insert]
@@ -119,8 +121,8 @@ module bob_validate_configuration()
            "Unsupported layout_operation");
     assert(door_angle >= 0 && door_angle <= 90,
            "door_angle must be between 0 and 90 degrees");
-    assert(bob_door_bottom(model_height) >= plywood_thickness,
-           "Door hinge is too close to the base");
+    assert(door_perimeter_gap >= 0,
+           "Door perimeter gap must be non-negative");
 
     if (model_height < minimum_supported_height ||
         model_height > maximum_supported_height)
@@ -171,15 +173,19 @@ module bob_assembly(exploded=0, debug=false)
         window_mode, show_engraving,
         show_hinge,
         show_door_sweep || debug,
-        exploded);
+        exploded,
+        door_perimeter_gap);
 
     if (debug) {
         // Nominal envelope and hinge-axis clearance references.
         %cube([model_width, model_depth, model_height]);
-        %translate([0, -hinge_axis_offset,
-                    bob_door_bottom(model_height)])
+        %translate([-plywood_thickness, 0,
+                    bob_door_bottom(
+                        plywood_thickness,
+                        door_perimeter_gap)])
             rotate([0,90,0])
-                cylinder(h=model_width,
+                cylinder(h=model_width+
+                           2*plywood_thickness,
                          d=hinge_pin_diameter+
                            2*hinge_clearance);
     }
@@ -208,7 +214,7 @@ module bob_dishwasher(make_3d=true, output_mode="automatic")
             shell_rib_count, shell_corner_radius,
             shell_front_offset, shell_rear_offset,
             hinge_pin_diameter, hinge_clearance,
-            hinge_axis_offset,
+            hinge_axis_offset, door_perimeter_gap,
             sheet_size, sheet_margin, part_spacing,
             window_mode, layout_material,
             layout_operation);
@@ -220,11 +226,15 @@ module bob_dishwasher(make_3d=true, output_mode="automatic")
         if (single_part_id == "BOB-DOOR-FRAME")
             bob_door_frame_2d(
                 bob_door_width(
-                    model_width, plywood_thickness),
-                bob_door_height(model_height),
+                    model_width, plywood_thickness,
+                    door_perimeter_gap),
+                bob_door_height(
+                    model_height, plywood_thickness,
+                    door_perimeter_gap),
                 max(5, plywood_thickness),
                 min(6, bob_door_width(
-                    model_width, plywood_thickness)*0.12));
+                    model_width, plywood_thickness,
+                    door_perimeter_gap)*0.12));
         else if (single_part_id == "BOB-RIB-01")
             bob_shell_rib_2d(
                 model_width, model_height,

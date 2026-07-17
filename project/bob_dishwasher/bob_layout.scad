@@ -79,6 +79,7 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
                            pin_diameter=2,
                            pin_clearance=0.2,
                            hinge_axis_offset=2.5,
+                           door_gap=0.4,
                            sheet_size=[300,300],
                            margin=5, spacing=3)
 {
@@ -86,8 +87,10 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
     assert(total_ribs == 6,
            "bob_plywood_sheet_1: current deterministic layout expects four internal ribs");
 
-    dw = bob_door_width(model_width, plywood_thickness);
-    dh = bob_door_height(model_height);
+    dw = bob_door_width(
+        model_width, plywood_thickness, door_gap);
+    dh = bob_door_height(
+        model_height, plywood_thickness, door_gap);
     base = [model_width-2*plywood_thickness,
             model_depth-2*plywood_thickness];
     cage_h = 4*plywood_thickness+3*spacing;
@@ -345,6 +348,7 @@ module bob_plywood_sheet_2_engraving(
 
 module bob_veneer_sheet(model_width, model_height, model_depth,
                         plywood_thickness=4,
+                        door_gap=0.4,
                         corner_radius=8,
                         front_offset=4,
                         rear_offset=4,
@@ -356,8 +360,10 @@ module bob_veneer_sheet(model_width, model_height, model_depth,
     wrap = csh_wrap_length(
         model_width, model_height, corner_radius);
     skin_depth = model_depth-front_offset-rear_offset;
-    dw = bob_door_width(model_width, plywood_thickness);
-    dh = bob_door_height(model_height);
+    dw = bob_door_width(
+        model_width, plywood_thickness, door_gap);
+    dh = bob_door_height(
+        model_height, plywood_thickness, door_gap);
     row2_y = margin+skin_depth+spacing;
 
     boxes = [
@@ -431,6 +437,7 @@ module bob_cut_layout(model_width, model_height, model_depth,
                       pin_diameter=2,
                       pin_clearance=0.2,
                       hinge_axis_offset=2.5,
+                      door_gap=0.4,
                       sheet_size=[300,300],
                       margin=5, spacing=3,
                       window_mode="open",
@@ -457,6 +464,7 @@ module bob_cut_layout(model_width, model_height, model_depth,
         plywood_thickness, kerf, fit_clearance,
         rib_count, corner_radius,
         pin_diameter, pin_clearance, hinge_axis_offset,
+        door_gap,
         sheet_size, margin, spacing);
 
     if (material == "all" || material == "plywood_2")
@@ -486,7 +494,7 @@ module bob_cut_layout(model_width, model_height, model_depth,
               : [0,0])
         bob_veneer_sheet(
             model_width, model_height, model_depth,
-            plywood_thickness,
+            plywood_thickness, door_gap,
             corner_radius, front_offset, rear_offset,
             sheet_size, margin, spacing, window_mode,
             operation);
