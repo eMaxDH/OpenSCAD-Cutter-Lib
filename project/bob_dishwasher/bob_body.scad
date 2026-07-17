@@ -1,6 +1,6 @@
 use <../../cutter_lib/materials/cm_manufacturing.scad>
 use <../../cutter_lib/shells/csh_ribbed_veneer.scad>
-use <../../cutter_lib/joints/cj_hidden_tabs.scad>
+use <../../cutter_lib/connector/cc_connector_triangle_45_2d.scad>
 
 /* [Example] */
 
@@ -44,14 +44,11 @@ else
 function bob_inner_width(model_width, plywood_thickness) =
     model_width - 2*plywood_thickness;
 
-function bob_inner_depth(model_depth, plywood_thickness) =
-    model_depth - 2*plywood_thickness;
-
 module bob_base_2d(model_width, model_depth, plywood_thickness=4)
 {
     square([
         bob_inner_width(model_width, plywood_thickness),
-        bob_inner_depth(model_depth, plywood_thickness)
+        model_depth
     ]);
 }
 
@@ -59,46 +56,51 @@ module bob_stringer_2d(model_depth, plywood_thickness=4)
 {
     square([
         plywood_thickness,
-        bob_inner_depth(model_depth, plywood_thickness)
+        model_depth
     ]);
 }
 
-// Bob-specific rib: generic rounded shell silhouette plus hidden stringer
-// registration slots. The slots remain behind the veneer.
+// Bob-specific canonical rounded shell silhouette.
 module bob_shell_rib_2d(model_width, model_height,
                         plywood_thickness=4,
                         corner_radius=8,
                         fit_clearance=0.15,
                         kerf=0.5)
 {
-    sw = slot_width(plywood_thickness, fit_clearance, kerf);
-    slot_length = 2*plywood_thickness;
-    x_inset = plywood_thickness + slot_length/2;
-    z_inset = plywood_thickness + slot_length/2;
-
     shell_rib(model_width, model_height,
               rib_width=plywood_thickness,
-              corner_radius=corner_radius) {
-        translate([x_inset, z_inset])
-            square([slot_length, sw], center=true);
-        translate([model_width-x_inset, z_inset])
-            square([slot_length, sw], center=true);
-        translate([x_inset, model_height-z_inset])
-            square([slot_length, sw], center=true);
-        translate([model_width-x_inset, model_height-z_inset])
-            square([slot_length, sw], center=true);
-    }
+              corner_radius=corner_radius);
 }
 
 function bob_rib_cap_height(corner_radius, plywood_thickness) =
     corner_radius+plywood_thickness;
 function bob_rib_cap_piece_height(corner_radius, plywood_thickness) =
-    bob_rib_cap_height(corner_radius, plywood_thickness)+
-    plywood_thickness;
+    bob_rib_cap_height(corner_radius, plywood_thickness);
 function bob_rib_side_length(model_height, corner_radius,
                              plywood_thickness) =
-    model_height-
-    2*bob_rib_cap_height(corner_radius, plywood_thickness);
+    model_height-2*corner_radius;
+
+// The library's stepped 45-degree pair partitions a full material-width
+// square. It is deliberately only an alignment guide for a broad glued scarf,
+// not a narrow structural tab.
+module bob_rib_triangle_joint_2d(
+    plywood_thickness=4,
+    half="cap",
+    connector_factor=0.4)
+{
+    assert(half == "cap" || half == "side",
+           "bob_rib_triangle_joint_2d: unsupported half");
+
+    if (half == "cap")
+        cc_connector_triangle_45_2d(
+            plywood_thickness, "f", connector_factor);
+    else
+        translate([plywood_thickness, plywood_thickness])
+            rotate([0,0,180])
+                cc_connector_triangle_45_2d(
+                    plywood_thickness, "m",
+                    connector_factor);
+}
 
 module bob_rib_cap_2d(model_width, model_height,
                       plywood_thickness=4,
@@ -109,7 +111,7 @@ module bob_rib_cap_2d(model_width, model_height,
 {
     cap_h = bob_rib_cap_height(
         corner_radius, plywood_thickness);
-    tab_feature = plywood_thickness/2;
+    curve_h = corner_radius;
 
     assert(bob_rib_side_length(
                model_height, corner_radius,
@@ -123,40 +125,29 @@ module bob_rib_cap_2d(model_width, model_height,
                     model_width, model_height,
                     plywood_thickness, corner_radius,
                     fit_clearance, kerf);
-                square([model_width, cap_h]);
+                square([model_width, curve_h]);
             }
             for (x = [0, model_width-plywood_thickness])
-                translate([x, cap_h])
-                    cj_hidden_tabs_2d(
-                        plywood_thickness,
-                        plywood_thickness,
-                        tab_feature,
-                        count=1, edge_margin=0,
-                        fit_clearance=fit_clearance,
-                        kerf=kerf);
+                translate([x, curve_h])
+                    bob_rib_triangle_joint_2d(
+                        plywood_thickness, "cap");
         }
     else
-        translate([0, plywood_thickness])
-            union() {
-                translate([0, -(model_height-cap_h)])
-                    intersection() {
-                        bob_shell_rib_2d(
-                            model_width, model_height,
-                            plywood_thickness, corner_radius,
-                            fit_clearance, kerf);
-                        translate([0, model_height-cap_h])
-                            square([model_width, cap_h]);
-                    }
-                for (x = [0, model_width-plywood_thickness])
-                    translate([x, 0])
-                        mirror([0,1])
-                            cj_hidden_tabs_2d(
-                                plywood_thickness,
-                                plywood_thickness,
-                                tab_feature,
-                                count=1, edge_margin=0,
-                                fit_clearance=fit_clearance,
-                                kerf=kerf);
+        union() {
+            translate([0, cap_h-model_height])
+                intersection() {
+                    bob_shell_rib_2d(
+                        model_width, model_height,
+                        plywood_thickness, corner_radius,
+                        fit_clearance, kerf);
+                    translate([0, model_height-curve_h])
+                        square([model_width, curve_h]);
+                }
+            for (x = [0, model_width-plywood_thickness])
+                translate([x, plywood_thickness])
+                    mirror([0,1])
+                        bob_rib_triangle_joint_2d(
+                            plywood_thickness, "cap");
             }
 }
 
@@ -168,23 +159,19 @@ module bob_rib_side_2d(model_height,
 {
     side_length = bob_rib_side_length(
         model_height, corner_radius, plywood_thickness);
-    slot_depth = slot_width(
-        plywood_thickness, fit_clearance, kerf);
 
-    difference() {
-        square([plywood_thickness, side_length]);
-        for (y = [
-            slot_depth/2,
-            side_length-slot_depth/2
-        ])
-            translate([0, y])
-                cj_hidden_slots_2d(
-                    plywood_thickness,
-                    plywood_thickness,
-                    plywood_thickness/2,
-                    count=1, edge_margin=0,
-                    fit_clearance=fit_clearance,
-                    kerf=kerf);
+    union() {
+        bob_rib_triangle_joint_2d(
+            plywood_thickness, "side");
+        translate([0, plywood_thickness])
+            square([
+                plywood_thickness,
+                side_length-2*plywood_thickness
+            ]);
+        translate([0, side_length])
+            mirror([0,1])
+                bob_rib_triangle_joint_2d(
+                    plywood_thickness, "side");
     }
 }
 
@@ -195,19 +182,13 @@ module bob_segmented_shell_rib_2d(
     fit_clearance=0.15,
     kerf=0)
 {
-    cap_h = bob_rib_cap_height(
-        corner_radius, plywood_thickness);
-    side_length = bob_rib_side_length(
-        model_height, corner_radius, plywood_thickness);
-
     bob_rib_cap_2d(
         model_width, model_height,
         plywood_thickness, corner_radius,
         false, fit_clearance, kerf);
     translate([
         0,
-        model_height-
-        bob_rib_cap_piece_height(
+        model_height-bob_rib_cap_piece_height(
             corner_radius, plywood_thickness)
     ])
         bob_rib_cap_2d(
@@ -215,7 +196,7 @@ module bob_segmented_shell_rib_2d(
             plywood_thickness, corner_radius,
             true, fit_clearance, kerf);
     for (x = [0, model_width-plywood_thickness])
-        translate([x, cap_h])
+        translate([x, corner_radius])
             bob_rib_side_2d(
                 model_height, plywood_thickness,
                 corner_radius, fit_clearance, kerf);
@@ -272,24 +253,22 @@ module bob_rib_at_y(y, model_width, model_height,
 module bob_stringer_cage(model_width, model_height, model_depth,
                          plywood_thickness=4)
 {
-    length = model_depth-2*plywood_thickness;
     x_positions = [
         2*plywood_thickness,
         model_width-3*plywood_thickness
     ];
-    z_positions = [
-        plywood_thickness,
-        model_height-2*plywood_thickness
-    ];
 
-    assert(length > 0, "bob_stringer_cage: model is too shallow");
+    assert(model_depth > 0,
+           "bob_stringer_cage: model is too shallow");
 
+    // The hidden base is already the full-depth lower longitudinal member.
+    // These two upper stringers run from the front face to the rear face and
+    // glue against the underside of every rib's upper rail.
     for (x = x_positions)
-        for (z = z_positions)
-            translate([x, plywood_thickness, z])
-                linear_extrude(plywood_thickness)
-                    bob_stringer_2d(
-                        model_depth, plywood_thickness);
+        translate([x, 0, model_height-2*plywood_thickness])
+            linear_extrude(plywood_thickness)
+                bob_stringer_2d(
+                    model_depth, plywood_thickness);
 }
 
 module bob_body_structure(model_width, model_height, model_depth,
@@ -333,7 +312,7 @@ module bob_body_structure(model_width, model_height, model_depth,
             plywood_thickness);
 
         // Hidden structural base.
-        translate([plywood_thickness, plywood_thickness,
+        translate([plywood_thickness, 0,
                    plywood_thickness])
             linear_extrude(plywood_thickness)
                 bob_base_2d(

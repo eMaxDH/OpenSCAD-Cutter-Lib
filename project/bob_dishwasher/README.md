@@ -161,19 +161,20 @@ The Bob entry module follows the lamp convention: `make_3d=true` assembles
 the model, while `make_3d=false` sends the manufactured components to
 deterministic XY sheet positions. No cut part remains rotated out of plane.
 
-The default plywood set contains 44 pieces. Each of the six logical shell
-ribs is cut as four compact pieces and glued together at tabbed joints on the
-straight vertical runs beside the corners. This preserves the continuous
-rounded veneer-support surface while avoiding six large rectangular nesting
-areas. At the default scale, the allocated rib footprint drops by about 50%.
+The default plywood set contains 42 pieces. Each of the six logical shell
+ribs is cut as four compact pieces and glued together at broad stepped
+45-degree joints on the straight vertical runs beside the corners. This
+preserves the continuous rounded veneer-support surface while avoiding six
+large rectangular nesting areas. At the default scale, the allocated rib
+footprint drops by about 58.5%.
 
 | Part | Quantity |
 | --- | ---: |
 | Front-frame segments | 4 |
 | Internal shell-rib segments | 16 |
 | Rear-frame segments | 4 |
-| Longitudinal stringers | 4 |
-| Hidden base | 1 |
+| Full-depth upper stringers | 2 |
+| Full-depth hidden base/lower structure | 1 |
 | Door frame | 1 |
 | Hinge cheeks | 2 |
 | Chamber rear, floor, and top | 3 |
@@ -292,10 +293,12 @@ veneer face terminate the wrap.
 
 1. Cut and evaluate the calibration coupon.
 2. Dry-fit each logical rib from one top cap, one bottom cap, and two side
-   pieces. The cap tabs enter the open notches at the ends of the sides.
+   pieces. The broad stepped 45-degree connectors align the glued scarf
+   joints; they are guides rather than narrow structural tabs.
 3. Glue these joints on a flat surface, keeping each completed rib square.
-4. Dry-fit the assembled front frame, four internal ribs, rear frame, and four
-   longitudinal stringers.
+4. Dry-fit the assembled front frame, four internal ribs, rear frame, and two
+   full-depth upper stringers. Their front and rear ends should finish flush
+   with the outside faces of the termination frames.
 5. Glue the rib cage square on the hidden base.
 6. Assemble the chamber floor, top, rear, and sides with the hidden tabs and
    slots, then install it inside the cage.

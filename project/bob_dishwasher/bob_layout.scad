@@ -54,7 +54,7 @@ module bob_layout_layer_info(material="all", operation="preview",
     echo(str("[BOB 2D LAYERS] material=", material,
              ", operation=", operation));
     echo("[BOB 2D LAYERS] plywood cut | plywood engraving | veneer cut | veneer engraving");
-    echo(str("[BOB PART MANIFEST] plywood=", 20+rib_segments,
+    echo(str("[BOB PART MANIFEST] plywood=", 18+rib_segments,
              " cut parts (including ", logical_ribs,
              " logical ribs / ", rib_segments,
              " glued rib segments and coupon), veneer=4 cut parts, purchased hinge pin=1"));
@@ -96,7 +96,7 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
     dh = bob_door_height(
         model_height, plywood_thickness, door_gap);
     base = [model_width-2*plywood_thickness,
-            model_depth-2*plywood_thickness];
+            model_depth];
     cap_piece_h = bob_rib_cap_piece_height(
         corner_radius, plywood_thickness);
     side_length = bob_rib_side_length(
@@ -128,7 +128,7 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
     door_x = margin+side_band_width+spacing;
     base_x = door_x+dw+spacing;
     cage_x = base_x+base[0]+spacing;
-    cage_width = 4*plywood_thickness+3*spacing;
+    cage_width = 2*plywood_thickness+spacing;
     hinge_x = cage_x+cage_width+spacing;
     hinge_width = 5*plywood_thickness+spacing;
     hinge_height = 3*plywood_thickness;
@@ -137,7 +137,7 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
         [door_x, parts_y, dw, dh],
         [base_x, parts_y, base[0], base[1]],
         [cage_x, parts_y, cage_width,
-         model_depth-2*plywood_thickness],
+         model_depth],
         [hinge_x, parts_y, hinge_width, hinge_height]
     ]);
 
@@ -168,8 +168,8 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
     ];
 
     // Each logical rib is split on its straight vertical runs, immediately
-    // beside the rounded corners. Tabs from the curved caps glue into the
-    // matching open notches in the narrow side pieces.
+    // beside the rounded corners. Broad complementary 45-degree faces carry
+    // the glue; the library connector's small step only aligns the pieces.
     for (i = [0:2*total_ribs-1]) {
         rib_index = floor(i/2);
         top = i%2 == 1;
@@ -227,12 +227,13 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
             bob_part_label("BOB-BASE");
         }
 
-    // Four longitudinal registration stringers, rotated for compact packing.
-    for (i = [0:3])
+    // Two full-depth upper stringers; the base replaces the redundant lower
+    // pair as the lower longitudinal structure.
+    for (i = [0:1])
         translate([cage_x+i*(plywood_thickness+spacing), parts_y])
             bob_stringer_2d(
                 model_depth, plywood_thickness);
-    bob_part_label("BOB-STRINGER x4", [cage_x, parts_y+1]);
+    bob_part_label("BOB-STRINGER x2", [cage_x, parts_y+1]);
 
     for (i = [0:1])
         translate([hinge_x+
