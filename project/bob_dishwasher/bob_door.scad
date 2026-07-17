@@ -29,7 +29,7 @@ if (make_3d)
         example_plywood_thickness,
         example_veneer_thickness,
         example_door_angle,
-        2, 0.2, 2.5,
+        2, 0.2,
         example_window_mode,
         true, true,
         example_show_sweep,
@@ -53,7 +53,7 @@ else {
             example_door_height);
 }
 
-// Leave one plywood thickness at each side for the fixed hinge cheeks.
+// Leave one plywood thickness at each side for the front-rib knuckles.
 function bob_door_width(model_width, plywood_thickness=4, door_gap=0.4) =
     model_width - 2*(plywood_thickness+door_gap);
 function bob_door_height(model_height, plywood_thickness=4, door_gap=0.4) =
@@ -203,36 +203,12 @@ module bob_door_local(door_width, door_height,
                             door_width, door_height);
 }
 
-module bob_hinge_supports(model_width, axis_y, axis_z,
-                          plywood_thickness=4,
-                          pin_diameter=2,
-                          pin_clearance=0.2,
-                          axis_offset=2.5)
-{
-    support_width = 2.5*plywood_thickness;
-    support_height = 3*plywood_thickness;
-    hole_y = support_width-axis_offset;
-
-    color([0.66, 0.49, 0.28])
-    for (x = [-plywood_thickness, model_width])
-        translate([x, axis_y-hole_y,
-                   axis_z-support_height/2])
-            rotate([90,0,90])
-                linear_extrude(plywood_thickness)
-                    ch_pin_hinge_cheek_2d(
-                        support_width, support_height,
-                        pin_diameter, pin_clearance,
-                        hole_center=[hole_y, support_height/2],
-                        edge_min=1);
-}
-
 module bob_door_assembly(model_width, model_height,
                          plywood_thickness=4,
                          veneer_thickness=0.6,
                          door_angle=90,
                          hinge_pin_diameter=2,
                          hinge_clearance=0.2,
-                         hinge_axis_offset=2.5,
                          window_mode="open",
                          show_engraving=true,
                          show_hinge=true,
@@ -246,55 +222,47 @@ module bob_door_assembly(model_width, model_height,
         model_height, plywood_thickness, door_gap);
     dx = (model_width-dw)/2;
     axis = [
-        0, 0,
+        0, plywood_thickness/2,
         bob_door_bottom(plywood_thickness, door_gap)
     ];
 
     assert(door_angle >= 0 && door_angle <= 90,
            "bob_door_assembly: door_angle must be between 0 and 90 degrees");
-    assert(hinge_axis_offset >=
-           (hinge_pin_diameter+hinge_clearance)/2+1,
-           "bob_door_assembly: hinge hole is too close to the rear edge");
-    assert(hinge_axis_offset <=
-           2.5*plywood_thickness-
-           (hinge_pin_diameter+hinge_clearance)/2-1,
-           "bob_door_assembly: hinge hole is too close to the front edge");
+    assert(hinge_pin_diameter+hinge_clearance+
+           1.5 <= plywood_thickness,
+           "bob_door_assembly: chassis knuckle has insufficient material around the pin");
     assert(door_gap >= 0,
            "bob_door_assembly: door gap must be non-negative");
 
     if (show_hinge) {
-        bob_hinge_supports(
-            model_width, axis[1], axis[2],
-            plywood_thickness,
-            hinge_pin_diameter,
-            hinge_clearance,
-            hinge_axis_offset);
         color("silver")
             ch_hinge_pin_preview(
-                model_width+2*plywood_thickness,
+                model_width,
                 hinge_pin_diameter,
-                [-plywood_thickness,
+                [0,
                  axis[1], axis[2]]);
     }
 
     translate([dx, axis[1], axis[2]])
         rotate([door_angle,0,0])
-            bob_door_local(
-                dw, dh,
-                plywood_thickness,
-                veneer_thickness,
-                window_mode,
-                show_engraving,
-                exploded);
+            translate([0, -axis[1], 0])
+                bob_door_local(
+                    dw, dh,
+                    plywood_thickness,
+                    veneer_thickness,
+                    window_mode,
+                    show_engraving,
+                    exploded);
 
     if (show_sweep)
         translate([dx, axis[1], axis[2]])
             for (a = [0:15:90])
                 %rotate([a,0,0])
-                    bob_door_local(
-                        dw, dh,
-                        plywood_thickness,
-                        veneer_thickness,
-                        window_mode,
-                        false);
+                    translate([0, -axis[1], 0])
+                        bob_door_local(
+                            dw, dh,
+                            plywood_thickness,
+                            veneer_thickness,
+                            window_mode,
+                            false);
 }

@@ -24,8 +24,8 @@ are always derived from `model_height`.
 
 ## Materials and hardware
 
-- 4 mm plywood for ribs, frames, base, chamber, door structure, hinge cheeks,
-  stringers, rack, and runners
+- 4 mm plywood for ribs, frames, base, chamber, door structure, stringers,
+  rack, and runners
 - approximately 0.6 mm wood veneer for the wrap and cosmetic faces
 - wood glue
 - a 2 mm rod, wire, dowel, or similarly sized pin for the hinge
@@ -56,7 +56,6 @@ door_angle = 90;
 door_perimeter_gap = 0.4;
 hinge_pin_diameter = 2;
 hinge_clearance = 0.2;
-hinge_axis_offset = 2.5;
 
 shell_rib_count = 4;
 window_mode = "open";
@@ -88,8 +87,10 @@ The validated door range is 0–90 degrees. Positive motion opens the door
 outward and downward. At 0 degrees the plywood frame sits inside the front
 opening, while the veneer fascia is flush with the front veneer.
 `door_perimeter_gap` provides clearance on every edge. The hinge pin is bonded
-along the lower front edge of the door and turns in two external side cheeks;
-`hinge_axis_offset` controls the hole backset within those cheeks.
+along the lower edge of the door and turns directly in coaxial bores through
+the two side rails of the front termination rib. The resulting order along
+the pin is chassis knuckle, centered door knuckle, chassis knuckle. The axis
+sits halfway through the plywood depth, keeping the closed fascia flush.
 
 ## Output modes
 
@@ -161,7 +162,7 @@ The Bob entry module follows the lamp convention: `make_3d=true` assembles
 the model, while `make_3d=false` sends the manufactured components to
 deterministic XY sheet positions. No cut part remains rotated out of plane.
 
-The default plywood set contains 42 pieces. Each of the six logical shell
+The default plywood set contains 40 pieces. Each of the six logical shell
 ribs is cut as four compact pieces and glued together at broad stepped
 45-degree joints on the straight vertical runs beside the corners. This
 preserves the continuous rounded veneer-support surface while avoiding six
@@ -176,7 +177,6 @@ footprint drops by about 58.5%.
 | Full-depth upper stringers | 2 |
 | Full-depth hidden base/lower structure | 1 |
 | Door frame | 1 |
-| Hinge cheeks | 2 |
 | Chamber rear, floor, and top | 3 |
 | Chamber sides | 2 |
 | Rack base | 1 |
@@ -196,6 +196,12 @@ assembly positions, rotates, and extrudes that same module; it does not redraw
 the part as an unrelated cube or polygon. Kerf compensation is enabled for
 laser-export geometry and disabled for the physical 3D preview, while fit
 clearance remains represented.
+
+The integrated hinge adds one explicit post-laser operation: its X-axis bore
+passes through the plywood edges of the assembled front-rib side segments, so
+it cannot be represented as a through-cut in their flat XY profiles. The 3D
+model shows the bore at its drilled position, and the assembly instructions
+call for both sides to be drilled coaxially.
 
 The veneer wrap is the intentional exception to literal extrusion: its flat
 rectangular development is bent around the same constant rounded
@@ -306,9 +312,12 @@ veneer face terminate the wrap.
    the raised end of each profile is a rear travel stop.
 8. Assemble and test the removable tray-style rack.
 9. Laminate the door fascia onto its plywood frame, keeping the window open.
-10. Bond the purchased pin along the lower front edge of the door.
-11. Pass the pin ends through the hinge cheeks, then glue the cheeks to the
-   outside faces of the cabinet sides without gluing the pin.
+10. Drill the two chassis-knuckle bores coaxially through the side rails of
+    the assembled front rib. Use a backing block and the calibrated pin-hole
+    diameter.
+11. Position the door between these chassis knuckles and slide the pin from
+    one outside face, along the door's lower edge, and into the opposite bore.
+    Bond the pin only to the door; keep both chassis bores free.
 12. Test the door at 0, 45, and 90 degrees before adding cosmetic parts.
 13. Pre-form and glue the veneer wrap over the ribs.
 14. Add the front termination ring and rear veneer face.

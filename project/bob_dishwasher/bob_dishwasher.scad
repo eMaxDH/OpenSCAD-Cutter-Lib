@@ -44,8 +44,6 @@ door_angle = 90; // [0:1:90]
 door_perimeter_gap = 0.4; // [0:0.1:2]
 hinge_pin_diameter = 2; // [0.5:0.1:5]
 hinge_clearance = 0.2; // [0:0.05:1]
-// Distance from the cheek's rear edge to its hinge-hole centre.
-hinge_axis_offset = 2.5; // [1.5:0.1:8]
 show_hinge = true; // [false:true]
 show_door_sweep = false; // [false:true]
 window_mode = "open"; // [open, transparent_insert]
@@ -149,7 +147,11 @@ module bob_assembly(exploded=0, debug=false)
         fit_clearance, kerf,
         show_rib_cage, show_veneer,
         minimum_veneer_bend_radius,
-        veneer_opacity);
+        veneer_opacity,
+        hinge_pin_diameter,
+        hinge_clearance,
+        door_perimeter_gap,
+        show_hinge);
 
     if (show_chamber)
         bob_chamber_assembly(
@@ -169,7 +171,6 @@ module bob_assembly(exploded=0, debug=false)
         plywood_thickness, veneer_thickness,
         door_angle,
         hinge_pin_diameter, hinge_clearance,
-        hinge_axis_offset,
         window_mode, show_engraving,
         show_hinge,
         show_door_sweep || debug,
@@ -179,13 +180,12 @@ module bob_assembly(exploded=0, debug=false)
     if (debug) {
         // Nominal envelope and hinge-axis clearance references.
         %cube([model_width, model_depth, model_height]);
-        %translate([-plywood_thickness, 0,
+        %translate([0, plywood_thickness/2,
                     bob_door_bottom(
                         plywood_thickness,
                         door_perimeter_gap)])
             rotate([0,90,0])
-                cylinder(h=model_width+
-                           2*plywood_thickness,
+                cylinder(h=model_width,
                          d=hinge_pin_diameter+
                            2*hinge_clearance);
     }
@@ -214,7 +214,7 @@ module bob_dishwasher(make_3d=true, output_mode="automatic")
             shell_rib_count, shell_corner_radius,
             shell_front_offset, shell_rear_offset,
             hinge_pin_diameter, hinge_clearance,
-            hinge_axis_offset, door_perimeter_gap,
+            door_perimeter_gap,
             sheet_size, sheet_margin, part_spacing,
             window_mode, layout_material,
             layout_operation);

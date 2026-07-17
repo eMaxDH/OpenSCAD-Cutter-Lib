@@ -283,17 +283,38 @@ module bob_body_structure(model_width, model_height, model_depth,
                           show_ribs=true,
                           show_skin=true,
                           min_bend_radius=5,
-                          veneer_opacity=0.58)
+                          veneer_opacity=0.58,
+                          hinge_pin_diameter=2,
+                          hinge_clearance=0.2,
+                          door_gap=0.4,
+                          show_hinge_bores=true)
 {
     usable_depth = model_depth-front_offset-rear_offset;
     assert(rib_count >= 1, "bob_body_structure: at least one rib is required");
 
     color([0.72, 0.56, 0.33])
     if (show_ribs) {
-        // Front and rear termination frames.
-        bob_rib_at_y(0, model_width, model_height,
-                     plywood_thickness, corner_radius,
-                     fit_clearance, kerf);
+        // The two side rails of the front termination frame are the fixed
+        // chassis knuckles. Their coaxial bore is drilled along X after the
+        // four frame segments have been glued.
+        difference() {
+            bob_rib_at_y(0, model_width, model_height,
+                         plywood_thickness, corner_radius,
+                         fit_clearance, kerf);
+            if (show_hinge_bores)
+                translate([
+                    -0.01,
+                    plywood_thickness/2,
+                    plywood_thickness+door_gap
+                ])
+                    rotate([0,90,0])
+                        cylinder(
+                            h=model_width+0.02,
+                            d=hinge_pin_diameter+
+                              hinge_clearance);
+        }
+
+        // Rear termination frame.
         bob_rib_at_y(model_depth-plywood_thickness,
                      model_width, model_height,
                      plywood_thickness, corner_radius,
