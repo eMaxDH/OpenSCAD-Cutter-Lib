@@ -51,7 +51,7 @@ module bob_layout_layer_info(material="all", operation="preview",
     echo(str("[BOB 2D LAYERS] material=", material,
              ", operation=", operation));
     echo("[BOB 2D LAYERS] plywood cut | plywood engraving | veneer cut | veneer engraving");
-    echo(str("[BOB PART MANIFEST] plywood=", 21+rib_count,
+    echo(str("[BOB PART MANIFEST] plywood=", 22+rib_count,
              " cut parts (including ", rib_count,
              " shell ribs and coupon), veneer=4 cut parts, purchased hinge pin=1"));
 
@@ -215,7 +215,12 @@ module bob_plywood_sheet_2(model_width, model_height, model_depth,
     row3_y = row2_y+ch+spacing;
     runner_cut_width = 2*plywood_thickness+spacing;
     rail_width = plywood_thickness/2;
-    rail_cut_width = 2*rail_width+spacing;
+    rack_corner_radius = bob_rack_corner_radius();
+    side_rail_length = bob_rack_side_rail_length(
+        rack[1], rack_corner_radius);
+    back_rail_length = bob_rack_back_rail_length(
+        rack[0], rack_corner_radius);
+    rail_cut_width = 3*rail_width+2*spacing;
     runner_region = [
         runner_cut_width+spacing+rail_cut_width,
         cd
@@ -313,11 +318,29 @@ module bob_plywood_sheet_2(model_width, model_height, model_depth,
             i*(rail_width+spacing),
             row3_y])
             bob_rack_side_rail_2d(
-                rack[1], plywood_thickness);
+                side_rail_length,
+                plywood_thickness);
     bob_part_label(
         "BOB-RACK-SIDE-RAIL x2",
         [margin+rack[0]+spacing+
          runner_cut_width+spacing, row3_y+1]);
+
+    // Rear rail, rotated so all three rack rails share a narrow layout band.
+    translate([
+        margin+rack[0]+spacing+
+        runner_cut_width+spacing+
+        2*(rail_width+spacing)+rail_width,
+        row3_y
+    ])
+        rotate([0,0,90])
+            bob_rack_back_rail_2d(
+                back_rail_length,
+                plywood_thickness);
+    bob_part_label(
+        "BOB-RACK-BACK-RAIL",
+        [margin+rack[0]+spacing+
+         runner_cut_width+spacing+
+         2*(rail_width+spacing), row3_y+1]);
 
     cl_layout_part(
         [margin+rack[0]+2*spacing+runner_region[0],

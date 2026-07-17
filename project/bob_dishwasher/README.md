@@ -161,7 +161,7 @@ The Bob entry module follows the lamp convention: `make_3d=true` assembles
 the model, while `make_3d=false` sends the manufactured components to
 deterministic XY sheet positions. No cut part remains rotated out of plane.
 
-The default plywood set contains 25 pieces:
+The default plywood set contains 26 pieces:
 
 | Part | Quantity |
 | --- | ---: |
@@ -177,6 +177,7 @@ The default plywood set contains 25 pieces:
 | Rack base | 1 |
 | Chamber tray runners | 2 |
 | Removable-rack side rails | 2 |
+| Removable-rack back rail | 1 |
 | Calibration coupon | 1 |
 
 The veneer sheet contains four pieces: the main wrap, door fascia, front
@@ -213,10 +214,10 @@ that filter intentionally shows only the engraved door fascia. Select
 and operation. Because the three sheets span much farther than the assembled
 model, use OpenSCAD's **View All / Zoom to fit** command after changing to 2D.
 
-The door fascia includes the display outline, controls, logo placeholder,
-window seam, lower panel seam, and vent grille. OpenSCAD SVG export does not
-reliably preserve preview colours, so produce separate files at matching
-coordinates:
+The Bob-style door fascia includes a circular viewing port, an upper display,
+three controls, a circular port border, and the lower `Bob.` mark. OpenSCAD
+SVG export does not reliably preserve preview colours, so produce separate
+files at matching coordinates:
 
 ```sh
 openscad -o bob-veneer-cut.svg \
@@ -308,7 +309,7 @@ runners. Keep paint, glue, and finish out of pin holes and runners.
 
 ## Window and chamber
 
-`window_mode="open"` leaves the aperture empty. The optional
+`window_mode="open"` leaves the circular aperture empty. The optional
 `"transparent_insert"` mode adds a preview insert, but no transparent sheet is
 included in the cutting layout.
 
