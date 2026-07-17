@@ -53,6 +53,7 @@ sheet_margin = 5;
 part_spacing = 3;
 
 door_angle = 90;
+door_perimeter_gap = 0.4;
 hinge_pin_diameter = 2;
 hinge_clearance = 0.2;
 hinge_axis_offset = 2.5;
@@ -84,8 +85,11 @@ If the panel is hidden, enable the **Customizer** panel from OpenSCAD's
 Window/View menu, then save or select a parameter set from the panel.
 
 The validated door range is 0–90 degrees. Positive motion opens the door
-outward and downward. The axis is shifted forward from the shell to clear the
-lower frame, chamber floor, and veneer.
+outward and downward. At 0 degrees the plywood frame sits inside the front
+opening, while the veneer fascia is flush with the front veneer.
+`door_perimeter_gap` provides clearance on every edge. The hinge pin is bonded
+along the lower front edge of the door and turns in two external side cheeks;
+`hinge_axis_offset` controls the hole backset within those cheeks.
 
 ## Output modes
 
@@ -287,11 +291,13 @@ veneer face terminate the wrap.
 3. Glue the rib cage square on the hidden base.
 4. Assemble the chamber floor, top, rear, and sides with the hidden tabs and
    slots, then install it inside the cage.
-5. Glue the tray runners inside the chamber.
+5. Glue the tray runners inside the chamber. They carry the removable rack;
+   the raised end of each profile is a rear travel stop.
 6. Assemble and test the removable tray-style rack.
 7. Laminate the door fascia onto its plywood frame, keeping the window open.
-8. Glue the hinge cheeks to the internal front supports.
-9. Align the door/support holes and insert the purchased pin.
+8. Bond the purchased pin along the lower front edge of the door.
+9. Pass the pin ends through the hinge cheeks, then glue the cheeks to the
+   outside faces of the cabinet sides without gluing the pin.
 10. Test the door at 0, 45, and 90 degrees before adding cosmetic parts.
 11. Pre-form and glue the veneer wrap over the ribs.
 12. Add the front termination ring and rear veneer face.
@@ -309,6 +315,10 @@ included in the cutting layout.
 The box-like chamber contains only structural panels, ledges, and a simplified
 spray-arm mark. There is no tank, pump, plumbing, heater, lighting, or rear
 service compartment.
+
+The two brown strips near the chamber floor are the rack runners, not part of
+the floor. They support the rack above the chamber floor and stop it at the
+rear. They remain visible when the removable rack is pulled out.
 
 ## Validation
 

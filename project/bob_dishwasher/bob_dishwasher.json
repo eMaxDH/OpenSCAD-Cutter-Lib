@@ -3,6 +3,7 @@
     "parameterSets": {
         "Default 80 mm assembly": {
             "door_angle": "90",
+            "door_perimeter_gap": "0.4",
             "layout_material": "all",
             "layout_operation": "preview",
             "make_3d": "true",
@@ -13,6 +14,7 @@
             "veneer_opacity": "0.58"
         },
         "Default cutting layout": {
+            "door_perimeter_gap": "0.4",
             "layout_material": "all",
             "layout_operation": "preview",
             "make_3d": "false",
@@ -21,6 +23,7 @@
         },
         "Skeleton inspection": {
             "door_angle": "45",
+            "door_perimeter_gap": "0.4",
             "make_3d": "true",
             "model_height": "80",
             "output_mode": "automatic",

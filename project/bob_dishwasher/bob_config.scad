@@ -40,9 +40,11 @@ part_spacing = 3; // [0.5:0.5:10]
 /* [Door and hinge] */
 
 door_angle = 90; // [0:1:90]
+door_perimeter_gap = 0.4; // [0:0.1:2]
 hinge_pin_diameter = 2; // [0.5:0.1:5]
 hinge_clearance = 0.2; // [0:0.05:1]
-hinge_axis_offset = 2.5; // [0.5:0.1:10]
+// Distance from the cheek's rear edge to its hinge-hole centre.
+hinge_axis_offset = 2.5; // [1.5:0.1:8]
 show_hinge = true; // [false:true]
 show_door_sweep = false; // [false:true]
 window_mode = "open"; // [open, transparent_insert]
