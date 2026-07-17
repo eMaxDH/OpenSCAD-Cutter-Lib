@@ -95,7 +95,8 @@ ribbed_veneer_shell(
     rib_count=4, rib_thickness=4, rib_width=4,
     veneer_thickness=0.6, corner_radius=6,
     front_termination_offset=4, rear_termination_offset=4,
-    show_ribs=true, show_skin=true, min_bend_radius=5
+    show_ribs=true, show_skin=true, min_bend_radius=5,
+    skin_opacity=0.90
 );
 ```
 

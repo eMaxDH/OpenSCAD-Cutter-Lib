@@ -1,0 +1,31 @@
+{
+    "fileFormatVersion": "1",
+    "parameterSets": {
+        "Default 80 mm assembly": {
+            "door_angle": "90",
+            "layout_material": "all",
+            "layout_operation": "cut",
+            "make_3d": "true",
+            "model_height": "80",
+            "output_mode": "automatic",
+            "show_rib_cage": "true",
+            "show_veneer": "true",
+            "veneer_opacity": "0.58"
+        },
+        "Default cutting layout": {
+            "layout_material": "all",
+            "layout_operation": "cut",
+            "make_3d": "false",
+            "model_height": "80",
+            "output_mode": "automatic"
+        },
+        "Skeleton inspection": {
+            "door_angle": "45",
+            "make_3d": "true",
+            "model_height": "80",
+            "output_mode": "automatic",
+            "show_rib_cage": "true",
+            "show_veneer": "false"
+        }
+    }
+}

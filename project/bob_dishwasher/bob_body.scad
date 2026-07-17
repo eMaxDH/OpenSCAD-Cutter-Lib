@@ -1,6 +1,45 @@
 use <../../cutter_lib/materials/cm_manufacturing.scad>
 use <../../cutter_lib/shells/csh_ribbed_veneer.scad>
 
+/* [Example] */
+
+make_3d = true; // [false:true]
+example_model_height = 80; // [70:1:160]
+example_plywood_thickness = 4; // [1:0.5:8]
+example_veneer_thickness = 0.6; // [0.1:0.1:2]
+example_rib_count = 4; // [1:1:10]
+example_show_veneer = true; // [false:true]
+example_show_skeleton = true; // [false:true]
+
+/* [Hidden] */
+
+example_model_width = 340 * example_model_height / 490;
+example_model_depth = example_model_height;
+example_corner_radius = example_model_height * 0.10;
+
+if (make_3d)
+    bob_body_structure(
+        example_model_width,
+        example_model_height,
+        example_model_depth,
+        example_plywood_thickness,
+        example_veneer_thickness,
+        example_rib_count,
+        example_corner_radius,
+        example_plywood_thickness,
+        example_plywood_thickness,
+        0.15, 0.5,
+        example_show_skeleton,
+        example_show_veneer,
+        5, 0.58);
+else
+    bob_shell_rib_2d(
+        example_model_width,
+        example_model_height,
+        example_plywood_thickness,
+        example_corner_radius,
+        0.15, 0.5);
+
 function bob_inner_width(model_width, plywood_thickness) =
     model_width - 2*plywood_thickness;
 
@@ -74,7 +113,8 @@ module bob_body_structure(model_width, model_height, model_depth,
                           kerf=0.5,
                           show_ribs=true,
                           show_skin=true,
-                          min_bend_radius=5)
+                          min_bend_radius=5,
+                          veneer_opacity=0.58)
 {
     usable_depth = model_depth-front_offset-rear_offset;
     assert(rib_count >= 1, "bob_body_structure: at least one rib is required");
@@ -122,7 +162,8 @@ module bob_body_structure(model_width, model_height, model_depth,
             rear_termination_offset=rear_offset,
             show_ribs=false,
             show_skin=true,
-            min_bend_radius=min_bend_radius);
+            min_bend_radius=min_bend_radius,
+            skin_opacity=veneer_opacity);
 
     if (show_skin) {
         // Front cosmetic termination ring and rear cosmetic face.

@@ -83,7 +83,8 @@ module ribbed_veneer_shell(width, height, depth,
                            rear_termination_offset=4,
                            show_ribs=true,
                            show_skin=true,
-                           min_bend_radius=5)
+                           min_bend_radius=5,
+                           skin_opacity=0.90)
 {
     usable_depth = depth-front_termination_offset-rear_termination_offset;
 
@@ -111,7 +112,7 @@ module ribbed_veneer_shell(width, height, depth,
                                       rib_width, corner_radius);
 
     if (show_skin)
-        color([0.72, 0.45, 0.2, 0.90])
+        color([0.72, 0.45, 0.2, skin_opacity])
             translate([0, front_termination_offset+usable_depth, 0])
                 rotate([90,0,0])
                     linear_extrude(usable_depth)

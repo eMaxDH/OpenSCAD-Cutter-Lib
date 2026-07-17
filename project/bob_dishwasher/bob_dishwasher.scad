@@ -1,3 +1,4 @@
+$bob_config_embedded = true;
 include <bob_config.scad>
 
 use <../../cutter_lib/calibration/ccal_laser_coupon.scad>
@@ -65,7 +66,8 @@ module bob_assembly(exploded=0, debug=false)
         shell_front_offset, shell_rear_offset,
         fit_clearance, kerf,
         show_rib_cage, show_veneer,
-        minimum_veneer_bend_radius);
+        minimum_veneer_bend_radius,
+        veneer_opacity);
 
     if (show_chamber)
         bob_chamber_assembly(
@@ -103,6 +105,11 @@ module bob_assembly(exploded=0, debug=false)
     }
 }
 
+selected_output_mode =
+    output_mode == "automatic"
+    ? (make_3d ? "assembly" : "cut_layout")
+    : output_mode;
+
 bob_validate_configuration();
 
 echo(str("Bob scale factor: ", scale_factor,
@@ -110,13 +117,13 @@ echo(str("Bob scale factor: ", scale_factor,
 echo(str("Bob envelope [W,D,H]: ",
          [model_width, model_depth, model_height]));
 
-if (output_mode == "assembly")
+if (selected_output_mode == "assembly")
     bob_assembly();
-else if (output_mode == "exploded")
+else if (selected_output_mode == "exploded")
     bob_assembly(exploded=2);
-else if (output_mode == "debug")
+else if (selected_output_mode == "debug")
     bob_assembly(debug=true);
-else if (output_mode == "cut_layout")
+else if (selected_output_mode == "cut_layout")
     bob_cut_layout(
         model_width, model_height, model_depth,
         plywood_thickness, veneer_thickness,
@@ -127,11 +134,11 @@ else if (output_mode == "cut_layout")
         sheet_size, sheet_margin, part_spacing,
         window_mode, layout_material,
         layout_operation);
-else if (output_mode == "calibration")
+else if (selected_output_mode == "calibration")
     ccal_laser_coupon(
         plywood_thickness, kerf,
         hinge_pin_diameter);
-else if (output_mode == "single_part") {
+else if (selected_output_mode == "single_part") {
     if (single_part_id == "BOB-DOOR-FRAME")
         bob_door_frame_2d(
             bob_door_width(model_width),
@@ -153,4 +160,5 @@ else if (output_mode == "single_part") {
                           single_part_id));
 }
 else
-    assert(false, str("Unknown output_mode: ", output_mode));
+    assert(false, str("Unknown output_mode: ",
+                      selected_output_mode));
