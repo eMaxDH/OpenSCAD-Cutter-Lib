@@ -161,13 +161,17 @@ The Bob entry module follows the lamp convention: `make_3d=true` assembles
 the model, while `make_3d=false` sends the manufactured components to
 deterministic XY sheet positions. No cut part remains rotated out of plane.
 
-The default plywood set contains 26 pieces:
+The default plywood set contains 44 pieces. Each of the six logical shell
+ribs is cut as four compact pieces and glued together at tabbed joints on the
+straight vertical runs beside the corners. This preserves the continuous
+rounded veneer-support surface while avoiding six large rectangular nesting
+areas. At the default scale, the allocated rib footprint drops by about 50%.
 
 | Part | Quantity |
 | --- | ---: |
-| Front frame | 1 |
-| Internal shell ribs | 4 |
-| Rear frame | 1 |
+| Front-frame segments | 4 |
+| Internal shell-rib segments | 16 |
+| Rear-frame segments | 4 |
 | Longitudinal stringers | 4 |
 | Hidden base | 1 |
 | Door frame | 1 |
@@ -287,22 +291,25 @@ veneer face terminate the wrap.
 ## Suggested assembly order
 
 1. Cut and evaluate the calibration coupon.
-2. Dry-fit the front frame, four internal ribs, rear frame, and four
+2. Dry-fit each logical rib from one top cap, one bottom cap, and two side
+   pieces. The cap tabs enter the open notches at the ends of the sides.
+3. Glue these joints on a flat surface, keeping each completed rib square.
+4. Dry-fit the assembled front frame, four internal ribs, rear frame, and four
    longitudinal stringers.
-3. Glue the rib cage square on the hidden base.
-4. Assemble the chamber floor, top, rear, and sides with the hidden tabs and
+5. Glue the rib cage square on the hidden base.
+6. Assemble the chamber floor, top, rear, and sides with the hidden tabs and
    slots, then install it inside the cage.
-5. Glue the tray runners inside the chamber. They carry the removable rack;
+7. Glue the tray runners inside the chamber. They carry the removable rack;
    the raised end of each profile is a rear travel stop.
-6. Assemble and test the removable tray-style rack.
-7. Laminate the door fascia onto its plywood frame, keeping the window open.
-8. Bond the purchased pin along the lower front edge of the door.
-9. Pass the pin ends through the hinge cheeks, then glue the cheeks to the
+8. Assemble and test the removable tray-style rack.
+9. Laminate the door fascia onto its plywood frame, keeping the window open.
+10. Bond the purchased pin along the lower front edge of the door.
+11. Pass the pin ends through the hinge cheeks, then glue the cheeks to the
    outside faces of the cabinet sides without gluing the pin.
-10. Test the door at 0, 45, and 90 degrees before adding cosmetic parts.
-11. Pre-form and glue the veneer wrap over the ribs.
-12. Add the front termination ring and rear veneer face.
-13. Sand lightly, mask moving areas, and paint or finish.
+12. Test the door at 0, 45, and 90 degrees before adding cosmetic parts.
+13. Pre-form and glue the veneer wrap over the ribs.
+14. Add the front termination ring and rear veneer face.
+15. Sand lightly, mask moving areas, and paint or finish.
 
 Do not glue the rack. Pull it through the open door or lift it from its
 runners. Keep paint, glue, and finish out of pin holes and runners.

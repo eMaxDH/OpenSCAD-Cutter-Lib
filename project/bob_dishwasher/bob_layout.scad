@@ -48,12 +48,16 @@ module bob_part_label(id, position=[1,1], size=1.8)
 module bob_layout_layer_info(material="all", operation="preview",
                              sheet_size=[300,300], rib_count=4)
 {
+    logical_ribs = rib_count+2;
+    rib_segments = 4*logical_ribs;
+
     echo(str("[BOB 2D LAYERS] material=", material,
              ", operation=", operation));
     echo("[BOB 2D LAYERS] plywood cut | plywood engraving | veneer cut | veneer engraving");
-    echo(str("[BOB PART MANIFEST] plywood=", 22+rib_count,
-             " cut parts (including ", rib_count,
-             " shell ribs and coupon), veneer=4 cut parts, purchased hinge pin=1"));
+    echo(str("[BOB PART MANIFEST] plywood=", 20+rib_segments,
+             " cut parts (including ", logical_ribs,
+             " logical ribs / ", rib_segments,
+             " glued rib segments and coupon), veneer=4 cut parts, purchased hinge pin=1"));
 
     %translate([0, sheet_size[1]+7]) {
         color("black")
@@ -93,35 +97,48 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
         model_height, plywood_thickness, door_gap);
     base = [model_width-2*plywood_thickness,
             model_depth-2*plywood_thickness];
-    cage_h = 4*plywood_thickness+3*spacing;
-    x4 = margin+3*(model_width+spacing);
-    door_y = margin;
-    base_y = door_y+dh+spacing;
-    cage_y = base_y+base[1]+spacing;
-    hinge_y = cage_y;
-
-    rib_boxes = [
-        [margin, margin, model_width, model_height],
-        [margin+model_width+spacing, margin,
-         model_width, model_height],
-        [margin+2*(model_width+spacing), margin,
-         model_width, model_height],
-        [margin, margin+model_height+spacing,
-         model_width, model_height],
-        [margin+model_width+spacing,
-         margin+model_height+spacing,
-         model_width, model_height],
-        [margin+2*(model_width+spacing),
-         margin+model_height+spacing,
-         model_width, model_height]
+    cap_piece_h = bob_rib_cap_piece_height(
+        corner_radius, plywood_thickness);
+    side_length = bob_rib_side_length(
+        model_height, corner_radius, plywood_thickness);
+    cap_columns = 4;
+    cap_rows = ceil(2*total_ribs/cap_columns);
+    cap_boxes = [
+        for (i = [0:2*total_ribs-1])
+            [
+                margin+(i%cap_columns)*(model_width+spacing),
+                margin+floor(i/cap_columns)*(cap_piece_h+spacing),
+                model_width, cap_piece_h
+            ]
     ];
-    boxes = concat(rib_boxes, [
-        [x4, door_y, dw, dh],
-        [x4, base_y, base[0], base[1]],
-        [x4, cage_y, cage_h,
+
+    parts_y = margin+cap_rows*cap_piece_h+
+              cap_rows*spacing;
+    side_boxes = [
+        for (i = [0:2*total_ribs-1])
+            [
+                margin+i*(plywood_thickness+spacing),
+                parts_y,
+                plywood_thickness, side_length
+            ]
+    ];
+    side_band_width =
+        2*total_ribs*plywood_thickness+
+        (2*total_ribs-1)*spacing;
+    door_x = margin+side_band_width+spacing;
+    base_x = door_x+dw+spacing;
+    cage_x = base_x+base[0]+spacing;
+    cage_width = 4*plywood_thickness+3*spacing;
+    hinge_x = cage_x+cage_width+spacing;
+    hinge_width = 5*plywood_thickness+spacing;
+    hinge_height = 3*plywood_thickness;
+
+    boxes = concat(cap_boxes, side_boxes, [
+        [door_x, parts_y, dw, dh],
+        [base_x, parts_y, base[0], base[1]],
+        [cage_x, parts_y, cage_width,
          model_depth-2*plywood_thickness],
-        [x4+cage_h+spacing, hinge_y,
-         5*plywood_thickness+spacing, 3*plywood_thickness]
+        [hinge_x, parts_y, hinge_width, hinge_height]
     ]);
 
     cl_validate_layout(
@@ -129,30 +146,68 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
         "BOB plywood sheet 1");
     cl_sheet_boundary(sheet_size, "BOB plywood 4 mm - sheet 1");
 
+    old_rib_box_area =
+        total_ribs*model_width*model_height;
+    segmented_rib_box_area =
+        total_ribs*(
+            2*model_width*cap_piece_h+
+            2*plywood_thickness*side_length);
+    echo(str(
+        "[BOB RIB NESTING] allocated rib footprint ",
+        old_rib_box_area, " -> ", segmented_rib_box_area,
+        " mm^2 (",
+        100*(old_rib_box_area-segmented_rib_box_area)/
+            old_rib_box_area,
+        "% reduction)"));
+
     rib_ids = [
         "BOB-FRONT-FRAME",
         "BOB-RIB-01", "BOB-RIB-02",
         "BOB-RIB-03", "BOB-RIB-04",
         "BOB-REAR-FRAME"
     ];
-    for (i = [0:5])
+
+    // Each logical rib is split on its straight vertical runs, immediately
+    // beside the rounded corners. Tabs from the curved caps glue into the
+    // matching open notches in the narrow side pieces.
+    for (i = [0:2*total_ribs-1]) {
+        rib_index = floor(i/2);
+        top = i%2 == 1;
+        segment_id = str(
+            rib_ids[rib_index],
+            top ? "-TOP" : "-BOTTOM");
         cl_layout_part(
-            [rib_boxes[i][0], rib_boxes[i][1]],
-            [model_width, model_height],
-            rib_ids[i], sheet_size=sheet_size, margin=margin) {
-                bob_shell_rib_2d(
+            [cap_boxes[i][0], cap_boxes[i][1]],
+            [model_width, cap_piece_h],
+            segment_id,
+            sheet_size=sheet_size, margin=margin) {
+                bob_rib_cap_2d(
                     model_width, model_height,
-                    plywood_thickness,
-                    corner_radius,
-                    fit_clearance, kerf);
+                    plywood_thickness, corner_radius,
+                    top, fit_clearance, kerf);
                 bob_part_label(
-                    rib_ids[i],
+                    segment_id,
                     [plywood_thickness+1,
                      plywood_thickness+1]);
             }
+    }
+
+    for (i = [0:2*total_ribs-1]) {
+        rib_index = floor(i/2);
+        side = i%2 == 0 ? "LEFT" : "RIGHT";
+        segment_id = str(rib_ids[rib_index], "-", side);
+        cl_layout_part(
+            [side_boxes[i][0], side_boxes[i][1]],
+            [plywood_thickness, side_length],
+            segment_id,
+            sheet_size=sheet_size, margin=margin)
+                bob_rib_side_2d(
+                    model_height, plywood_thickness,
+                    corner_radius, fit_clearance, kerf);
+    }
 
     cl_layout_part(
-        [x4, door_y], [dw, dh],
+        [door_x, parts_y], [dw, dh],
         "BOB-DOOR-FRAME",
         sheet_size=sheet_size, margin=margin) {
             bob_door_frame_2d(
@@ -163,7 +218,7 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
         }
 
     cl_layout_part(
-        [x4, base_y], base,
+        [base_x, parts_y], base,
         "BOB-BASE",
         sheet_size=sheet_size, margin=margin) {
             bob_base_2d(
@@ -174,15 +229,15 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
 
     // Four longitudinal registration stringers, rotated for compact packing.
     for (i = [0:3])
-        translate([x4+i*(plywood_thickness+spacing), cage_y])
+        translate([cage_x+i*(plywood_thickness+spacing), parts_y])
             bob_stringer_2d(
                 model_depth, plywood_thickness);
-    bob_part_label("BOB-STRINGER x4", [x4, cage_y+1]);
+    bob_part_label("BOB-STRINGER x4", [cage_x, parts_y+1]);
 
     for (i = [0:1])
-        translate([x4+cage_h+spacing+
+        translate([hinge_x+
                    i*(2.5*plywood_thickness+spacing),
-                   hinge_y])
+                   parts_y])
             ch_pin_hinge_cheek_2d(
                 2.5*plywood_thickness,
                 3*plywood_thickness,
@@ -195,7 +250,7 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
                     1.5*plywood_thickness],
                 edge_min=1);
     bob_part_label("BOB-HINGE-L/R",
-                   [x4+cage_h+spacing, hinge_y+1]);
+                   [hinge_x, parts_y+1]);
 }
 
 module bob_plywood_sheet_2(model_width, model_height, model_depth,

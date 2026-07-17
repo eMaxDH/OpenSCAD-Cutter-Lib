@@ -236,7 +236,7 @@ module bob_dishwasher(make_3d=true, output_mode="automatic")
                     model_width, plywood_thickness,
                     door_perimeter_gap)*0.12));
         else if (single_part_id == "BOB-RIB-01")
-            bob_shell_rib_2d(
+            bob_segmented_rib_compact_2d(
                 model_width, model_height,
                 plywood_thickness,
                 shell_corner_radius,
