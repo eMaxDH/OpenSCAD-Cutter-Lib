@@ -36,11 +36,24 @@ function bob_rack_size(model_width, model_depth, plywood_thickness) =
      bob_chamber_depth(model_depth, plywood_thickness)-
      4*plywood_thickness];
 
+function bob_rack_corner_radius() = 2;
+function bob_rack_side_rail_length(rack_depth, corner_radius=2) =
+    rack_depth-2*corner_radius;
+function bob_rack_back_rail_length(rack_width, corner_radius=2) =
+    rack_width-2*corner_radius;
+
 module bob_rack_side_rail_2d(length, plywood_thickness=4)
 {
     assert(length > 0 && plywood_thickness > 0,
            "bob_rack_side_rail_2d: dimensions must be positive");
     square([plywood_thickness/2, length]);
+}
+
+module bob_rack_back_rail_2d(length, plywood_thickness=4)
+{
+    assert(length > 0 && plywood_thickness > 0,
+           "bob_rack_back_rail_2d: dimensions must be positive");
+    square([length, plywood_thickness/2]);
 }
 
 module bob_rack_assembly(model_width, model_height, model_depth,
@@ -52,6 +65,11 @@ module bob_rack_assembly(model_width, model_height, model_depth,
     chamber_d = bob_chamber_depth(model_depth, plywood_thickness);
     rack = bob_rack_size(
         model_width, model_depth, plywood_thickness);
+    corner_radius = bob_rack_corner_radius();
+    side_rail_length = bob_rack_side_rail_length(
+        rack[1], corner_radius);
+    back_rail_length = bob_rack_back_rail_length(
+        rack[0], corner_radius);
     x0 = (model_width-rack[0])/2;
     y0 = 2*plywood_thickness+2*plywood_thickness-pullout;
     chamber_floor_top = 3*plywood_thickness;
@@ -83,7 +101,7 @@ module bob_rack_assembly(model_width, model_height, model_depth,
             removable_tray(
                 rack,
                 thickness=plywood_thickness/2,
-                corner_radius=2,
+                corner_radius=corner_radius,
                 grip_width=min(14, rack[0]/2),
                 grip_depth=4,
                 dish_slots=4,
@@ -93,9 +111,22 @@ module bob_rack_assembly(model_width, model_height, model_depth,
     // Low, robust side rails instead of fragile miniature wire tines.
     color([0.72, 0.54, 0.30])
     for (x = [x0, x0+rack[0]-plywood_thickness/2])
-        translate([x, y0,
+        translate([x, y0+corner_radius,
                    rack_z+plywood_thickness/2])
             linear_extrude(plywood_thickness)
                 bob_rack_side_rail_2d(
-                    rack[1], plywood_thickness);
+                    side_rail_length,
+                    plywood_thickness);
+
+    // Rear rail closes the rack between the two rounded back corners.
+    color([0.72, 0.54, 0.30])
+        translate([
+            x0+corner_radius,
+            y0+rack[1]-corner_radius,
+            rack_z+plywood_thickness/2
+        ])
+            linear_extrude(plywood_thickness)
+                bob_rack_back_rail_2d(
+                    back_rail_length,
+                    plywood_thickness);
 }

@@ -60,17 +60,24 @@ function bob_door_height(model_height, plywood_thickness=4, door_gap=0.4) =
     model_height - 2*(plywood_thickness+door_gap);
 function bob_door_bottom(plywood_thickness=4, door_gap=0.4) =
     plywood_thickness+door_gap;
-function bob_window_size(door_width, door_height) =
-    [door_width*0.66, door_height*0.48];
+function bob_window_diameter(door_width, door_height) =
+    min(door_width*0.42, door_height*0.32);
+function bob_window_center_z(door_height) = door_height*0.43;
+
+module bob_door_window_2d(door_width, door_height)
+{
+    translate([
+        door_width/2,
+        bob_window_center_z(door_height)
+    ])
+        circle(d=bob_window_diameter(
+            door_width, door_height));
+}
 
 module bob_door_frame_2d(door_width, door_height,
                          frame_width=5, corner_radius=5,
                          window_mode="open")
 {
-    window = bob_window_size(door_width, door_height);
-    window_x = (door_width-window[0])/2;
-    window_z = door_height*0.18;
-
     assert(window_mode == "open" ||
            window_mode == "transparent_insert",
            "bob_door_frame_2d: unsupported window_mode");
@@ -81,8 +88,8 @@ module bob_door_frame_2d(door_width, door_height,
     difference() {
         csh_rounded_rect_2d(
             [door_width, door_height], corner_radius);
-        translate([window_x, window_z])
-            csh_rounded_rect_2d(window, corner_radius*0.65);
+        bob_door_window_2d(
+            door_width, door_height);
     }
 }
 
@@ -90,41 +97,36 @@ module bob_door_fascia_2d(door_width, door_height,
                           corner_radius=5,
                           window_mode="open")
 {
-    window = bob_window_size(door_width, door_height);
     difference() {
         csh_rounded_rect_2d(
             [door_width, door_height], corner_radius);
         if (window_mode == "open" ||
             window_mode == "transparent_insert")
-            translate([(door_width-window[0])/2,
-                       door_height*0.18])
-                csh_rounded_rect_2d(window, corner_radius*0.65);
+            bob_door_window_2d(
+                door_width, door_height);
     }
 }
 
 module bob_door_engraving_2d(door_width, door_height,
                              line_width=0.35)
 {
-    window = bob_window_size(door_width, door_height);
     display = [door_width*0.28, door_height*0.07];
-    control_z = door_height*0.79;
+    display_z = door_height*0.79;
+    button_z = door_height*0.735;
+    window_d = bob_window_diameter(
+        door_width, door_height);
+    window_z = bob_window_center_z(door_height);
 
-    // Window border / main seam.
+    // Circular viewing-port border.
     difference() {
-        translate([(door_width-window[0])/2-1,
-                   door_height*0.18-1])
-            csh_rounded_rect_2d(
-                [window[0]+2, window[1]+2], 4);
-        translate([(door_width-window[0])/2-1+line_width,
-                   door_height*0.18-1+line_width])
-            csh_rounded_rect_2d(
-                [window[0]+2-2*line_width,
-                 window[1]+2-2*line_width],
-                4-line_width);
+        translate([door_width/2, window_z])
+            circle(d=window_d+2);
+        translate([door_width/2, window_z])
+            circle(d=window_d+2-2*line_width);
     }
 
-    // Display and two controls.
-    translate([(door_width-display[0])/2, control_z])
+    // Upper display.
+    translate([(door_width-display[0])/2, display_z])
         difference() {
             csh_rounded_rect_2d(display, 1);
             translate([line_width, line_width])
@@ -134,22 +136,21 @@ module bob_door_engraving_2d(door_width, door_height,
                     max(0, 1-line_width));
         }
 
-    for (x = [door_width*0.18, door_width*0.82])
-        translate([x, control_z+display[1]/2])
-            circle(d=2.2);
+    // Three controls below the display, matching the Bob front arrangement.
+    button_x = [
+        door_width/2-door_width*0.09,
+        door_width/2,
+        door_width/2+door_width*0.09
+    ];
+    button_d = [2.0, 2.6, 2.0];
+    for (i = [0:2])
+        translate([button_x[i], button_z])
+            circle(d=button_d[i]);
 
-    // Logo placeholder, lower seam, and vent grille.
-    translate([door_width/2, door_height*0.70])
-        text("LOGO", size=max(2, door_width*0.07),
+    // Lower brand mark.
+    translate([door_width/2, door_height*0.08])
+        text("Bob.", size=max(2.5, door_width*0.09),
              halign="center");
-
-    translate([door_width*0.15, door_height*0.08])
-        square([door_width*0.70, line_width]);
-
-    for (i = [0:5])
-        translate([door_width*0.32+i*door_width*0.06,
-                   door_height*0.04])
-            square([line_width, door_height*0.025]);
 }
 
 module bob_door_local(door_width, door_height,
@@ -181,12 +182,15 @@ module bob_door_local(door_width, door_height,
 
     if (window_mode == "transparent_insert")
         color([0.35, 0.65, 0.8, 0.25])
-            translate([door_width*0.17,
-                       plywood_thickness/2+exploded,
-                       door_height*0.18])
-                cube([door_width*0.66,
-                      veneer_thickness,
-                      door_height*0.48]);
+            translate([
+                0,
+                plywood_thickness/2+exploded,
+                0
+            ])
+                rotate([90,0,0])
+                    linear_extrude(veneer_thickness)
+                        bob_door_window_2d(
+                            door_width, door_height);
 
     if (show_engraving)
         color([0.12, 0.08, 0.05])
