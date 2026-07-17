@@ -1,7 +1,6 @@
 use <../../cutter_lib/layout/cl_cut_layout.scad>
 use <../../cutter_lib/calibration/ccal_laser_coupon.scad>
 use <../../cutter_lib/shells/csh_ribbed_veneer.scad>
-use <../../cutter_lib/hinges/ch_pin_hinge.scad>
 use <../../cutter_lib/trays/ctr_removable_tray.scad>
 use <bob_body.scad>
 use <bob_door.scad>
@@ -54,7 +53,7 @@ module bob_layout_layer_info(material="all", operation="preview",
     echo(str("[BOB 2D LAYERS] material=", material,
              ", operation=", operation));
     echo("[BOB 2D LAYERS] plywood cut | plywood engraving | veneer cut | veneer engraving");
-    echo(str("[BOB PART MANIFEST] plywood=", 18+rib_segments,
+    echo(str("[BOB PART MANIFEST] plywood=", 16+rib_segments,
              " cut parts (including ", logical_ribs,
              " logical ribs / ", rib_segments,
              " glued rib segments and coupon), veneer=4 cut parts, purchased hinge pin=1"));
@@ -80,9 +79,6 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
                            kerf=0.5, fit_clearance=0.15,
                            rib_count=4,
                            corner_radius=8,
-                           pin_diameter=2,
-                           pin_clearance=0.2,
-                           hinge_axis_offset=2.5,
                            door_gap=0.4,
                            sheet_size=[300,300],
                            margin=5, spacing=3)
@@ -129,16 +125,12 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
     base_x = door_x+dw+spacing;
     cage_x = base_x+base[0]+spacing;
     cage_width = 2*plywood_thickness+spacing;
-    hinge_x = cage_x+cage_width+spacing;
-    hinge_width = 5*plywood_thickness+spacing;
-    hinge_height = 3*plywood_thickness;
 
     boxes = concat(cap_boxes, side_boxes, [
         [door_x, parts_y, dw, dh],
         [base_x, parts_y, base[0], base[1]],
         [cage_x, parts_y, cage_width,
-         model_depth],
-        [hinge_x, parts_y, hinge_width, hinge_height]
+         model_depth]
     ]);
 
     cl_validate_layout(
@@ -234,24 +226,6 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
             bob_stringer_2d(
                 model_depth, plywood_thickness);
     bob_part_label("BOB-STRINGER x2", [cage_x, parts_y+1]);
-
-    for (i = [0:1])
-        translate([hinge_x+
-                   i*(2.5*plywood_thickness+spacing),
-                   parts_y])
-            ch_pin_hinge_cheek_2d(
-                2.5*plywood_thickness,
-                3*plywood_thickness,
-                pin_diameter,
-                pin_clearance,
-                kerf,
-                hole_center=[
-                    2.5*plywood_thickness-
-                    hinge_axis_offset,
-                    1.5*plywood_thickness],
-                edge_min=1);
-    bob_part_label("BOB-HINGE-L/R",
-                   [hinge_x, parts_y+1]);
 }
 
 module bob_plywood_sheet_2(model_width, model_height, model_depth,
@@ -517,7 +491,6 @@ module bob_cut_layout(model_width, model_height, model_depth,
                       rear_offset=4,
                       pin_diameter=2,
                       pin_clearance=0.2,
-                      hinge_axis_offset=2.5,
                       door_gap=0.4,
                       sheet_size=[300,300],
                       margin=5, spacing=3,
@@ -544,7 +517,6 @@ module bob_cut_layout(model_width, model_height, model_depth,
         model_width, model_height, model_depth,
         plywood_thickness, kerf, fit_clearance,
         rib_count, corner_radius,
-        pin_diameter, pin_clearance, hinge_axis_offset,
         door_gap,
         sheet_size, margin, spacing);
 

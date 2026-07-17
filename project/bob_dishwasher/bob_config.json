@@ -3,7 +3,6 @@
         "test": {
             "door_angle": "90",
             "fit_clearance": "0.15",
-            "hinge_axis_offset": "2.5",
             "hinge_clearance": "0.2",
             "hinge_pin_diameter": "2",
             "kerf": "0.5",
