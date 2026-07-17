@@ -7,6 +7,154 @@ useful as entry points.
 All defaults shown here come from the current source. Import files with `use`,
 not `include`.
 
+## Manufacturing and fabrication
+
+The miniature-appliance helpers are grouped by reusable mechanism:
+
+| Import | Purpose |
+| --- | --- |
+| `materials/cm_manufacturing.scad` | Kerf-aware slot, tab, and hole dimensions |
+| `joints/cj_hidden_tabs.scad` | Repeated hidden tabs and matching slots |
+| `hinges/ch_pin_hinge.scad` | Pin cheeks, pins, rotation, and motion sweeps |
+| `shells/csh_ribbed_veneer.scad` | Rounded ribs and flattenable veneer wraps |
+| `trays/ctr_removable_tray.scad` | Tray, grip, dish slots, and runners |
+| `layout/cl_cut_layout.scad` | Sheets, placement, and overlap checks |
+| `calibration/ccal_laser_coupon.scad` | Slot-fit, kerf, and pin-hole coupon |
+| `validation/cv_validation.scad` | Shared assertions and warnings |
+
+### Compensation
+
+```scad
+cut_compensation(kerf);
+slot_width(material_thickness, fit_clearance=0, kerf=0);
+tab_width(material_thickness, fit_clearance=0, kerf=0);
+compensated_dimension(target, kerf=0, internal=false);
+effective_pin_hole_diameter(pin_diameter, pin_clearance=0, kerf=0);
+```
+
+These return drawn dimensions for a centre-line laser path. Internal features
+subtract one full kerf; external features add one full kerf. Verify that
+convention against the export/CAM workflow using the coupon.
+
+### Hidden joints
+
+```scad
+cj_edge_pattern(edge_length, count=3, edge_margin=4) children();
+cj_hidden_tabs_2d(
+    edge_length, tab_depth, feature_width,
+    count=3, edge_margin=4, fit_clearance=0, kerf=0
+);
+cj_hidden_slots_2d(
+    edge_length, material_thickness, feature_width,
+    count=3, edge_margin=4, fit_clearance=0, kerf=0
+);
+cj_hidden_tabbed_panel_2d(
+    size, edge="bottom", tab_depth=4, feature_width=8,
+    count=3, edge_margin=4, fit_clearance=0, kerf=0
+);
+```
+
+The modules assert that margins, pitch, and feature widths are feasible.
+Slots are intended for `difference()` operations.
+
+### Pin hinges
+
+```scad
+ch_rotate_about_axis(
+    axis_origin=[0,0,0], angle=0, axis=[1,0,0]
+) children();
+ch_pin_hinge_cheek_2d(
+    width, height, pin_diameter,
+    pin_clearance=0, kerf=0,
+    hole_center=undef, edge_min=1
+);
+ch_hinge_pin_preview(length, diameter, axis_origin=[0,0,0]);
+ch_motion_sweep(
+    angle_start=0, angle_end=90, samples=7,
+    axis_origin=[0,0,0], axis=[1,0,0]
+) children();
+```
+
+Cheek validation rejects pin holes that violate the minimum edge distance.
+The motion sweep is preview-only background geometry.
+
+### Ribbed veneer shells
+
+```scad
+csh_wrap_length(width, height, corner_radius);
+csh_rounded_rect_2d(size, radius);
+shell_rib(width, height, rib_width=4, corner_radius=6) children();
+veneer_registration_slot(size=[8,4]);
+veneer_skin_layout(
+    width, height, depth, corner_radius=6,
+    front_termination_offset=4, rear_termination_offset=4,
+    min_bend_radius=5
+);
+ribbed_veneer_shell(
+    width, height, depth,
+    rib_count=4, rib_thickness=4, rib_width=4,
+    veneer_thickness=0.6, corner_radius=6,
+    front_termination_offset=4, rear_termination_offset=4,
+    show_ribs=true, show_skin=true, min_bend_radius=5
+);
+```
+
+The shell is a constant rounded cross-section extruded along depth. Its veneer
+development bends in one direction and is not a compound-surface flattening.
+
+### Removable trays
+
+```scad
+finger_grip_2d(width=16, depth=5);
+dish_slot_pattern_2d(
+    area=[30,30], slot_width=2,
+    slot_length=20, count=4, margin=3
+);
+removable_tray_2d(...);
+removable_tray(..., make_3d=false);
+tray_runner(length, width=4, height=4, stop_height=0, make_3d=true);
+```
+
+The tray uses broad cut slots and a grip opening rather than fragile tines.
+
+### Sheet layouts
+
+```scad
+cl_boxes_overlap(a, b, spacing=0);
+cl_validate_layout(
+    boxes, sheet_size=[300,300],
+    margin=5, spacing=3, name="sheet"
+);
+cl_sheet_boundary(sheet_size=[300,300], label="", line_width=0.3);
+cl_layout_part(
+    position, size, id="", quantity=1,
+    sheet_size=[300,300], margin=5, label_size=2
+) children();
+cl_cut_geometry() children();
+cl_engrave_geometry() children();
+cl_reference_geometry() children();
+cl_operation_geometry(kind="cut", output="preview") children();
+```
+
+Parts use explicit placement because OpenSCAD cannot reliably query arbitrary
+child bounds. `cl_validate_layout` asserts sheet containment and pairwise
+non-overlap using declared bounding boxes. `cl_operation_geometry` provides
+explicit cut/engrave selection because SVG export does not reliably preserve
+OpenSCAD preview colours.
+
+### Calibration
+
+```scad
+ccal_laser_coupon(
+    material_thickness=4, kerf=0.5, pin_diameter=2,
+    clearances=[-0.2,-0.1,0,0.1,0.2,0.3],
+    size=[85,42], label_size=2
+);
+```
+
+Cut the coupon with the intended material and process before selecting fit and
+pin clearances.
+
 ## Shared conventions
 
 - `make_3d=false` selects flat XY output; `true` selects assembled or extruded
@@ -521,4 +669,3 @@ cumulative stack for unequal heights; use a single numeric height unless that
 behaviour is specifically desired.
 
 `ct_tower_example(...)` supplies two demonstration floors.
-

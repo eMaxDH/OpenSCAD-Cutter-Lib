@@ -8,6 +8,11 @@ layered walls, repeated floors, connectors, struts, slots, and reference
 surfaces. A complete four-level lamp in [`project/lamp`](project/lamp) shows
 how the pieces fit together.
 
+The repository also includes a fabrication-oriented
+[Bob countertop dishwasher miniature](project/bob_dishwasher) with a moving
+pin-hinged door, rib-supported veneer shell, removable rack, calibrated hidden
+joints, and plywood/veneer sheet layouts.
+
 ![Four-level lamp example](project/lamp/img/lamp.png)
 
 ## What the library does
@@ -30,6 +35,7 @@ The repository currently provides:
 | Towers | Layered walls, six-sided floors, vertically repeated floors |
 | Marking | Repeated ruler ticks |
 | Example project | A configurable, multi-level wooden lamp |
+| Appliance project | Parametric Bob dishwasher miniature and cutting sheets |
 
 See the [API reference](docs/API.md) for module signatures, child ordering,
 return values, and constraints.
@@ -195,6 +201,8 @@ cutter_lib/
   tower/       walls, floors, and vertical stacking
 project/
   lamp/        complete example and exported images/models
+  bob_dishwasher/
+               miniature appliance assembly and cutting layouts
 docs/
   API.md       module and function reference
   LAMP.md      example-project walkthrough
@@ -210,6 +218,9 @@ The lamp composes the library at three levels:
 
 Read the [lamp walkthrough](docs/LAMP.md) before modifying its dimensions or
 exporting individual layers.
+
+For a manufacturing-focused example, read the
+[Bob project guide](project/bob_dishwasher/README.md).
 
 ## Current limitations
 
@@ -229,4 +240,3 @@ exporting individual layers.
 No license file is currently included. Until the repository owner adds one,
 do not assume permission to copy, modify, or redistribute the project beyond
 what applicable law permits.
-

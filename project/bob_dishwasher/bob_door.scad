@@ -1,0 +1,229 @@
+use <../../cutter_lib/hinges/ch_pin_hinge.scad>
+use <../../cutter_lib/shells/csh_ribbed_veneer.scad>
+
+function bob_door_width(model_width) = model_width - 4;
+function bob_door_height(model_height) = model_height * 0.84;
+function bob_door_bottom(model_height) = model_height * 0.075;
+function bob_window_size(door_width, door_height) =
+    [door_width*0.66, door_height*0.48];
+
+module bob_door_frame_2d(door_width, door_height,
+                         frame_width=5, corner_radius=5,
+                         window_mode="open")
+{
+    window = bob_window_size(door_width, door_height);
+    window_x = (door_width-window[0])/2;
+    window_z = door_height*0.18;
+
+    assert(window_mode == "open" ||
+           window_mode == "transparent_insert",
+           "bob_door_frame_2d: unsupported window_mode");
+    assert(door_width > 2*frame_width &&
+           door_height > 2*frame_width,
+           "bob_door_frame_2d: frame consumes door");
+
+    difference() {
+        csh_rounded_rect_2d(
+            [door_width, door_height], corner_radius);
+        translate([window_x, window_z])
+            csh_rounded_rect_2d(window, corner_radius*0.65);
+    }
+}
+
+module bob_door_fascia_2d(door_width, door_height,
+                          corner_radius=5,
+                          window_mode="open")
+{
+    window = bob_window_size(door_width, door_height);
+    difference() {
+        csh_rounded_rect_2d(
+            [door_width, door_height], corner_radius);
+        if (window_mode == "open" ||
+            window_mode == "transparent_insert")
+            translate([(door_width-window[0])/2,
+                       door_height*0.18])
+                csh_rounded_rect_2d(window, corner_radius*0.65);
+    }
+}
+
+module bob_door_engraving_2d(door_width, door_height,
+                             line_width=0.35)
+{
+    window = bob_window_size(door_width, door_height);
+    display = [door_width*0.28, door_height*0.07];
+    control_z = door_height*0.79;
+
+    // Window border / main seam.
+    difference() {
+        translate([(door_width-window[0])/2-1,
+                   door_height*0.18-1])
+            csh_rounded_rect_2d(
+                [window[0]+2, window[1]+2], 4);
+        translate([(door_width-window[0])/2-1+line_width,
+                   door_height*0.18-1+line_width])
+            csh_rounded_rect_2d(
+                [window[0]+2-2*line_width,
+                 window[1]+2-2*line_width],
+                4-line_width);
+    }
+
+    // Display and two controls.
+    translate([(door_width-display[0])/2, control_z])
+        difference() {
+            csh_rounded_rect_2d(display, 1);
+            translate([line_width, line_width])
+                csh_rounded_rect_2d(
+                    [display[0]-2*line_width,
+                     display[1]-2*line_width],
+                    max(0, 1-line_width));
+        }
+
+    for (x = [door_width*0.18, door_width*0.82])
+        translate([x, control_z+display[1]/2])
+            circle(d=2.2);
+
+    // Logo placeholder, lower seam, and vent grille.
+    translate([door_width/2, door_height*0.70])
+        text("LOGO", size=max(2, door_width*0.07),
+             halign="center");
+
+    translate([door_width*0.15, door_height*0.08])
+        square([door_width*0.70, line_width]);
+
+    for (i = [0:5])
+        translate([door_width*0.32+i*door_width*0.06,
+                   door_height*0.04])
+            square([line_width, door_height*0.025]);
+}
+
+module bob_door_local(door_width, door_height,
+                      plywood_thickness=4,
+                      veneer_thickness=0.6,
+                      window_mode="open",
+                      show_engraving=true,
+                      exploded=0)
+{
+    corner = min(6, door_width*0.12);
+
+    color([0.72, 0.56, 0.33])
+        translate([0, exploded, 0])
+            rotate([90,0,0])
+                linear_extrude(plywood_thickness)
+                    bob_door_frame_2d(
+                        door_width, door_height,
+                        frame_width=max(plywood_thickness, 5),
+                        corner_radius=corner,
+                        window_mode=window_mode);
+
+    color([0.55, 0.28, 0.12])
+        translate([0, -plywood_thickness-exploded, 0])
+            rotate([90,0,0])
+                linear_extrude(veneer_thickness)
+                    bob_door_fascia_2d(
+                        door_width, door_height,
+                        corner, window_mode);
+
+    if (window_mode == "transparent_insert")
+        color([0.35, 0.65, 0.8, 0.25])
+            translate([door_width*0.17,
+                       0.1+exploded,
+                       door_height*0.18])
+                cube([door_width*0.66,
+                      veneer_thickness,
+                      door_height*0.48]);
+
+    if (show_engraving)
+        color([0.12, 0.08, 0.05])
+            translate([0,
+                       -plywood_thickness-veneer_thickness-
+                       exploded-0.08,
+                       0])
+                rotate([90,0,0])
+                    linear_extrude(0.08)
+                        bob_door_engraving_2d(
+                            door_width, door_height);
+}
+
+module bob_hinge_supports(model_width, axis_y, axis_z,
+                          plywood_thickness=4,
+                          pin_diameter=2,
+                          pin_clearance=0.2)
+{
+    support_width = 2.5*plywood_thickness;
+    support_height = 3*plywood_thickness;
+    hole_d = pin_diameter+pin_clearance;
+
+    color([0.66, 0.49, 0.28])
+    for (x = [0, model_width-plywood_thickness])
+        translate([x, axis_y-support_width/2,
+                   axis_z-support_height/2])
+            difference() {
+                cube([plywood_thickness,
+                      support_width, support_height]);
+                translate([-0.1, support_width/2,
+                           support_height/2])
+                    rotate([0,90,0])
+                        cylinder(h=plywood_thickness+0.2,
+                                 d=hole_d);
+            }
+}
+
+module bob_door_assembly(model_width, model_height,
+                         plywood_thickness=4,
+                         veneer_thickness=0.6,
+                         door_angle=90,
+                         hinge_pin_diameter=2,
+                         hinge_clearance=0.2,
+                         hinge_axis_offset=2.5,
+                         window_mode="open",
+                         show_engraving=true,
+                         show_hinge=true,
+                         show_sweep=false,
+                         exploded=0)
+{
+    dw = bob_door_width(model_width);
+    dh = bob_door_height(model_height);
+    dx = (model_width-dw)/2;
+    axis = [0, -hinge_axis_offset, bob_door_bottom(model_height)];
+
+    assert(door_angle >= 0 && door_angle <= 90,
+           "bob_door_assembly: door_angle must be between 0 and 90 degrees");
+    assert(hinge_axis_offset >= veneer_thickness+hinge_clearance,
+           "bob_door_assembly: hinge axis is too close to the shell");
+    assert(axis[2] >= plywood_thickness,
+           "bob_door_assembly: hinge is too close to the base");
+
+    if (show_hinge) {
+        bob_hinge_supports(
+            model_width, axis[1], axis[2],
+            plywood_thickness,
+            hinge_pin_diameter,
+            hinge_clearance);
+        color("silver")
+            ch_hinge_pin_preview(
+                model_width,
+                hinge_pin_diameter,
+                [0, axis[1], axis[2]]);
+    }
+
+    translate([dx, axis[1], axis[2]])
+        rotate([door_angle,0,0])
+            bob_door_local(
+                dw, dh,
+                plywood_thickness,
+                veneer_thickness,
+                window_mode,
+                show_engraving,
+                exploded);
+
+    if (show_sweep)
+        translate([dx, axis[1], axis[2]])
+            for (a = [0:15:90])
+                %rotate([a,0,0])
+                    bob_door_local(
+                        dw, dh,
+                        plywood_thickness,
+                        veneer_thickness,
+                        window_mode,
+                        false);
+}
