@@ -314,7 +314,9 @@ included in the cutting layout.
 
 The box-like chamber contains only structural panels, ledges, and a simplified
 spray-arm mark. There is no tank, pump, plumbing, heater, lighting, or rear
-service compartment.
+service compartment. Its top panel reaches the underside of the upper
+longitudinal stringers, leaving one plywood thickness between the chamber and
+the shell's inner top edge.
 
 The two brown strips near the chamber floor are the rack runners, not part of
 the floor. They support the rack above the chamber floor and stop it at the
