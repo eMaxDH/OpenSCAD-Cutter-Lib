@@ -65,22 +65,36 @@ module removable_tray(size=[40,50], thickness=2,
                           grip_depth, dish_slots, dish_slot_width);
 }
 
-module tray_runner(length, width=4, height=4, stop_height=0,
-                   make_3d=true)
+// Side profile of a runner cut from sheet stock. The optional raised stop is
+// part of this same outline, so it cannot diverge between 2D and 3D.
+module tray_runner_2d(length, height=4, stop_height=0, stop_length=4)
 {
-    assert(length > 0 && width > 0 && height > 0,
+    assert(length > 0 && height > 0 && stop_length > 0,
            "tray_runner: dimensions must be positive");
     assert(stop_height >= 0,
            "tray_runner: stop_height must be non-negative");
+    assert(stop_length <= length,
+           "tray_runner: stop length exceeds runner length");
 
-    if (make_3d)
-        union() {
-            cube([width, length, height]);
-            if (stop_height > 0)
-                translate([0, length-width, height])
-                    cube([width, width, stop_height]);
-        }
-    else
-        square([width, length]);
+    union() {
+        square([length, height]);
+        if (stop_height > 0)
+            translate([length-stop_length, height])
+                square([stop_length, stop_height]);
+    }
 }
 
+module tray_runner(length, width=4, height=4, stop_height=0,
+                   make_3d=true)
+{
+    assert(width > 0, "tray_runner: width must be positive");
+
+    if (make_3d)
+        rotate([90,0,90])
+            linear_extrude(width)
+                tray_runner_2d(
+                    length, height, stop_height, width);
+    else
+        tray_runner_2d(
+            length, height, stop_height, width);
+}

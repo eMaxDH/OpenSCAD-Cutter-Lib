@@ -36,6 +36,13 @@ function bob_rack_size(model_width, model_depth, plywood_thickness) =
      bob_chamber_depth(model_depth, plywood_thickness)-
      4*plywood_thickness];
 
+module bob_rack_side_rail_2d(length, plywood_thickness=4)
+{
+    assert(length > 0 && plywood_thickness > 0,
+           "bob_rack_side_rail_2d: dimensions must be positive");
+    square([plywood_thickness/2, length]);
+}
+
 module bob_rack_assembly(model_width, model_height, model_depth,
                          plywood_thickness=4,
                          pullout=0,
@@ -86,6 +93,7 @@ module bob_rack_assembly(model_width, model_height, model_depth,
     color([0.72, 0.54, 0.30])
     for (x = [x0, x0+rack[0]-plywood_thickness/2])
         translate([x, y0, z0+plywood_thickness/2])
-            cube([plywood_thickness/2,
-                  rack[1], plywood_thickness]);
+            linear_extrude(plywood_thickness)
+                bob_rack_side_rail_2d(
+                    rack[1], plywood_thickness);
 }

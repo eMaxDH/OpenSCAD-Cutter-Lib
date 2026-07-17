@@ -46,6 +46,22 @@ function bob_inner_width(model_width, plywood_thickness) =
 function bob_inner_depth(model_depth, plywood_thickness) =
     model_depth - 2*plywood_thickness;
 
+module bob_base_2d(model_width, model_depth, plywood_thickness=4)
+{
+    square([
+        bob_inner_width(model_width, plywood_thickness),
+        bob_inner_depth(model_depth, plywood_thickness)
+    ]);
+}
+
+module bob_stringer_2d(model_depth, plywood_thickness=4)
+{
+    square([
+        plywood_thickness,
+        bob_inner_depth(model_depth, plywood_thickness)
+    ]);
+}
+
 // Bob-specific rib: generic rounded shell silhouette plus hidden stringer
 // registration slots. The slots remain behind the veneer.
 module bob_shell_rib_2d(model_width, model_height,
@@ -92,14 +108,23 @@ module bob_stringer_cage(model_width, model_height, model_depth,
                          plywood_thickness=4)
 {
     length = model_depth-2*plywood_thickness;
-    inset = 1.5*plywood_thickness;
+    x_positions = [
+        2*plywood_thickness,
+        model_width-3*plywood_thickness
+    ];
+    z_positions = [
+        plywood_thickness,
+        model_height-2*plywood_thickness
+    ];
 
     assert(length > 0, "bob_stringer_cage: model is too shallow");
 
-    for (x = [inset, model_width-inset-plywood_thickness])
-        for (z = [inset, model_height-inset-plywood_thickness])
+    for (x = x_positions)
+        for (z = z_positions)
             translate([x, plywood_thickness, z])
-                cube([plywood_thickness, length, plywood_thickness]);
+                linear_extrude(plywood_thickness)
+                    bob_stringer_2d(
+                        model_depth, plywood_thickness);
 }
 
 module bob_body_structure(model_width, model_height, model_depth,
@@ -145,9 +170,10 @@ module bob_body_structure(model_width, model_height, model_depth,
         // Hidden structural base.
         translate([plywood_thickness, plywood_thickness,
                    plywood_thickness])
-            cube([bob_inner_width(model_width, plywood_thickness),
-                  bob_inner_depth(model_depth, plywood_thickness),
-                  plywood_thickness]);
+            linear_extrude(plywood_thickness)
+                bob_base_2d(
+                    model_width, model_depth,
+                    plywood_thickness);
     }
 
     if (show_skin)

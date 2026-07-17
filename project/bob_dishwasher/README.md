@@ -148,6 +148,47 @@ Every Bob `.scad` file can also be opened directly. `bob_body.scad`,
 contain standalone 2D/3D examples; `bob_config.scad` shows the configured
 outer envelope.
 
+## Complete flat part manifest
+
+The Bob entry module follows the lamp convention: `make_3d=true` assembles
+the model, while `make_3d=false` sends the manufactured components to
+deterministic XY sheet positions. No cut part remains rotated out of plane.
+
+The default plywood set contains 25 pieces:
+
+| Part | Quantity |
+| --- | ---: |
+| Front frame | 1 |
+| Internal shell ribs | 4 |
+| Rear frame | 1 |
+| Longitudinal stringers | 4 |
+| Hidden base | 1 |
+| Door frame | 1 |
+| Hinge cheeks | 2 |
+| Chamber rear, floor, and top | 3 |
+| Chamber sides | 2 |
+| Rack base | 1 |
+| Chamber tray runners | 2 |
+| Removable-rack side rails | 2 |
+| Calibration coupon | 1 |
+
+The veneer sheet contains four pieces: the main wrap, door fascia, front
+termination frame, and rear face. The hinge pin is purchased hardware and is
+therefore reported in the manifest but is not a laser-cut part.
+
+### Geometry source rule
+
+Every rigid manufactured Bob part has one canonical 2D profile. The 3D
+assembly positions, rotates, and extrudes that same module; it does not redraw
+the part as an unrelated cube or polygon. Kerf compensation is enabled for
+laser-export geometry and disabled for the physical 3D preview, while fit
+clearance remains represented.
+
+The veneer wrap is the intentional exception to literal extrusion: its flat
+rectangular development is bent around the same constant rounded
+cross-section used by the 3D shell. The transparent window insert, hinge pin,
+and engraving previews are not laser-cut structural parts.
+
 ## Cut and engrave operations
 
 Set `layout_operation="preview"` to inspect both operations:
@@ -180,6 +221,17 @@ openscad -o bob-veneer-cut.svg \
 openscad -o bob-veneer-engrave.svg \
   -D 'output_mode="cut_layout"' \
   -D 'layout_material="veneer"' \
+  -D 'layout_operation="engrave"' \
+  project/bob_dishwasher/bob_dishwasher.scad
+```
+
+The chamber spray-arm engraving is registered to the chamber floor on
+plywood sheet 2:
+
+```sh
+openscad -o bob-plywood-2-engrave.svg \
+  -D 'output_mode="cut_layout"' \
+  -D 'layout_material="plywood_2"' \
   -D 'layout_operation="engrave"' \
   project/bob_dishwasher/bob_dishwasher.scad
 ```
