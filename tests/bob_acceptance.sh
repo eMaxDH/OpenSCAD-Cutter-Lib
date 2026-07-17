@@ -50,6 +50,7 @@ for kerf in 0.15 0.5; do
         -D 'model_height=80' \
         -D 'output_mode="cut_layout"' \
         -D 'layout_material="all"' \
+        -D 'layout_operation="cut"' \
         -D "kerf=$kerf" \
         "$model"
 done
@@ -58,12 +59,14 @@ openscad \
     -o "$output_dir/bob-layout-70mm.svg" \
     -D 'model_height=70' \
     -D 'output_mode="cut_layout"' \
+    -D 'layout_operation="cut"' \
     "$model"
 
 openscad \
     -o "$output_dir/bob-layout-100mm.svg" \
     -D 'model_height=100' \
     -D 'output_mode="cut_layout"' \
+    -D 'layout_operation="cut"' \
     "$model"
 
 openscad \

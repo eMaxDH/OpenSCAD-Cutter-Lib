@@ -45,6 +45,29 @@ module bob_part_label(id, position=[1,1], size=1.8)
     }
 }
 
+module bob_layout_layer_info(material="all", operation="preview",
+                             sheet_size=[300,300])
+{
+    echo(str("[BOB 2D LAYERS] material=", material,
+             ", operation=", operation));
+    echo("[BOB 2D LAYERS] plywood cut | veneer cut | veneer engraving");
+
+    %translate([0, sheet_size[1]+7]) {
+        color("black")
+            text(str("BOB 2D layout: material=", material,
+                     "  operation=", operation), size=4);
+        color("red")
+            translate([0, -6])
+                text("RED = cut geometry", size=3);
+        color("blue")
+            translate([55, -6])
+                text("BLUE = engraving geometry", size=3);
+        color("gray")
+            translate([130, -6])
+                text("GRAY = reference only", size=3);
+    }
+}
+
 module bob_plywood_sheet_1(model_width, model_height, model_depth,
                            plywood_thickness=4,
                            kerf=0.5, fit_clearance=0.15,
@@ -308,9 +331,10 @@ module bob_veneer_sheet(model_width, model_height, model_depth,
         [margin,margin], [wrap,skin_depth],
         "BOB-VENEER-WRAP",
         sheet_size=sheet_size, margin=margin)
-        veneer_skin_layout(
-            model_width, model_height, model_depth,
-            corner_radius, front_offset, rear_offset);
+        cl_operation_geometry("cut", operation)
+            veneer_skin_layout(
+                model_width, model_height, model_depth,
+                corner_radius, front_offset, rear_offset);
 
     cl_layout_part(
         [margin,row2_y], [dw,dh],
@@ -330,10 +354,11 @@ module bob_veneer_sheet(model_width, model_height, model_depth,
         [model_width,model_height],
         "BOB-FRONT-VENEER-FRAME",
         sheet_size=sheet_size, margin=margin)
-        shell_rib(
-            model_width, model_height,
-            rib_width=plywood_thickness,
-            corner_radius=corner_radius);
+        cl_operation_geometry("cut", operation)
+            shell_rib(
+                model_width, model_height,
+                rib_width=plywood_thickness,
+                corner_radius=corner_radius);
 
     if (operation != "engrave")
     cl_layout_part(
@@ -342,8 +367,9 @@ module bob_veneer_sheet(model_width, model_height, model_depth,
         [model_width,model_height],
         "BOB-REAR-VENEER",
         sheet_size=sheet_size, margin=margin)
-        csh_rounded_rect_2d(
-            [model_width,model_height], corner_radius);
+        cl_operation_geometry("cut", operation)
+            csh_rounded_rect_2d(
+                [model_width,model_height], corner_radius);
 }
 
 module bob_cut_layout(model_width, model_height, model_depth,
@@ -375,8 +401,11 @@ module bob_cut_layout(model_width, model_height, model_depth,
     assert(operation != "engrave" || material == "veneer",
            "bob_cut_layout: engraving exists only on the veneer sheet");
 
+    bob_layout_layer_info(material, operation, sheet_size);
+
     if (material == "all" || material == "plywood_1")
     translate(material == "all" ? [0,0] : [0,0])
+    cl_operation_geometry("cut", operation)
     bob_plywood_sheet_1(
         model_width, model_height, model_depth,
         plywood_thickness, kerf, fit_clearance,
@@ -388,6 +417,7 @@ module bob_cut_layout(model_width, model_height, model_depth,
     translate(material == "all"
               ? [sheet_size[0]+sheet_gap,0]
               : [0,0])
+        cl_operation_geometry("cut", operation)
         bob_plywood_sheet_2(
             model_width, model_height, model_depth,
             plywood_thickness, kerf, fit_clearance,

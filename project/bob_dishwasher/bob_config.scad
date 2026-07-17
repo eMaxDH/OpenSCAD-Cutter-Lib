@@ -7,8 +7,15 @@
 make_3d = true; // [false:true]
 
 output_mode = "automatic"; // [automatic, assembly, cut_layout, exploded, single_part, debug, calibration]
+
+/* [2D layout layers] */
+
+// "preview" shows cutting and engraving together in OpenSCAD.
 layout_material = "all"; // [all, plywood_1, plywood_2, veneer]
-layout_operation = "cut"; // [cut, engrave, preview]
+layout_operation = "preview"; // [preview, cut, engrave]
+
+/* [Output part selection] */
+
 single_part_id = "BOB-DOOR-FRAME"; // [BOB-DOOR-FRAME, BOB-RIB-01, BOB-CAL-01]
 
 /* [Scale] */

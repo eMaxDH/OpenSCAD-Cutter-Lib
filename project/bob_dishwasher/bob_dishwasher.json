@@ -4,7 +4,7 @@
         "Default 80 mm assembly": {
             "door_angle": "90",
             "layout_material": "all",
-            "layout_operation": "cut",
+            "layout_operation": "preview",
             "make_3d": "true",
             "model_height": "80",
             "output_mode": "automatic",
@@ -14,7 +14,7 @@
         },
         "Default cutting layout": {
             "layout_material": "all",
-            "layout_operation": "cut",
+            "layout_operation": "preview",
             "make_3d": "false",
             "model_height": "80",
             "output_mode": "automatic"
