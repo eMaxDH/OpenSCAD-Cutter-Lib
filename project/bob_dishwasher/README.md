@@ -36,7 +36,10 @@ material, focus, power, speed, and machine condition.
 
 ## Main parameters
 
-Edit `bob_config.scad` or override values with OpenSCAD `-D` options:
+Open `bob_dishwasher.scad` to edit these values in OpenSCAD's Customizer, or
+override them with `-D` options. `bob_config.scad` mirrors the defaults as a
+standalone configuration reference, but the main file owns the active
+Customizer controls.
 
 ```scad
 model_height = 80;
