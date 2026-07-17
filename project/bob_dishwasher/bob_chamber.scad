@@ -45,8 +45,11 @@ else {
 
 function bob_chamber_width(model_width, plywood_thickness) =
     model_width - 4*plywood_thickness;
+// Leave two material thicknesses below and above the chamber: the lower
+// allowance contains the base/floor stack, and the upper allowance contains
+// the top longitudinal stringers.
 function bob_chamber_height(model_height, plywood_thickness) =
-    model_height - 6*plywood_thickness;
+    model_height - 4*plywood_thickness;
 function bob_chamber_depth(model_depth, plywood_thickness) =
     model_depth - 4*plywood_thickness;
 
