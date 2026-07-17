@@ -48,15 +48,15 @@ module bob_base_2d(model_width, model_depth, plywood_thickness=4)
 {
     square([
         bob_inner_width(model_width, plywood_thickness),
-        model_depth
+        model_depth-2*plywood_thickness
     ]);
 }
 
-module bob_stringer_2d(model_depth, plywood_thickness=4)
+module bob_stringer_2d(stringer_length, plywood_thickness=4)
 {
     square([
         plywood_thickness,
-        model_depth
+        stringer_length
     ]);
 }
 
@@ -257,18 +257,24 @@ module bob_stringer_cage(model_width, model_height, model_depth,
         2*plywood_thickness,
         model_width-3*plywood_thickness
     ];
+    stringer_length = model_depth-plywood_thickness;
 
-    assert(model_depth > 0,
+    assert(stringer_length > 0,
            "bob_stringer_cage: model is too shallow");
 
-    // The hidden base is already the full-depth lower longitudinal member.
-    // These two upper stringers run from the front face to the rear face and
-    // glue against the underside of every rib's upper rail.
+    // The hidden base supplies the lower longitudinal structure behind the
+    // front door-sweep clearance.
+    // The two upper stringers start behind the front rib and remain flush
+    // with the outside rear face.
     for (x = x_positions)
-        translate([x, 0, model_height-2*plywood_thickness])
+        translate([
+            x,
+            plywood_thickness,
+            model_height-2*plywood_thickness
+        ])
             linear_extrude(plywood_thickness)
                 bob_stringer_2d(
-                    model_depth, plywood_thickness);
+                    stringer_length, plywood_thickness);
 }
 
 module bob_body_structure(model_width, model_height, model_depth,
@@ -305,7 +311,7 @@ module bob_body_structure(model_width, model_height, model_depth,
                 translate([
                     -0.01,
                     plywood_thickness/2,
-                    plywood_thickness+door_gap
+                    2.5*plywood_thickness-door_gap
                 ])
                     rotate([0,90,0])
                         cylinder(
@@ -332,8 +338,9 @@ module bob_body_structure(model_width, model_height, model_depth,
             model_width, model_height, model_depth,
             plywood_thickness);
 
-        // Hidden structural base.
-        translate([plywood_thickness, 0,
+        // Hidden structural base starts behind the front rib so the part of
+        // the raised-hinge door below the pin has a clear opening sweep.
+        translate([plywood_thickness, 2*plywood_thickness,
                    plywood_thickness])
             linear_extrude(plywood_thickness)
                 bob_base_2d(

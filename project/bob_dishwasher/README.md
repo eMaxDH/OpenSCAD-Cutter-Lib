@@ -87,10 +87,14 @@ The validated door range is 0–90 degrees. Positive motion opens the door
 outward and downward. At 0 degrees the plywood frame sits inside the front
 opening, while the veneer fascia is flush with the front veneer.
 `door_perimeter_gap` provides clearance on every edge. The hinge pin is bonded
-along the lower edge of the door and turns directly in coaxial bores through
-the two side rails of the front termination rib. The resulting order along
-the pin is chassis knuckle, centered door knuckle, chassis knuckle. The axis
-sits halfway through the plywood depth, keeping the closed fascia flush.
+through the door approximately one plywood thickness below the rack base and
+turns directly in coaxial bores through the two side rails of the front
+termination rib. The resulting order along the pin is chassis knuckle,
+centered door knuckle, chassis knuckle. The door remains full height below
+the raised axis, so it still closes the complete lower opening. The axis sits
+halfway through the plywood depth, keeping the closed fascia flush. The body
+base begins two plywood thicknesses behind the front face, clearing the lower
+door edge throughout the 0–90 degree sweep.
 
 ## Output modes
 
@@ -174,8 +178,8 @@ footprint drops by about 58.5%.
 | Front-frame segments | 4 |
 | Internal shell-rib segments | 16 |
 | Rear-frame segments | 4 |
-| Full-depth upper stringers | 2 |
-| Full-depth hidden base/lower structure | 1 |
+| Upper stringers, front-rib inset | 2 |
+| Front-inset hidden base/lower structure | 1 |
 | Door frame | 1 |
 | Chamber rear, floor, and top | 3 |
 | Chamber sides | 2 |
@@ -198,10 +202,10 @@ laser-export geometry and disabled for the physical 3D preview, while fit
 clearance remains represented.
 
 The integrated hinge adds one explicit post-laser operation: its X-axis bore
-passes through the plywood edges of the assembled front-rib side segments, so
-it cannot be represented as a through-cut in their flat XY profiles. The 3D
-model shows the bore at its drilled position, and the assembly instructions
-call for both sides to be drilled coaxially.
+passes through the plywood edges of the assembled front-rib side segments and
+the door, so it cannot be represented as a through-cut in their flat XY
+profiles. The 3D model shows the bore at its drilled position, and the
+assembly instructions call for all three knuckles to be drilled coaxially.
 
 The veneer wrap is the intentional exception to literal extrusion: its flat
 rectangular development is bent around the same constant rounded
@@ -303,21 +307,23 @@ veneer face terminate the wrap.
    joints; they are guides rather than narrow structural tabs.
 3. Glue these joints on a flat surface, keeping each completed rib square.
 4. Dry-fit the assembled front frame, four internal ribs, rear frame, and two
-   full-depth upper stringers. Their front and rear ends should finish flush
-   with the outside faces of the termination frames.
-5. Glue the rib cage square on the hidden base.
+   upper stringers. Each stringer starts flush with the rear face of the front
+   rib and finishes flush with the outside face of the rear rib.
+5. Glue the rib cage square on the hidden base. Its front edge starts two
+   plywood thicknesses behind the front face and its rear edge remains flush
+   with the rear frame.
 6. Assemble the chamber floor, top, rear, and sides with the hidden tabs and
    slots, then install it inside the cage.
 7. Glue the tray runners inside the chamber. They carry the removable rack;
    the raised end of each profile is a rear travel stop.
 8. Assemble and test the removable tray-style rack.
 9. Laminate the door fascia onto its plywood frame, keeping the window open.
-10. Drill the two chassis-knuckle bores coaxially through the side rails of
-    the assembled front rib. Use a backing block and the calibrated pin-hole
-    diameter.
-11. Position the door between these chassis knuckles and slide the pin from
-    one outside face, along the door's lower edge, and into the opposite bore.
-    Bond the pin only to the door; keep both chassis bores free.
+10. Position the closed door inside the assembled front rib. At the rack
+    level, drill one continuous coaxial bore from the first chassis side,
+    through the door, and through the opposite chassis side. Use a backing
+    block and the calibrated pin-hole diameter.
+11. Slide the pin through all three knuckles. Bond it only inside the door;
+    keep both chassis bores free.
 12. Test the door at 0, 45, and 90 degrees before adding cosmetic parts.
 13. Pre-form and glue the veneer wrap over the ribs.
 14. Add the front termination ring and rear veneer face.
