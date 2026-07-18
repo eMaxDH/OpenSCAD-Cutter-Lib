@@ -3,6 +3,7 @@ set -euo pipefail
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 model="$repo_root/project/bob_dishwasher/bob_dishwasher.scad"
+presets="$repo_root/project/bob_dishwasher/bob_dishwasher.json"
 output_dir="${TMPDIR:-/tmp}/openscad-cutter-lib-bob-tests"
 
 if ! command -v openscad >/dev/null 2>&1; then
@@ -43,6 +44,23 @@ for angle in 0 45 90; do
         -D "door_angle=$angle" \
         "$model"
 done
+
+# Saved presets must not override live Customizer door-angle changes.
+for angle in 30 90; do
+    openscad \
+        -o "$output_dir/bob-preset-door-${angle}deg.csg" \
+        -p "$presets" \
+        -P "Default 80 mm assembly" \
+        -D "door_angle=$angle" \
+        "$model"
+done
+
+if cmp -s \
+    "$output_dir/bob-preset-door-30deg.csg" \
+    "$output_dir/bob-preset-door-90deg.csg"; then
+    echo "ERROR: saved preset overrides door_angle." >&2
+    exit 1
+fi
 
 # Verify that the three door-clearance controls can differ without breaking
 # either the assembly placement or the generated manufacturing profiles.

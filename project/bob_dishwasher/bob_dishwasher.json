@@ -2,7 +2,6 @@
     "fileFormatVersion": "1",
     "parameterSets": {
         "Default 80 mm assembly": {
-            "door_angle": "90",
             "door_side_gap": "0.4",
             "door_top_gap": "0.5",
             "door_bottom_gap": "1.0",
@@ -26,7 +25,6 @@
             "output_mode": "automatic"
         },
         "Skeleton inspection": {
-            "door_angle": "45",
             "door_side_gap": "0.4",
             "door_top_gap": "0.5",
             "door_bottom_gap": "1.0",
