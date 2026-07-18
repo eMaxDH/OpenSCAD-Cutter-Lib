@@ -54,8 +54,8 @@ part_spacing = 3;
 
 door_angle = 90;
 door_side_gap = 0.4;
-door_top_gap = 0.4;
-door_bottom_gap = 0.4;
+door_top_gap = 0.5;
+door_bottom_gap = 1.0;
 hinge_pin_diameter = 2;
 hinge_clearance = 0.2;
 

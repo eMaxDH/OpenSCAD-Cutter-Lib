@@ -3,8 +3,8 @@
         "test": {
             "door_angle": "90",
             "door_side_gap": "0.4",
-            "door_top_gap": "0.4",
-            "door_bottom_gap": "0.4",
+            "door_top_gap": "0.5",
+            "door_bottom_gap": "1.0",
             "fit_clearance": "0.15",
             "hinge_clearance": "0.2",
             "hinge_pin_diameter": "2",
