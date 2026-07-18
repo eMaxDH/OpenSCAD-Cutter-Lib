@@ -53,6 +53,31 @@ module cj_hidden_slots_2d(edge_length, material_thickness, feature_width,
             square([drawn_length, drawn_depth]);
 }
 
+// Matching slots that open directly onto a panel edge. Children extend in
+// +Y from that edge, like `cj_hidden_tabs_2d`. Only the closed inner end needs
+// depth compensation; the open end is supplied by the panel perimeter cut.
+module cj_hidden_edge_notches_2d(
+    edge_length, material_thickness, feature_width,
+    count=3, edge_margin=4,
+    fit_clearance=0, kerf=0)
+{
+    drawn_length = slot_width(
+        feature_width, fit_clearance, kerf);
+    drawn_depth =
+        material_thickness+fit_clearance-
+        cut_compensation(kerf);
+    pitch = (edge_length-2*edge_margin)/count;
+
+    assert(drawn_depth > 0,
+           "cj_hidden_edge_notches_2d: kerf consumes notch depth");
+    assert(drawn_length < pitch,
+           "cj_hidden_edge_notches_2d: notches overlap; reduce width/count or margins");
+
+    cj_edge_pattern(edge_length, count, edge_margin)
+        translate([-drawn_length/2, 0])
+            square([drawn_length, drawn_depth]);
+}
+
 // Adds tabs to one edge of a rectangular panel. The edge may be "bottom",
 // "top", "left", or "right". Tabs point away from the panel.
 module cj_hidden_tabbed_panel_2d(size, edge="bottom",
@@ -90,4 +115,3 @@ module cj_hidden_tabbed_panel_2d(size, edge="bottom",
                                           fit_clearance, kerf);
     }
 }
-
