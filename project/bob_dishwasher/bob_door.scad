@@ -19,11 +19,12 @@ example_window_mode = "open"; // [open, transparent_insert]
 example_model_width = 340 * example_model_height / 490;
 example_door_width = bob_door_width(
     example_model_width, example_plywood_thickness,
-    example_door_side_gap);
+    example_door_side_gap, example_veneer_thickness);
 example_door_height = bob_door_height(
     example_model_height, example_plywood_thickness,
     example_door_top_gap,
-    example_door_bottom_gap);
+    example_door_bottom_gap,
+    example_veneer_thickness);
 
 if (make_3d)
     bob_door_assembly(
@@ -58,15 +59,21 @@ else {
             example_door_height);
 }
 
-// Leave one plywood thickness at each side for the front-rib knuckles.
+// Leave the veneer skin, one plywood rail, and the configured clearance at
+// each edge of the structural front opening.
 function bob_door_width(model_width, plywood_thickness=4,
-                        side_gap=0.4) =
-    model_width-2*(plywood_thickness+side_gap);
+                        side_gap=0.4,
+                        veneer_thickness=0) =
+    model_width-2*(veneer_thickness+
+                   plywood_thickness+side_gap);
 function bob_door_height(model_height, plywood_thickness=4,
-                         top_gap=0.4, bottom_gap=0.4) =
-    model_height-2*plywood_thickness-top_gap-bottom_gap;
-function bob_door_bottom(plywood_thickness=4, bottom_gap=0.4) =
-    plywood_thickness+bottom_gap;
+                         top_gap=0.4, bottom_gap=0.4,
+                         veneer_thickness=0) =
+    model_height-2*(veneer_thickness+plywood_thickness)-
+    top_gap-bottom_gap;
+function bob_door_bottom(plywood_thickness=4, bottom_gap=0.4,
+                         veneer_thickness=0) =
+    veneer_thickness+plywood_thickness+bottom_gap;
 function bob_hinge_axis_z(plywood_thickness=4) =
     2.4*plywood_thickness;
 function bob_window_diameter(door_width, door_height) =
@@ -229,10 +236,11 @@ module bob_door_assembly(model_width, model_height,
 {
     dw = bob_door_width(
         model_width, plywood_thickness,
-        door_side_gap);
+        door_side_gap, veneer_thickness);
     dh = bob_door_height(
         model_height, plywood_thickness,
-        door_top_gap, door_bottom_gap);
+        door_top_gap, door_bottom_gap,
+        veneer_thickness);
     dx = (model_width-dw)/2;
     axis = [
         0, plywood_thickness/2,
@@ -240,7 +248,8 @@ module bob_door_assembly(model_width, model_height,
     ];
     axis_local_z =
         axis[2]-bob_door_bottom(
-            plywood_thickness, door_bottom_gap);
+            plywood_thickness, door_bottom_gap,
+            veneer_thickness);
 
     assert(door_angle >= 0 && door_angle <= 90,
            "bob_door_assembly: door_angle must be between 0 and 90 degrees");

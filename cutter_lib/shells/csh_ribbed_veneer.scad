@@ -87,9 +87,19 @@ module ribbed_veneer_shell(width, height, depth,
                            skin_opacity=0.90)
 {
     usable_depth = depth-front_termination_offset-rear_termination_offset;
+    rib_outer_width = width-2*veneer_thickness;
+    rib_outer_height = height-2*veneer_thickness;
+    rib_corner_radius = corner_radius-veneer_thickness;
 
     assert(width > 0 && height > 0 && depth > 0,
            "ribbed_veneer_shell: dimensions must be positive");
+    assert(veneer_thickness > 0,
+           "ribbed_veneer_shell: veneer_thickness must be positive");
+    assert(rib_outer_width > 2*rib_width &&
+           rib_outer_height > 2*rib_width,
+           "ribbed_veneer_shell: veneer leaves no room for the ribs");
+    assert(rib_corner_radius >= rib_width,
+           "ribbed_veneer_shell: veneer leaves too little rib corner radius");
     assert(rib_count >= 1 && floor(rib_count) == rib_count,
            "ribbed_veneer_shell: rib_count must be a positive integer");
     assert(usable_depth >= rib_thickness,
@@ -105,11 +115,18 @@ module ribbed_veneer_shell(width, height, depth,
                 ? front_termination_offset
                 : front_termination_offset +
                   (usable_depth-rib_thickness)*i/(rib_count-1))
-                translate([0, y+rib_thickness, 0])
+                translate([
+                    veneer_thickness,
+                    y+rib_thickness,
+                    veneer_thickness
+                ])
                     rotate([90,0,0])
                         linear_extrude(rib_thickness)
-                            shell_rib(width, height,
-                                      rib_width, corner_radius);
+                            shell_rib(
+                                rib_outer_width,
+                                rib_outer_height,
+                                rib_width,
+                                rib_corner_radius);
 
     if (show_skin)
         color([0.72, 0.45, 0.2, skin_opacity])

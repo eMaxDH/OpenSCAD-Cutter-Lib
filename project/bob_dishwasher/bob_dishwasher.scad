@@ -235,20 +235,26 @@ module bob_dishwasher(make_3d=true, output_mode="automatic")
             bob_door_frame_2d(
                 bob_door_width(
                     model_width, plywood_thickness,
-                    door_side_gap),
+                    door_side_gap, veneer_thickness),
                 bob_door_height(
                     model_height, plywood_thickness,
                     door_top_gap,
-                    door_bottom_gap),
+                    door_bottom_gap,
+                    veneer_thickness),
                 max(5, plywood_thickness),
                 min(6, bob_door_width(
                     model_width, plywood_thickness,
-                    door_side_gap)*0.12));
+                    door_side_gap,
+                    veneer_thickness)*0.12));
         else if (single_part_id == "BOB-RIB-01")
             bob_segmented_rib_compact_2d(
-                model_width, model_height,
+                bob_structural_width(
+                    model_width, veneer_thickness),
+                bob_structural_height(
+                    model_height, veneer_thickness),
                 plywood_thickness,
-                shell_corner_radius,
+                bob_structural_corner_radius(
+                    shell_corner_radius, veneer_thickness),
                 fit_clearance, kerf);
         else if (single_part_id == "BOB-CAL-01")
             ccal_laser_coupon(

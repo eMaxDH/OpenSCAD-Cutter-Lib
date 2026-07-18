@@ -76,6 +76,7 @@ module bob_layout_layer_info(material="all", operation="preview",
 
 module bob_plywood_sheet_1(model_width, model_height, model_depth,
                            plywood_thickness=4,
+                           veneer_thickness=0.6,
                            kerf=0.5, fit_clearance=0.15,
                            rib_count=4,
                            corner_radius=8,
@@ -86,29 +87,40 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
                            margin=5, spacing=3)
 {
     total_ribs = rib_count+2;
+    structural_width =
+        bob_structural_width(model_width, veneer_thickness);
+    structural_height =
+        bob_structural_height(model_height, veneer_thickness);
+    structural_radius =
+        bob_structural_corner_radius(
+            corner_radius, veneer_thickness);
     assert(rib_count >= 1,
            "bob_plywood_sheet_1: at least one internal rib is required");
 
     dw = bob_door_width(
         model_width, plywood_thickness,
-        door_side_gap);
+        door_side_gap, veneer_thickness);
     dh = bob_door_height(
         model_height, plywood_thickness,
-        door_top_gap, door_bottom_gap);
-    base = [model_width-2*plywood_thickness,
-            model_depth-2*plywood_thickness];
+        door_top_gap, door_bottom_gap,
+        veneer_thickness);
+    base = [
+        structural_width-2*plywood_thickness,
+        model_depth-veneer_thickness-2*plywood_thickness
+    ];
     cap_piece_h = bob_rib_cap_piece_height(
-        corner_radius, plywood_thickness);
+        structural_radius, plywood_thickness);
     side_length = bob_rib_side_length(
-        model_height, corner_radius, plywood_thickness);
+        structural_height, structural_radius,
+        plywood_thickness);
     cap_columns = 4;
     cap_rows = ceil(2*total_ribs/cap_columns);
     cap_boxes = [
         for (i = [0:2*total_ribs-1])
             [
-                margin+(i%cap_columns)*(model_width+spacing),
+                margin+(i%cap_columns)*(structural_width+spacing),
                 margin+floor(i/cap_columns)*(cap_piece_h+spacing),
-                model_width, cap_piece_h
+                structural_width, cap_piece_h
             ]
     ];
 
@@ -129,7 +141,8 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
     base_x = door_x+dw+spacing;
     cage_x = base_x+base[0]+spacing;
     cage_width = 2*plywood_thickness+spacing;
-    stringer_length = model_depth-plywood_thickness;
+    stringer_length =
+        model_depth-plywood_thickness-veneer_thickness;
 
     boxes = concat(cap_boxes, side_boxes, [
         [door_x, parts_y, dw, dh],
@@ -144,10 +157,10 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
     cl_sheet_boundary(sheet_size, "BOB plywood 4 mm - sheet 1");
 
     old_rib_box_area =
-        total_ribs*model_width*model_height;
+        total_ribs*structural_width*structural_height;
     segmented_rib_box_area =
         total_ribs*(
-            2*model_width*cap_piece_h+
+            2*structural_width*cap_piece_h+
             2*plywood_thickness*side_length);
     echo(str(
         "[BOB RIB NESTING] allocated rib footprint ",
@@ -176,12 +189,12 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
             top ? "-TOP" : "-BOTTOM");
         cl_layout_part(
             [cap_boxes[i][0], cap_boxes[i][1]],
-            [model_width, cap_piece_h],
+            [structural_width, cap_piece_h],
             segment_id,
             sheet_size=sheet_size, margin=margin) {
                 bob_rib_cap_2d(
-                    model_width, model_height,
-                    plywood_thickness, corner_radius,
+                    structural_width, structural_height,
+                    plywood_thickness, structural_radius,
                     top, fit_clearance, kerf);
                 bob_part_label(
                     segment_id,
@@ -200,8 +213,8 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
             segment_id,
             sheet_size=sheet_size, margin=margin)
                 bob_rib_side_2d(
-                    model_height, plywood_thickness,
-                    corner_radius, fit_clearance, kerf);
+                    structural_height, plywood_thickness,
+                    structural_radius, fit_clearance, kerf);
     }
 
     cl_layout_part(
@@ -220,7 +233,8 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
         "BOB-BASE",
         sheet_size=sheet_size, margin=margin) {
             bob_base_2d(
-                model_width, model_depth,
+                structural_width,
+                model_depth-veneer_thickness,
                 plywood_thickness);
             bob_part_label("BOB-BASE");
         }
@@ -409,6 +423,7 @@ module bob_plywood_sheet_2_engraving(
 
 module bob_veneer_sheet(model_width, model_height, model_depth,
                         plywood_thickness=4,
+                        veneer_thickness=0.6,
                         door_side_gap=0.4,
                         door_top_gap=0.4,
                         door_bottom_gap=0.4,
@@ -425,10 +440,11 @@ module bob_veneer_sheet(model_width, model_height, model_depth,
     skin_depth = model_depth-front_offset-rear_offset;
     dw = bob_door_width(
         model_width, plywood_thickness,
-        door_side_gap);
+        door_side_gap, veneer_thickness);
     dh = bob_door_height(
         model_height, plywood_thickness,
-        door_top_gap, door_bottom_gap);
+        door_top_gap, door_bottom_gap,
+        veneer_thickness);
     row2_y = margin+skin_depth+spacing;
 
     boxes = [
@@ -527,7 +543,8 @@ module bob_cut_layout(model_width, model_height, model_depth,
     cl_operation_geometry("cut", operation)
     bob_plywood_sheet_1(
         model_width, model_height, model_depth,
-        plywood_thickness, kerf, fit_clearance,
+        plywood_thickness, veneer_thickness,
+        kerf, fit_clearance,
         rib_count, corner_radius,
         door_side_gap,
         door_top_gap,
@@ -561,7 +578,7 @@ module bob_cut_layout(model_width, model_height, model_depth,
               : [0,0])
         bob_veneer_sheet(
             model_width, model_height, model_depth,
-            plywood_thickness,
+            plywood_thickness, veneer_thickness,
             door_side_gap,
             door_top_gap,
             door_bottom_gap,

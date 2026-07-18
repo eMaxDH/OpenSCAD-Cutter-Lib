@@ -35,14 +35,23 @@ if (make_3d)
         5, 0.58);
 else
     bob_segmented_rib_compact_2d(
-        example_model_width,
-        example_model_height,
+        bob_structural_width(
+            example_model_width, example_veneer_thickness),
+        bob_structural_height(
+            example_model_height, example_veneer_thickness),
         example_plywood_thickness,
-        example_corner_radius,
+        bob_structural_corner_radius(
+            example_corner_radius, example_veneer_thickness),
         0.15, 0.5);
 
 function bob_inner_width(model_width, plywood_thickness) =
     model_width - 2*plywood_thickness;
+function bob_structural_width(model_width, veneer_thickness) =
+    model_width-2*veneer_thickness;
+function bob_structural_height(model_height, veneer_thickness) =
+    model_height-2*veneer_thickness;
+function bob_structural_corner_radius(corner_radius, veneer_thickness) =
+    corner_radius-veneer_thickness;
 
 module bob_base_2d(model_width, model_depth, plywood_thickness=4)
 {
@@ -251,26 +260,29 @@ module bob_rib_at_y(y, model_width, model_height,
 }
 
 module bob_stringer_cage(model_width, model_height, model_depth,
-                         plywood_thickness=4)
+                         plywood_thickness=4,
+                         veneer_thickness=0.6)
 {
     x_positions = [
-        2*plywood_thickness,
-        model_width-3*plywood_thickness
+        veneer_thickness+2*plywood_thickness,
+        model_width-veneer_thickness-3*plywood_thickness
     ];
-    stringer_length = model_depth-plywood_thickness;
+    stringer_length =
+        model_depth-plywood_thickness-veneer_thickness;
 
     assert(stringer_length > 0,
            "bob_stringer_cage: model is too shallow");
 
     // The hidden base supplies the lower longitudinal structure behind the
     // front door-sweep clearance.
-    // The two upper stringers start behind the front rib and remain flush
-    // with the outside rear face.
+    // The upper stringers start behind the front rib and end against the
+    // inner face of the rear veneer.
     for (x = x_positions)
         translate([
             x,
             plywood_thickness,
-            model_height-2*plywood_thickness
+            model_height-veneer_thickness-
+            2*plywood_thickness
         ])
             linear_extrude(plywood_thickness)
                 bob_stringer_2d(
@@ -295,7 +307,20 @@ module bob_body_structure(model_width, model_height, model_depth,
                           show_hinge_bores=true)
 {
     usable_depth = model_depth-front_offset-rear_offset;
+    structural_width =
+        bob_structural_width(model_width, veneer_thickness);
+    structural_height =
+        bob_structural_height(model_height, veneer_thickness);
+    structural_radius =
+        bob_structural_corner_radius(
+            corner_radius, veneer_thickness);
+
     assert(rib_count >= 1, "bob_body_structure: at least one rib is required");
+    assert(structural_width > 2*plywood_thickness &&
+           structural_height > 2*plywood_thickness,
+           "bob_body_structure: veneer leaves no room for the ribs");
+    assert(structural_radius >= plywood_thickness,
+           "bob_body_structure: veneer leaves too little rib corner radius");
 
     color([0.72, 0.56, 0.33])
     if (show_ribs) {
@@ -303,9 +328,11 @@ module bob_body_structure(model_width, model_height, model_depth,
         // chassis knuckles. Their coaxial bore is drilled along X after the
         // four frame segments have been glued.
         difference() {
-            bob_rib_at_y(0, model_width, model_height,
-                         plywood_thickness, corner_radius,
-                         fit_clearance, kerf);
+            translate([veneer_thickness, 0, veneer_thickness])
+                bob_rib_at_y(
+                    0, structural_width, structural_height,
+                    plywood_thickness, structural_radius,
+                    fit_clearance, kerf);
             if (show_hinge_bores)
                 translate([
                     -0.01,
@@ -320,30 +347,38 @@ module bob_body_structure(model_width, model_height, model_depth,
         }
 
         // Rear termination frame.
-        bob_rib_at_y(model_depth-plywood_thickness,
-                     model_width, model_height,
-                     plywood_thickness, corner_radius,
-                     fit_clearance, kerf);
+        translate([veneer_thickness, 0, veneer_thickness])
+            bob_rib_at_y(
+                model_depth-plywood_thickness-veneer_thickness,
+                structural_width, structural_height,
+                plywood_thickness, structural_radius,
+                fit_clearance, kerf);
 
         // Internal silhouette ribs.
         for (i = [0:rib_count-1])
             let(y = front_offset +
                     (usable_depth-plywood_thickness)*(i+1)/(rib_count+1))
-                bob_rib_at_y(y, model_width, model_height,
-                             plywood_thickness, corner_radius,
-                             fit_clearance, kerf);
+                translate([
+                    veneer_thickness, 0, veneer_thickness
+                ])
+                    bob_rib_at_y(
+                        y, structural_width, structural_height,
+                        plywood_thickness, structural_radius,
+                        fit_clearance, kerf);
 
         bob_stringer_cage(
             model_width, model_height, model_depth,
-            plywood_thickness);
+            plywood_thickness, veneer_thickness);
 
         // Hidden structural base starts behind the front rib so the part of
         // the raised-hinge door below the pin has a clear opening sweep.
-        translate([plywood_thickness, 2*plywood_thickness,
+        translate([veneer_thickness+plywood_thickness,
+                   2*plywood_thickness,
                    plywood_thickness])
             linear_extrude(plywood_thickness)
                 bob_base_2d(
-                    model_width, model_depth,
+                    structural_width,
+                    model_depth-veneer_thickness,
                     plywood_thickness);
     }
 
