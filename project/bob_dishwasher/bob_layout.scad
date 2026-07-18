@@ -86,8 +86,8 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
                            margin=5, spacing=3)
 {
     total_ribs = rib_count+2;
-    assert(total_ribs == 6,
-           "bob_plywood_sheet_1: current deterministic layout expects four internal ribs");
+    assert(rib_count >= 1,
+           "bob_plywood_sheet_1: at least one internal rib is required");
 
     dw = bob_door_width(
         model_width, plywood_thickness,
@@ -157,12 +157,13 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
             old_rib_box_area,
         "% reduction)"));
 
-    rib_ids = [
-        "BOB-FRONT-FRAME",
-        "BOB-RIB-01", "BOB-RIB-02",
-        "BOB-RIB-03", "BOB-RIB-04",
-        "BOB-REAR-FRAME"
-    ];
+    rib_ids = concat(
+        ["BOB-FRONT-FRAME"],
+        [
+            for (i = [1:rib_count])
+                str("BOB-RIB-", i < 10 ? "0" : "", i)
+        ],
+        ["BOB-REAR-FRAME"]);
 
     // Each logical rib is split on its straight vertical runs, immediately
     // beside the rounded corners. Broad complementary 45-degree faces carry

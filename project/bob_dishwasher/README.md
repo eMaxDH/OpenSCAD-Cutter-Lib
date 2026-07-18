@@ -80,7 +80,9 @@ In OpenSCAD's Customizer, leave `output_mode="automatic"` to use the
 - unchecked: flat cutting layout.
 
 The saved `bob_dishwasher.json` presets provide default assembly, cutting
-layout, and skeleton-inspection configurations.
+layout, and skeleton-inspection configurations. They intentionally do not
+store `door_angle`, so changing the angle in the Customizer is not overwritten
+when Automatic Preview refreshes.
 
 If the panel is hidden, enable the **Customizer** panel from OpenSCAD's
 Window/View menu, then save or select a parameter set from the panel.
@@ -169,7 +171,7 @@ The Bob entry module follows the lamp convention: `make_3d=true` assembles
 the model, while `make_3d=false` sends the manufactured components to
 deterministic XY sheet positions. No cut part remains rotated out of plane.
 
-The default plywood set contains 40 pieces. Each of the six logical shell
+The default plywood set contains 36 pieces. Each of the five logical shell
 ribs is cut as four compact pieces and glued together at broad stepped
 45-degree joints on the straight vertical runs beside the corners. This
 preserves the continuous rounded veneer-support surface while avoiding six
@@ -179,7 +181,7 @@ footprint drops by about 58.5%.
 | Part | Quantity |
 | --- | ---: |
 | Front-frame segments | 4 |
-| Internal shell-rib segments | 16 |
+| Internal shell-rib segments | 12 |
 | Rear-frame segments | 4 |
 | Upper stringers, front-rib inset | 2 |
 | Front-inset hidden base/lower structure | 1 |
@@ -309,7 +311,7 @@ veneer face terminate the wrap.
    pieces. The broad stepped 45-degree connectors align the glued scarf
    joints; they are guides rather than narrow structural tabs.
 3. Glue these joints on a flat surface, keeping each completed rib square.
-4. Dry-fit the assembled front frame, four internal ribs, rear frame, and two
+4. Dry-fit the assembled front frame, three internal ribs, rear frame, and two
    upper stringers. Each stringer starts flush with the rear face of the front
    rib and finishes flush with the outside face of the rear rib.
 5. Glue the rib cage square on the hidden base. Its front edge starts two
@@ -374,7 +376,8 @@ assembly layouts, and calibration output.
   not measured scan data.
 - The constant cross-section omits subtle front-to-back compound curvature.
 - Physical hinge play and veneer spring-back still require a dry fit.
-- The deterministic layout expects four internal ribs.
+- The deterministic layout derives its rib pieces from `shell_rib_count` and
+  rejects configurations that no longer fit the selected sheet.
 - Transparent-window mode is preview-only.
 - Labels and orientation arrows are reference geometry, not engraving.
 - Kerf, fit, pin clearance, and bend radius require physical calibration.

@@ -40,6 +40,7 @@ part_spacing = 3; // [0.5:0.5:10]
 
 /* [Door and hinge] */
 
+// Kept out of saved presets so Customizer changes persist during preview.
 door_angle = 90; // [0:1:90]
 door_side_gap = 0.4; // [0:0.1:2]
 door_top_gap = 0.5; // [0:0.1:2]
