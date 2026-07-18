@@ -107,13 +107,13 @@ module bob_chamber_side_2d(depth, height,
 
     difference() {
         square([depth, height]);
-        translate([0, plywood_thickness/2])
-            cj_hidden_slots_2d(
-                depth, plywood_thickness, feature_width,
-                tab_count, edge_margin=plywood_thickness,
-                fit_clearance=fit_clearance, kerf=kerf);
-        translate([0, height-plywood_thickness/2])
-            cj_hidden_slots_2d(
+        cj_hidden_edge_notches_2d(
+            depth, plywood_thickness, feature_width,
+            tab_count, edge_margin=plywood_thickness,
+            fit_clearance=fit_clearance, kerf=kerf);
+        translate([0, height])
+            mirror([0,1])
+            cj_hidden_edge_notches_2d(
                 depth, plywood_thickness, feature_width,
                 tab_count, edge_margin=plywood_thickness,
                 fit_clearance=fit_clearance, kerf=kerf);
