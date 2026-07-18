@@ -2,6 +2,9 @@
     "parameterSets": {
         "test": {
             "door_angle": "90",
+            "door_side_gap": "0.4",
+            "door_top_gap": "0.4",
+            "door_bottom_gap": "0.4",
             "fit_clearance": "0.15",
             "hinge_clearance": "0.2",
             "hinge_pin_diameter": "2",
@@ -22,7 +25,7 @@
             "sheet_margin": "5",
             "sheet_size": "[300, 300]",
             "shell_mode": "ribbed_veneer",
-            "shell_rib_count": "4",
+            "shell_rib_count": "3",
             "show_chamber": "true",
             "show_door_sweep": "false",
             "show_engraving": "true",

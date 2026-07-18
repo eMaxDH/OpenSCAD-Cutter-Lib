@@ -53,11 +53,13 @@ sheet_margin = 5;
 part_spacing = 3;
 
 door_angle = 90;
-door_perimeter_gap = 0.4;
+door_side_gap = 0.4;
+door_top_gap = 0.4;
+door_bottom_gap = 0.4;
 hinge_pin_diameter = 2;
 hinge_clearance = 0.2;
 
-shell_rib_count = 4;
+shell_rib_count = 3;
 window_mode = "open";
 rack_enabled = true;
 rack_pullout = 0;
@@ -86,15 +88,16 @@ Window/View menu, then save or select a parameter set from the panel.
 The validated door range is 0–90 degrees. Positive motion opens the door
 outward and downward. At 0 degrees the plywood frame sits inside the front
 opening, while the veneer fascia is flush with the front veneer.
-`door_perimeter_gap` provides clearance on every edge. The hinge pin is bonded
-through the door approximately one plywood thickness below the rack base and
-turns directly in coaxial bores through the two side rails of the front
-termination rib. The resulting order along the pin is chassis knuckle,
-centered door knuckle, chassis knuckle. The door remains full height below
-the raised axis, so it still closes the complete lower opening. The axis sits
-halfway through the plywood depth, keeping the closed fascia flush. The body
-base begins two plywood thicknesses behind the front face, clearing the lower
-door edge throughout the 0–90 degree sweep.
+`door_side_gap`, `door_top_gap`, and `door_bottom_gap` independently control
+the closed-door clearance at those edges. The hinge pin is bonded through the
+door approximately one plywood thickness below the rack base and turns
+directly in coaxial bores through the two side rails of the front termination
+rib. The resulting order along the pin is chassis knuckle, centered door
+knuckle, chassis knuckle. The door remains full height below the raised axis,
+so it still closes the complete lower opening. The axis sits halfway through
+the plywood depth, keeping the closed fascia flush. The body base begins two
+plywood thicknesses behind the front face, clearing the lower door edge
+throughout the 0–90 degree sweep.
 
 ## Output modes
 

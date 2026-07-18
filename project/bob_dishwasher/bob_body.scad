@@ -292,7 +292,6 @@ module bob_body_structure(model_width, model_height, model_depth,
                           veneer_opacity=0.58,
                           hinge_pin_diameter=2,
                           hinge_clearance=0.2,
-                          door_gap=0.4,
                           show_hinge_bores=true)
 {
     usable_depth = model_depth-front_offset-rear_offset;
@@ -311,7 +310,7 @@ module bob_body_structure(model_width, model_height, model_depth,
                 translate([
                     -0.01,
                     plywood_thickness/2,
-                    2.5*plywood_thickness-door_gap
+                    2.4*plywood_thickness
                 ])
                     rotate([0,90,0])
                         cylinder(

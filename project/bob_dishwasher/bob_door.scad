@@ -7,7 +7,9 @@ make_3d = true; // [false:true]
 example_model_height = 80; // [70:1:160]
 example_plywood_thickness = 4; // [1:0.5:8]
 example_veneer_thickness = 0.6; // [0.1:0.1:2]
-example_door_perimeter_gap = 0.4; // [0:0.1:2]
+example_door_side_gap = 0.4; // [0:0.1:2]
+example_door_top_gap = 0.5; // [0:0.1:2]
+example_door_bottom_gap = 1.0; // [0:0.1:2]
 example_door_angle = 45; // [0:1:90]
 example_show_sweep = false; // [false:true]
 example_window_mode = "open"; // [open, transparent_insert]
@@ -17,10 +19,11 @@ example_window_mode = "open"; // [open, transparent_insert]
 example_model_width = 340 * example_model_height / 490;
 example_door_width = bob_door_width(
     example_model_width, example_plywood_thickness,
-    example_door_perimeter_gap);
+    example_door_side_gap);
 example_door_height = bob_door_height(
     example_model_height, example_plywood_thickness,
-    example_door_perimeter_gap);
+    example_door_top_gap,
+    example_door_bottom_gap);
 
 if (make_3d)
     bob_door_assembly(
@@ -33,7 +36,9 @@ if (make_3d)
         example_window_mode,
         true, true,
         example_show_sweep,
-        door_gap=example_door_perimeter_gap);
+        door_side_gap=example_door_side_gap,
+        door_top_gap=example_door_top_gap,
+        door_bottom_gap=example_door_bottom_gap);
 else {
     bob_door_frame_2d(
         example_door_width,
@@ -54,14 +59,16 @@ else {
 }
 
 // Leave one plywood thickness at each side for the front-rib knuckles.
-function bob_door_width(model_width, plywood_thickness=4, door_gap=0.4) =
-    model_width - 2*(plywood_thickness+door_gap);
-function bob_door_height(model_height, plywood_thickness=4, door_gap=0.4) =
-    model_height - 2*(plywood_thickness+door_gap);
-function bob_door_bottom(plywood_thickness=4, door_gap=0.4) =
-    plywood_thickness+door_gap;
-function bob_hinge_axis_z(plywood_thickness=4, door_gap=0.4) =
-    2.5*plywood_thickness-door_gap;
+function bob_door_width(model_width, plywood_thickness=4,
+                        side_gap=0.4) =
+    model_width-2*(plywood_thickness+side_gap);
+function bob_door_height(model_height, plywood_thickness=4,
+                         top_gap=0.4, bottom_gap=0.4) =
+    model_height-2*plywood_thickness-top_gap-bottom_gap;
+function bob_door_bottom(plywood_thickness=4, bottom_gap=0.4) =
+    plywood_thickness+bottom_gap;
+function bob_hinge_axis_z(plywood_thickness=4) =
+    2.4*plywood_thickness;
 function bob_window_diameter(door_width, door_height) =
     min(door_width*0.42, door_height*0.32);
 function bob_window_center_z(door_height) = door_height*0.43;
@@ -216,29 +223,34 @@ module bob_door_assembly(model_width, model_height,
                          show_hinge=true,
                          show_sweep=false,
                          exploded=0,
-                         door_gap=0.4)
+                         door_side_gap=0.4,
+                         door_top_gap=0.4,
+                         door_bottom_gap=0.4)
 {
     dw = bob_door_width(
-        model_width, plywood_thickness, door_gap);
+        model_width, plywood_thickness,
+        door_side_gap);
     dh = bob_door_height(
-        model_height, plywood_thickness, door_gap);
+        model_height, plywood_thickness,
+        door_top_gap, door_bottom_gap);
     dx = (model_width-dw)/2;
     axis = [
         0, plywood_thickness/2,
-        bob_hinge_axis_z(
-            plywood_thickness, door_gap)
+        bob_hinge_axis_z(plywood_thickness)
     ];
     axis_local_z =
         axis[2]-bob_door_bottom(
-            plywood_thickness, door_gap);
+            plywood_thickness, door_bottom_gap);
 
     assert(door_angle >= 0 && door_angle <= 90,
            "bob_door_assembly: door_angle must be between 0 and 90 degrees");
     assert(hinge_pin_diameter+hinge_clearance+
            1.5 <= plywood_thickness,
            "bob_door_assembly: chassis knuckle has insufficient material around the pin");
-    assert(door_gap >= 0,
-           "bob_door_assembly: door gap must be non-negative");
+    assert(door_side_gap >= 0 &&
+           door_top_gap >= 0 &&
+           door_bottom_gap >= 0,
+           "bob_door_assembly: door gaps must be non-negative");
 
     if (show_hinge) {
         color("silver")

@@ -40,7 +40,9 @@ part_spacing = 3; // [0.5:0.5:10]
 /* [Door and hinge] */
 
 door_angle = 90; // [0:1:90]
-door_perimeter_gap = 0.4; // [0:0.1:2]
+door_side_gap = 0.4; // [0:0.1:2]
+door_top_gap = 0.4; // [0:0.1:2]
+door_bottom_gap = 0.4; // [0:0.1:2]
 hinge_pin_diameter = 2; // [0.5:0.1:5]
 hinge_clearance = 0.2; // [0:0.05:1]
 show_hinge = true; // [false:true]
@@ -49,7 +51,7 @@ window_mode = "open"; // [open, transparent_insert]
 
 /* [Veneer shell and skeleton] */
 
-shell_rib_count = 4; // [1:1:10]
+shell_rib_count = 3; // [1:1:10]
 shell_mode = "ribbed_veneer"; // [ribbed_veneer]
 shell_corner_radius = model_height * 0.10;
 shell_front_offset = plywood_thickness;
