@@ -253,13 +253,22 @@ module bob_plywood_sheet_2(model_width, model_height, model_depth,
                            kerf=0.5, fit_clearance=0.15,
                            pin_diameter=2,
                            sheet_size=[300,300],
-                           margin=5, spacing=3)
+                           margin=5, spacing=3,
+                           veneer_thickness=0.6,
+                           chamber_skeleton_gap=0.5)
 {
-    cw = bob_chamber_width(model_width, plywood_thickness);
-    ch = bob_chamber_height(model_height, plywood_thickness);
-    cd = bob_chamber_depth(model_depth, plywood_thickness);
+    cw = bob_chamber_width(
+        model_width, plywood_thickness,
+        veneer_thickness, chamber_skeleton_gap);
+    ch = bob_chamber_height(
+        model_height, plywood_thickness,
+        veneer_thickness, chamber_skeleton_gap);
+    cd = bob_chamber_depth(
+        model_depth, plywood_thickness,
+        veneer_thickness, chamber_skeleton_gap);
     rack = bob_rack_size(
-        model_width, model_depth, plywood_thickness);
+        model_width, model_depth, plywood_thickness,
+        veneer_thickness, chamber_skeleton_gap);
     row1_h = max(ch, cd);
     row2_y = margin+row1_h+spacing;
     row3_y = row2_y+ch+spacing;
@@ -409,10 +418,16 @@ module bob_plywood_sheet_2_engraving(
     model_width, model_height, model_depth,
     plywood_thickness=4,
     sheet_size=[300,300],
-    margin=5, spacing=3)
+    margin=5, spacing=3,
+    veneer_thickness=0.6,
+    chamber_skeleton_gap=0.5)
 {
-    cw = bob_chamber_width(model_width, plywood_thickness);
-    cd = bob_chamber_depth(model_depth, plywood_thickness);
+    cw = bob_chamber_width(
+        model_width, plywood_thickness,
+        veneer_thickness, chamber_skeleton_gap);
+    cd = bob_chamber_depth(
+        model_depth, plywood_thickness,
+        veneer_thickness, chamber_skeleton_gap);
     floor_x = margin+cw+spacing;
 
     translate([
@@ -522,6 +537,7 @@ module bob_cut_layout(model_width, model_height, model_depth,
                       door_side_gap=0.4,
                       door_top_gap=0.5,
                       door_bottom_gap=1.0,
+                      chamber_skeleton_gap=0.5,
                       sheet_size=[300,300],
                       margin=5, spacing=3,
                       window_mode="open",
@@ -562,7 +578,9 @@ module bob_cut_layout(model_width, model_height, model_depth,
             model_width, model_height, model_depth,
             plywood_thickness, kerf, fit_clearance,
             pin_diameter,
-            sheet_size, margin, spacing);
+            sheet_size, margin, spacing,
+            veneer_thickness,
+            chamber_skeleton_gap);
 
     if (material == "all" || material == "plywood_2")
     translate(material == "all"
@@ -572,7 +590,9 @@ module bob_cut_layout(model_width, model_height, model_depth,
         bob_plywood_sheet_2_engraving(
             model_width, model_height, model_depth,
             plywood_thickness,
-            sheet_size, margin, spacing);
+            sheet_size, margin, spacing,
+            veneer_thickness,
+            chamber_skeleton_gap);
 
     if (material == "all" || material == "veneer")
     translate(material == "all"

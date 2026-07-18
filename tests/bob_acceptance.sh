@@ -70,6 +70,30 @@ if cmp -s \
     exit 1
 fi
 
+# Chamber clearance must affect both the assembly and its plywood sheet.
+for gap in 0 1.0; do
+    openscad \
+        -o "$output_dir/bob-chamber-gap-${gap}mm.csg" \
+        -D 'output_mode="assembly"' \
+        -D "chamber_skeleton_gap=$gap" \
+        "$model"
+
+    openscad \
+        -o "$output_dir/bob-chamber-gap-${gap}mm.svg" \
+        -D 'output_mode="cut_layout"' \
+        -D 'layout_material="plywood_2"' \
+        -D 'layout_operation="cut"' \
+        -D "chamber_skeleton_gap=$gap" \
+        "$model"
+done
+
+if cmp -s \
+    "$output_dir/bob-chamber-gap-0mm.svg" \
+    "$output_dir/bob-chamber-gap-1.0mm.svg"; then
+    echo "ERROR: plywood layout ignores chamber_skeleton_gap." >&2
+    exit 1
+fi
+
 # Saved presets must not override live Customizer door-angle changes.
 for angle in 30 90; do
     openscad \

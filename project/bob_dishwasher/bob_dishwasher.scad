@@ -72,6 +72,7 @@ rack_pullout = 0; // [0:1:80]
 
 show_engraving = true; // [false:true]
 show_chamber = true; // [false:true]
+chamber_skeleton_gap = 0.5; // [0:0.1:2]
 
 /* [Hidden] */
 
@@ -126,6 +127,8 @@ module bob_validate_configuration()
            door_top_gap >= 0 &&
            door_bottom_gap >= 0,
            "Door gaps must be non-negative");
+    assert(chamber_skeleton_gap >= 0,
+           "chamber_skeleton_gap must be non-negative");
 
     if (model_height < minimum_supported_height ||
         model_height > maximum_supported_height)
@@ -160,7 +163,9 @@ module bob_assembly(exploded=0, debug=false)
     if (show_chamber)
         bob_chamber_assembly(
             model_width, model_height, model_depth,
-            plywood_thickness, exploded);
+            plywood_thickness, exploded,
+            veneer_thickness,
+            chamber_skeleton_gap);
 
     if (rack_enabled)
         bob_rack_assembly(
@@ -168,7 +173,9 @@ module bob_assembly(exploded=0, debug=false)
             plywood_thickness,
             rack_removable ? rack_pullout : 0,
             rack_removable,
-            exploded);
+            exploded,
+            veneer_thickness,
+            chamber_skeleton_gap);
 
     bob_door_assembly(
         model_width, model_height,
@@ -223,6 +230,7 @@ module bob_dishwasher(make_3d=true, output_mode="automatic")
             door_side_gap,
             door_top_gap,
             door_bottom_gap,
+            chamber_skeleton_gap,
             sheet_size, sheet_margin, part_spacing,
             window_mode, layout_material,
             layout_operation);
