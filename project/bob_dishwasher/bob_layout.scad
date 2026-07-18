@@ -437,7 +437,9 @@ module bob_veneer_sheet(model_width, model_height, model_depth,
 {
     wrap = csh_wrap_length(
         model_width, model_height, corner_radius);
-    skin_depth = model_depth-front_offset-rear_offset;
+    // Match the assembled wrap: cover the front rib completely and meet the
+    // inner face of the rear veneer without overlapping that face sheet.
+    skin_depth = model_depth-veneer_thickness;
     dw = bob_door_width(
         model_width, plywood_thickness,
         door_side_gap, veneer_thickness);
@@ -469,7 +471,7 @@ module bob_veneer_sheet(model_width, model_height, model_depth,
         cl_operation_geometry("cut", operation)
             veneer_skin_layout(
                 model_width, model_height, model_depth,
-                corner_radius, front_offset, rear_offset);
+                corner_radius, 0, veneer_thickness);
 
     cl_layout_part(
         [margin,row2_y], [dw,dh],
