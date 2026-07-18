@@ -44,6 +44,26 @@ for angle in 0 45 90; do
         "$model"
 done
 
+# Verify that the three door-clearance controls can differ without breaking
+# either the assembly placement or the generated manufacturing profiles.
+openscad \
+    -o "$output_dir/bob-door-asymmetric-gaps.csg" \
+    -D 'output_mode="assembly"' \
+    -D 'door_angle=45' \
+    -D 'door_side_gap=0.7' \
+    -D 'door_top_gap=1.2' \
+    -D 'door_bottom_gap=0.2' \
+    "$model"
+
+openscad \
+    -o "$output_dir/bob-layout-asymmetric-gaps.svg" \
+    -D 'output_mode="cut_layout"' \
+    -D 'layout_operation="cut"' \
+    -D 'door_side_gap=0.7' \
+    -D 'door_top_gap=1.2' \
+    -D 'door_bottom_gap=0.2' \
+    "$model"
+
 for kerf in 0.15 0.5; do
     openscad \
         -o "$output_dir/bob-layout-kerf-${kerf}.svg" \
