@@ -2,6 +2,7 @@
     "fileFormatVersion": "1",
     "parameterSets": {
         "Default 80 mm assembly": {
+            "chamber_skeleton_gap": "0.5",
             "door_side_gap": "0.4",
             "door_top_gap": "0.5",
             "door_bottom_gap": "1.0",
@@ -15,6 +16,7 @@
             "veneer_opacity": "0.58"
         },
         "Default cutting layout": {
+            "chamber_skeleton_gap": "0.5",
             "door_side_gap": "0.4",
             "door_top_gap": "0.5",
             "door_bottom_gap": "1.0",
@@ -25,6 +27,7 @@
             "output_mode": "automatic"
         },
         "Skeleton inspection": {
+            "chamber_skeleton_gap": "0.5",
             "door_side_gap": "0.4",
             "door_top_gap": "0.5",
             "door_bottom_gap": "1.0",

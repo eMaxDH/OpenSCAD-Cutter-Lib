@@ -70,6 +70,7 @@ rack_pullout = 0; // [0:1:80]
 
 show_engraving = true; // [false:true]
 show_chamber = true; // [false:true]
+chamber_skeleton_gap = 0.5; // [0:0.1:2]
 
 /* [Hidden] */
 

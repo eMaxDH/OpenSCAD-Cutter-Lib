@@ -6,6 +6,8 @@ use <../../cutter_lib/joints/cj_hidden_tabs.scad>
 make_3d = true; // [false:true]
 example_model_height = 80; // [70:1:160]
 example_plywood_thickness = 4; // [1:0.5:8]
+example_veneer_thickness = 0.6; // [0.1:0.1:2]
+example_skeleton_gap = 0.5; // [0:0.1:2]
 example_exploded = 0; // [0:0.5:10]
 
 /* [Hidden] */
@@ -14,13 +16,19 @@ example_model_width = 340 * example_model_height / 490;
 example_model_depth = example_model_height;
 example_chamber_width =
     bob_chamber_width(example_model_width,
-                      example_plywood_thickness);
+                      example_plywood_thickness,
+                      example_veneer_thickness,
+                      example_skeleton_gap);
 example_chamber_height =
     bob_chamber_height(example_model_height,
-                       example_plywood_thickness);
+                       example_plywood_thickness,
+                       example_veneer_thickness,
+                       example_skeleton_gap);
 example_chamber_depth =
     bob_chamber_depth(example_model_depth,
-                      example_plywood_thickness);
+                      example_plywood_thickness,
+                      example_veneer_thickness,
+                      example_skeleton_gap);
 
 if (make_3d)
     bob_chamber_assembly(
@@ -28,7 +36,9 @@ if (make_3d)
         example_model_height,
         example_model_depth,
         example_plywood_thickness,
-        example_exploded);
+        example_exploded,
+        example_veneer_thickness,
+        example_skeleton_gap);
 else {
     bob_chamber_floor_2d(
         example_chamber_width,
@@ -43,15 +53,24 @@ else {
             example_plywood_thickness);
 }
 
-function bob_chamber_width(model_width, plywood_thickness) =
-    model_width - 4*plywood_thickness;
+function bob_chamber_width(model_width, plywood_thickness,
+                           veneer_thickness=0,
+                           skeleton_gap=0) =
+    model_width - 4*plywood_thickness -
+    2*(veneer_thickness+skeleton_gap);
 // Leave two material thicknesses below and above the chamber: the lower
 // allowance contains the base/floor stack, and the upper allowance contains
 // the top longitudinal stringers.
-function bob_chamber_height(model_height, plywood_thickness) =
-    model_height - 4*plywood_thickness;
-function bob_chamber_depth(model_depth, plywood_thickness) =
-    model_depth - 4*plywood_thickness;
+function bob_chamber_height(model_height, plywood_thickness,
+                            veneer_thickness=0,
+                            skeleton_gap=0) =
+    model_height - 4*plywood_thickness -
+    veneer_thickness-skeleton_gap;
+function bob_chamber_depth(model_depth, plywood_thickness,
+                           veneer_thickness=0,
+                           skeleton_gap=0) =
+    model_depth - 4*plywood_thickness -
+    veneer_thickness-skeleton_gap;
 
 module bob_chamber_rear_2d(width, height)
 {
@@ -122,11 +141,19 @@ module bob_chamber_side_2d(depth, height,
 
 module bob_chamber_assembly(model_width, model_height, model_depth,
                             plywood_thickness=4,
-                            exploded=0)
+                            exploded=0,
+                            veneer_thickness=0.6,
+                            skeleton_gap=0.5)
 {
-    cw = bob_chamber_width(model_width, plywood_thickness);
-    ch = bob_chamber_height(model_height, plywood_thickness);
-    cd = bob_chamber_depth(model_depth, plywood_thickness);
+    cw = bob_chamber_width(
+        model_width, plywood_thickness,
+        veneer_thickness, skeleton_gap);
+    ch = bob_chamber_height(
+        model_height, plywood_thickness,
+        veneer_thickness, skeleton_gap);
+    cd = bob_chamber_depth(
+        model_depth, plywood_thickness,
+        veneer_thickness, skeleton_gap);
     x0 = (model_width-cw)/2;
     y0 = 2*plywood_thickness;
     z0 = 2*plywood_thickness;
@@ -135,6 +162,8 @@ module bob_chamber_assembly(model_width, model_height, model_depth,
            ch > 2*plywood_thickness &&
            cd > 2*plywood_thickness,
            "bob_chamber_assembly: model is too small for chamber");
+    assert(skeleton_gap >= 0,
+           "bob_chamber_assembly: skeleton_gap must be non-negative");
 
     color([0.72, 0.74, 0.72]) {
         // Use the actual tabbed profiles. The main floor/top panels sit

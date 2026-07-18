@@ -69,6 +69,7 @@ shell_rib_count = 3;
 window_mode = "open";
 rack_enabled = true;
 rack_pullout = 0;
+chamber_skeleton_gap = 0.5;
 show_veneer = true;
 show_rib_cage = true;
 veneer_opacity = 0.58;
@@ -353,11 +354,11 @@ included in the cutting layout.
 
 The box-like chamber contains only structural panels, ledges, and a simplified
 spray-arm mark. There is no tank, pump, plumbing, heater, lighting, or rear
-service compartment. Its top panel reaches the underside of the upper
-longitudinal stringers, leaving one plywood thickness between the chamber and
-the shell's inner top edge. The floor and top tabs enter open-edge notches in
-the chamber sides, avoiding fragile plywood strips between a slot and the
-panel perimeter.
+service compartment. `chamber_skeleton_gap` leaves the configured clearance
+between the chamber and the skeleton at both sides, below the upper stringers,
+and ahead of the rear rib. The chamber floor remains seated on the structural
+base. The floor and top tabs enter open-edge notches in the chamber sides,
+avoiding fragile plywood strips between a slot and the panel perimeter.
 
 The two brown strips near the chamber floor are the rack runners, not part of
 the floor. They support the rack above the chamber floor and stop it at the
@@ -379,8 +380,8 @@ need more sheets even if their assembly geometry remains valid.
 tests/bob_acceptance.sh
 ```
 
-The script covers three heights, door angles 0/45/90, kerf values 0.15/0.5,
-assembly layouts, and calibration output.
+The script covers three heights, door angles 0/45/90, veneer and chamber-gap
+variants, kerf values 0.15/0.5, assembly layouts, and calibration output.
 
 ## Known limitations
 
