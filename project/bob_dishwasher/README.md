@@ -20,7 +20,11 @@ cross-section that veneer can realistically wrap.
 | Depth | 490 mm | 80.00 mm |
 
 The default scale is approximately 1:6.125. `model_width` and `model_depth`
-are always derived from `model_height`.
+are always derived from `model_height`. These dimensions describe the
+finished outside of the veneer, not the plywood skeleton. The rib width,
+height, and corner radius are inset by `veneer_thickness` on every wrapped
+edge, so the plywood supports the veneer's inner face without protruding
+through or sharing its exterior plane.
 
 ## Materials and hardware
 
@@ -91,8 +95,10 @@ The validated door range is 0–90 degrees. Positive motion opens the door
 outward and downward. At 0 degrees the plywood frame sits inside the front
 opening, while the veneer fascia is flush with the front veneer.
 `door_side_gap`, `door_top_gap`, and `door_bottom_gap` independently control
-the closed-door clearance at those edges. The hinge pin is bonded through the
-door approximately one plywood thickness below the rack base and turns
+the closed-door clearance at the plywood opening. The veneer thickness is
+included automatically when the door outline and its position are calculated.
+The hinge pin is bonded through the door approximately one plywood thickness
+below the rack base and turns
 directly in coaxial bores through the two side rails of the front termination
 rib. The resulting order along the pin is chassis knuckle, centered door
 knuckle, chassis knuckle. The door remains full height below the raised axis,
@@ -176,7 +182,7 @@ ribs is cut as four compact pieces and glued together at broad stepped
 45-degree joints on the straight vertical runs beside the corners. This
 preserves the continuous rounded veneer-support surface while avoiding six
 large rectangular nesting areas. At the default scale, the allocated rib
-footprint drops by about 58.5%.
+footprint drops by about 59.1%.
 
 | Part | Quantity |
 | --- | ---: |

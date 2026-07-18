@@ -45,6 +45,31 @@ for angle in 0 45 90; do
         "$model"
 done
 
+# Veneer thickness changes the plywood support envelope: the ribs and door
+# must stop at the skin's inner face instead of sharing its exterior plane.
+for veneer in 0.2 1.0; do
+    openscad \
+        -o "$output_dir/bob-rib-veneer-${veneer}mm.svg" \
+        -D 'output_mode="single_part"' \
+        -D 'single_part_id="BOB-RIB-01"' \
+        -D "veneer_thickness=$veneer" \
+        "$model"
+
+    openscad \
+        -o "$output_dir/bob-closed-veneer-${veneer}mm.csg" \
+        -D 'output_mode="assembly"' \
+        -D 'door_angle=0' \
+        -D "veneer_thickness=$veneer" \
+        "$model"
+done
+
+if cmp -s \
+    "$output_dir/bob-rib-veneer-0.2mm.svg" \
+    "$output_dir/bob-rib-veneer-1.0mm.svg"; then
+    echo "ERROR: plywood ribs ignore veneer_thickness." >&2
+    exit 1
+fi
+
 # Saved presets must not override live Customizer door-angle changes.
 for angle in 30 90; do
     openscad \
