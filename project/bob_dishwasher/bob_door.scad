@@ -224,8 +224,8 @@ module bob_door_assembly(model_width, model_height,
                          show_sweep=false,
                          exploded=0,
                          door_side_gap=0.4,
-                         door_top_gap=0.4,
-                         door_bottom_gap=0.4)
+                         door_top_gap=0.5,
+                         door_bottom_gap=1.0)
 {
     dw = bob_door_width(
         model_width, plywood_thickness,
