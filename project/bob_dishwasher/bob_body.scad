@@ -383,6 +383,9 @@ module bob_body_structure(model_width, model_height, model_depth,
     }
 
     if (show_skin)
+        // The wrap starts at the front frame and ends where the rear face
+        // veneer begins. The rib-spacing offsets must not expose either
+        // termination rib.
         ribbed_veneer_shell(
             model_width, model_height, model_depth,
             rib_count=1,
@@ -390,8 +393,8 @@ module bob_body_structure(model_width, model_height, model_depth,
             rib_width=plywood_thickness,
             veneer_thickness=veneer_thickness,
             corner_radius=corner_radius,
-            front_termination_offset=front_offset,
-            rear_termination_offset=rear_offset,
+            front_termination_offset=0,
+            rear_termination_offset=veneer_thickness,
             show_ribs=false,
             show_skin=true,
             min_bend_radius=min_bend_radius,

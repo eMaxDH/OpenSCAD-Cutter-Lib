@@ -24,7 +24,9 @@ are always derived from `model_height`. These dimensions describe the
 finished outside of the veneer, not the plywood skeleton. The rib width,
 height, and corner radius are inset by `veneer_thickness` on every wrapped
 edge, so the plywood supports the veneer's inner face without protruding
-through or sharing its exterior plane.
+through or sharing its exterior plane. The main wrap covers the complete
+front termination rib and continues to the inner face of the rear veneer, so
+the first and last plywood ribs are not left exposed.
 
 ## Materials and hardware
 
