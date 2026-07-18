@@ -35,9 +35,13 @@ else
 
 function bob_rack_size(model_width, model_depth, plywood_thickness) =
     [bob_chamber_width(model_width, plywood_thickness)-
-     2*plywood_thickness,
+     plywood_thickness,
      bob_chamber_depth(model_depth, plywood_thickness)-
      4*plywood_thickness];
+function bob_rack_runner_span(
+    model_width, plywood_thickness) =
+    bob_chamber_width(model_width, plywood_thickness)-
+    2*plywood_thickness;
 
 function bob_rack_corner_radius() = 2;
 function bob_rack_side_rail_length(
@@ -122,6 +126,9 @@ module bob_rack_assembly(model_width, model_height, model_depth,
         rack[1], corner_radius, rail_width);
     back_rail_length = bob_rack_back_rail_length(rack[0]);
     x0 = (model_width-rack[0])/2;
+    runner_span = bob_rack_runner_span(
+        model_width, plywood_thickness);
+    runner_x0 = (model_width-runner_span)/2;
     y0 = 2*plywood_thickness+2*plywood_thickness-pullout;
     chamber_floor_top = 3*plywood_thickness;
     runner_height = plywood_thickness/2;
@@ -137,7 +144,12 @@ module bob_rack_assembly(model_width, model_height, model_depth,
 
     // Tray support ledges.
     color([0.60, 0.47, 0.28])
-    for (x = [x0, x0+rack[0]-plywood_thickness])
+    // Keep the established chamber-runner coordinates. The wider rack
+    // overhangs these supports symmetrically.
+    for (x = [
+        runner_x0,
+        runner_x0+runner_span-plywood_thickness
+    ])
         translate([x, 2*plywood_thickness,
                    runner_z])
             tray_runner(
