@@ -59,11 +59,13 @@ sheet_margin = 5;
 part_spacing = 3;
 
 door_angle = 90;
-door_side_gap = 0.4;
-door_top_gap = 0.5;
-door_bottom_gap = 1.0;
+cradle_side_gap = 0.6;
+cradle_bottom_gap = 1.0;
+cradle_top_gap = 0.5;
 hinge_pin_diameter = 2;
 hinge_clearance = 0.2;
+hinge_pin_vertical_offset = 0;
+hinge_pin_front_back_offset = 0;
 
 shell_rib_count = 3;
 window_mode = "open";
@@ -95,20 +97,39 @@ If the panel is hidden, enable the **Customizer** panel from OpenSCAD's
 Window/View menu, then save or select a parameter set from the panel.
 
 The validated door range is 0–90 degrees. Positive motion opens the door
-outward and downward. At 0 degrees the plywood frame sits inside the front
-opening, while the veneer fascia is flush with the front veneer.
-`door_side_gap`, `door_top_gap`, and `door_bottom_gap` independently control
-the closed-door clearance at the plywood opening. The veneer thickness is
-included automatically when the door outline and its position are calculated.
+outward and downward. At 0 degrees the door is a front overlay covering the
+full termination rib except for its forward lower hinge cradle.
+The door now follows the complete finished front outline; the former
+`door_side_gap`, `door_top_gap`, and `door_bottom_gap` controls have been
+removed. `cradle_side_gap` sets the clearance beside the centered lower
+tongue, `cradle_bottom_gap` sets its clearance above the inside floor of the
+U, and `cradle_top_gap` sets the vertical clearance between the tops of the
+U-shaped cradle and the two door shoulders.
+
+`hinge_pin_vertical_offset` moves the pin up or down from its nominal
+position. `hinge_pin_front_back_offset` moves it through the plywood
+thickness: positive values move it toward the body and negative values move
+it toward the front. Both are constrained by assertions that preserve enough
+plywood around the bore.
 The hinge pin is bonded through the door approximately one plywood thickness
-below the rack base and turns
-directly in coaxial bores through the two side rails of the front termination
-rib. The resulting order along the pin is chassis knuckle, centered door
-knuckle, chassis knuckle. The door remains full height below the raised axis,
-so it still closes the complete lower opening. The axis sits halfway through
-the plywood depth, keeping the closed fascia flush. The body base begins two
-plywood thicknesses behind the front face, clearing the lower door edge
-throughout the 0–90 degree sweep.
+below the rack base and turns directly in coaxial bores through the two sides
+of the forward U-shaped cradle. The resulting order along the pin is chassis
+knuckle, centered door knuckle, chassis knuckle. Like the original mechanism,
+the broad door panel steps inward to a centered lower hinge tongue. The pin
+crosses that tongue and remains visible in the two side gaps. The upper door
+corners use the same finished radius as the veneer-covered body. The
+tongue-bottom corners use the U-shaped cradle's inner plywood radius, so the
+two hinge curves match; the shoulders remain square. At larger scales the
+tongue height grows only as much as needed to contain that radius.
+The axis sits halfway through the forward plywood layer. The body base begins
+two plywood thicknesses behind the original front-rib plane, clearing the
+lower door edge throughout the 0–90 degree sweep.
+
+In the front-to-back direction, the closed door and lower U-shaped cradle
+share the plywood layer immediately ahead of the complete front rib. The
+cradle's rear face is glued directly to the rib; there is no veneer trapped
+in that structural glue joint. The door veneer remains on the visible tongue
+but is subtracted anywhere the plywood cradle permanently covers it.
 
 ## Output modes
 
@@ -180,7 +201,7 @@ The Bob entry module follows the lamp convention: `make_3d=true` assembles
 the model, while `make_3d=false` sends the manufactured components to
 deterministic XY sheet positions. No cut part remains rotated out of plane.
 
-The default plywood set contains 36 pieces. Each of the five logical shell
+The default plywood set contains 37 pieces. Each of the five logical shell
 ribs is cut as four compact pieces and glued together at broad stepped
 45-degree joints on the straight vertical runs beside the corners. This
 preserves the continuous rounded veneer-support surface while avoiding six
@@ -195,6 +216,7 @@ footprint drops by about 59.1%.
 | Upper stringers, front-rib inset | 2 |
 | Front-inset hidden base/lower structure | 1 |
 | Door frame | 1 |
+| Forward lower hinge cradle | 1 |
 | Chamber rear, floor, and top | 3 |
 | Chamber sides | 2 |
 | Rack base | 1 |
@@ -203,9 +225,11 @@ footprint drops by about 59.1%.
 | Removable-rack back rail | 1 |
 | Calibration coupon | 1 |
 
-The veneer sheet contains four pieces: the main wrap, door fascia, front
-termination frame, and rear face. The hinge pin is purchased hardware and is
-therefore reported in the manifest but is not a laser-cut part.
+The veneer sheet contains four pieces: the main wrap, trimmed door fascia,
+front termination frame, and rear face. The hinge cradle is intentionally
+bare plywood at the front and glues directly to the front rib. The hinge pin
+is purchased hardware and is therefore reported in the manifest but is not a
+laser-cut part.
 
 ### Geometry source rule
 
@@ -216,8 +240,8 @@ laser-export geometry and disabled for the physical 3D preview, while fit
 clearance remains represented.
 
 The integrated hinge adds one explicit post-laser operation: its X-axis bore
-passes through the plywood edges of the assembled front-rib side segments and
-the door, so it cannot be represented as a through-cut in their flat XY
+passes through the plywood edges of the assembled cradle sides and the door
+tongue, so it cannot be represented as a through-cut in their flat XY
 profiles. The 3D model shows the bore at its drilled position, and the
 assembly instructions call for all three knuckles to be drilled coaxially.
 
@@ -244,9 +268,13 @@ and operation. Because the three sheets span much farther than the assembled
 model, use OpenSCAD's **View All / Zoom to fit** command after changing to 2D.
 
 The Bob-style door fascia includes a circular viewing port, an upper display,
-three controls, a circular port border, and the lower `Bob.` mark. OpenSCAD
-SVG export does not reliably preserve preview colours, so produce separate
-files at matching coordinates:
+three controls, a circular port border, and the lower `Bob.` mark. Its cut
+outline uses the same broad-panel/centered-hinge-tongue profile as the plywood
+door frame, minus any area permanently hidden by the U-shaped plywood cradle.
+The broad panel follows the finished rib width, so it hides the front rib at
+the top and sides when closed; only the lower cradle is visible around the
+rounded tongue. OpenSCAD SVG export does not reliably
+preserve preview colours, so produce separate files at matching coordinates:
 
 ```sh
 openscad -o bob-veneer-cut.svg \
@@ -331,11 +359,14 @@ veneer face terminate the wrap.
 7. Glue the tray runners inside the chamber. They carry the removable rack;
    the raised end of each profile is a rear travel stop.
 8. Assemble and test the removable tray-style rack.
-9. Laminate the door fascia onto its plywood frame, keeping the window open.
-10. Position the closed door inside the assembled front rib. At the rack
-    level, drill one continuous coaxial bore from the first chassis side,
-    through the door, and through the opposite chassis side. Use a backing
-    block and the calibrated pin-hole diameter.
+9. Laminate the trimmed door fascia onto its plywood frame, keeping the
+   window open. Confirm that the separate front-rib veneer leaves the cradle
+   glue footprint bare.
+10. Glue the bare plywood cradle directly to the plywood front termination
+    rib, with the closed door centered in the U. At the rack
+    level, drill one continuous coaxial bore through the first cradle side,
+    the centered lower door tongue, and the opposite cradle side. Use a
+    backing block and the calibrated pin-hole diameter.
 11. Slide the pin through all three knuckles. Bond it only inside the door;
     keep both chassis bores free.
 12. Test the door at 0, 45, and 90 degrees before adding cosmetic parts.
@@ -380,8 +411,9 @@ need more sheets even if their assembly geometry remains valid.
 tests/bob_acceptance.sh
 ```
 
-The script covers three heights, door angles 0/45/90, veneer and chamber-gap
-variants, kerf values 0.15/0.5, assembly layouts, and calibration output.
+The script covers three heights, door angles 0/45/90, cradle and pin offsets,
+veneer and chamber-gap variants, kerf values 0.15/0.5, assembly layouts, and
+calibration output.
 
 ## Known limitations
 

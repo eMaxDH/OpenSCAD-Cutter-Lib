@@ -1,12 +1,14 @@
 {
     "parameterSets": {
         "test": {
-            "door_side_gap": "0.4",
-            "door_top_gap": "0.5",
-            "door_bottom_gap": "1.0",
+            "cradle_side_gap": "0.6",
+            "cradle_bottom_gap": "1.0",
+            "cradle_top_gap": "0.5",
             "fit_clearance": "0.15",
             "hinge_clearance": "0.2",
             "hinge_pin_diameter": "2",
+            "hinge_pin_vertical_offset": "0",
+            "hinge_pin_front_back_offset": "0",
             "kerf": "0.5",
             "layout_material": "all",
             "layout_operation": "cut",

@@ -42,11 +42,13 @@ part_spacing = 3; // [0.5:0.5:10]
 
 // Kept out of saved presets so Customizer changes persist during preview.
 door_angle = 90; // [0:1:90]
-door_side_gap = 0.4; // [0:0.1:2]
-door_top_gap = 0.5; // [0:0.1:2]
-door_bottom_gap = 1.0; // [0:0.1:2]
+cradle_side_gap = 0.6; // [0:0.1:3]
+cradle_bottom_gap = 1.0; // [0:0.1:2]
+cradle_top_gap = 0.5; // [0:0.1:3]
 hinge_pin_diameter = 2; // [0.5:0.1:5]
 hinge_clearance = 0.2; // [0:0.05:1]
+hinge_pin_vertical_offset = 0; // [-1.3:0.1:2]
+hinge_pin_front_back_offset = 0; // [-0.4:0.1:0.4]
 show_hinge = true; // [false:true]
 show_door_sweep = false; // [false:true]
 window_mode = "open"; // [open, transparent_insert]
@@ -123,10 +125,10 @@ module bob_validate_configuration()
            "Unsupported layout_operation");
     assert(door_angle >= 0 && door_angle <= 90,
            "door_angle must be between 0 and 90 degrees");
-    assert(door_side_gap >= 0 &&
-           door_top_gap >= 0 &&
-           door_bottom_gap >= 0,
-           "Door gaps must be non-negative");
+    assert(cradle_side_gap >= 0 &&
+           cradle_bottom_gap >= 0 &&
+           cradle_top_gap >= 0,
+           "Door/cradle gaps must be non-negative");
     assert(chamber_skeleton_gap >= 0,
            "chamber_skeleton_gap must be non-negative");
 
@@ -158,7 +160,16 @@ module bob_assembly(exploded=0, debug=false)
         veneer_opacity,
         hinge_pin_diameter,
         hinge_clearance,
-        show_hinge);
+        false,
+        bob_hinge_cradle_height(
+            plywood_thickness,
+            veneer_thickness,
+            cradle_bottom_gap,
+            cradle_top_gap,
+            bob_hinge_cradle_inner_radius(
+                shell_corner_radius,
+                plywood_thickness,
+                veneer_thickness)));
 
     if (show_chamber)
         bob_chamber_assembly(
@@ -186,16 +197,23 @@ module bob_assembly(exploded=0, debug=false)
         show_hinge,
         show_door_sweep || debug,
         exploded,
-        door_side_gap,
-        door_top_gap,
-        door_bottom_gap);
+        cradle_side_gap,
+        cradle_bottom_gap,
+        cradle_top_gap,
+        hinge_pin_vertical_offset,
+        hinge_pin_front_back_offset,
+        shell_corner_radius);
 
     if (debug) {
         // Nominal envelope and hinge-axis clearance references.
         %cube([model_width, model_depth, model_height]);
         %translate([
-            0, plywood_thickness/2,
-            bob_hinge_axis_z(plywood_thickness)
+            0,
+            -plywood_thickness/2+
+            hinge_pin_front_back_offset,
+            bob_hinge_axis_z(
+                plywood_thickness,
+                hinge_pin_vertical_offset)
         ])
             rotate([0,90,0])
                 cylinder(h=model_width,
@@ -227,9 +245,9 @@ module bob_dishwasher(make_3d=true, output_mode="automatic")
             shell_rib_count, shell_corner_radius,
             shell_front_offset, shell_rear_offset,
             hinge_pin_diameter, hinge_clearance,
-            door_side_gap,
-            door_top_gap,
-            door_bottom_gap,
+            cradle_side_gap,
+            cradle_bottom_gap,
+            cradle_top_gap,
             chamber_skeleton_gap,
             sheet_size, sheet_margin, part_spacing,
             window_mode, layout_material,
@@ -241,19 +259,23 @@ module bob_dishwasher(make_3d=true, output_mode="automatic")
     else if (selected_output_mode == "single_part") {
         if (single_part_id == "BOB-DOOR-FRAME")
             bob_door_frame_2d(
-                bob_door_width(
-                    model_width, plywood_thickness,
-                    door_side_gap, veneer_thickness),
+                bob_door_width(model_width),
                 bob_door_height(
                     model_height, plywood_thickness,
-                    door_top_gap,
-                    door_bottom_gap,
-                    veneer_thickness),
+                    veneer_thickness,
+                    cradle_bottom_gap),
                 max(5, plywood_thickness),
-                min(6, bob_door_width(
+                shell_corner_radius,
+                plywood_thickness=plywood_thickness,
+                tongue_width=bob_door_tongue_width(
                     model_width, plywood_thickness,
-                    door_side_gap,
-                    veneer_thickness)*0.12));
+                    veneer_thickness,
+                    cradle_side_gap),
+                tongue_corner_radius=
+                    bob_hinge_cradle_inner_radius(
+                        shell_corner_radius,
+                        plywood_thickness,
+                        veneer_thickness));
         else if (single_part_id == "BOB-RIB-01")
             bob_segmented_rib_compact_2d(
                 bob_structural_width(

@@ -111,25 +111,44 @@ if cmp -s \
     exit 1
 fi
 
-# Verify that the three door-clearance controls can differ without breaking
+# Verify that the three cradle-clearance controls can differ without breaking
 # either the assembly placement or the generated manufacturing profiles.
 openscad \
-    -o "$output_dir/bob-door-asymmetric-gaps.csg" \
+    -o "$output_dir/bob-cradle-asymmetric-gaps.csg" \
     -D 'output_mode="assembly"' \
     -D 'door_angle=45' \
-    -D 'door_side_gap=0.7' \
-    -D 'door_top_gap=1.2' \
-    -D 'door_bottom_gap=0.2' \
+    -D 'cradle_side_gap=0.8' \
+    -D 'cradle_top_gap=1.2' \
+    -D 'cradle_bottom_gap=0.2' \
     "$model"
 
 openscad \
-    -o "$output_dir/bob-layout-asymmetric-gaps.svg" \
+    -o "$output_dir/bob-layout-asymmetric-cradle-gaps.svg" \
     -D 'output_mode="cut_layout"' \
     -D 'layout_operation="cut"' \
-    -D 'door_side_gap=0.7' \
-    -D 'door_top_gap=1.2' \
-    -D 'door_bottom_gap=0.2' \
+    -D 'cradle_side_gap=0.8' \
+    -D 'cradle_top_gap=1.2' \
+    -D 'cradle_bottom_gap=0.2' \
     "$model"
+
+# Both hinge-axis sliders must change the generated assembly.
+for offsets in "0 0" "1.0 0.4"; do
+    read -r vertical front_back <<< "$offsets"
+    openscad \
+        -o "$output_dir/bob-pin-offsets-${vertical}-${front_back}.csg" \
+        -D 'output_mode="assembly"' \
+        -D 'door_angle=30' \
+        -D "hinge_pin_vertical_offset=$vertical" \
+        -D "hinge_pin_front_back_offset=$front_back" \
+        "$model"
+done
+
+if cmp -s \
+    "$output_dir/bob-pin-offsets-0-0.csg" \
+    "$output_dir/bob-pin-offsets-1.0-0.4.csg"; then
+    echo "ERROR: hinge pin offset sliders do not change the assembly." >&2
+    exit 1
+fi
 
 for kerf in 0.15 0.5; do
     openscad \
