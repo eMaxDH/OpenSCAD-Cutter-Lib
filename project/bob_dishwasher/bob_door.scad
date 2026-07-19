@@ -243,6 +243,80 @@ module bob_hinge_cradle_2d(width, height,
     }
 }
 
+// Finished front outline: the inner edge matches the plywood cradle while
+// the outer edge reaches the veneer-covered body silhouette.
+module bob_hinge_cradle_finished_2d(
+    model_width, model_height,
+    plywood_thickness=4,
+    veneer_thickness=0.6,
+    corner_radius=8,
+    cradle_height=14)
+{
+    bob_hinge_cradle_2d(
+        model_width, model_height,
+        plywood_thickness+veneer_thickness,
+        corner_radius,
+        cradle_height);
+}
+
+// Cross-section of the veneer wrapped over the U's outer left side, bottom,
+// rounded corners, and right side. Extruding this profile through the cradle
+// depth produces the edge covering shown in the assembly.
+module bob_hinge_cradle_edge_veneer_2d(
+    model_width, model_height,
+    plywood_thickness=4,
+    veneer_thickness=0.6,
+    corner_radius=8,
+    cradle_height=14)
+{
+    difference() {
+        bob_hinge_cradle_finished_2d(
+            model_width, model_height,
+            plywood_thickness,
+            veneer_thickness,
+            corner_radius,
+            cradle_height);
+
+        translate([
+            veneer_thickness,
+            veneer_thickness
+        ])
+            bob_hinge_cradle_2d(
+                bob_structural_width(
+                    model_width,
+                    veneer_thickness),
+                bob_structural_height(
+                    model_height,
+                    veneer_thickness),
+                plywood_thickness,
+                bob_structural_corner_radius(
+                    corner_radius,
+                    veneer_thickness),
+                cradle_height-veneer_thickness);
+    }
+}
+
+function bob_hinge_cradle_outer_edge_length(
+    model_width, corner_radius, cradle_height) =
+    model_width-2*corner_radius+
+    PI*corner_radius+
+    2*(cradle_height-corner_radius);
+
+module bob_hinge_cradle_edge_strip_2d(
+    model_width, plywood_thickness=4,
+    corner_radius=8, cradle_height=14)
+{
+    assert(cradle_height >= corner_radius,
+           "bob_hinge_cradle_edge_strip_2d: cradle is below its corner radius");
+    square([
+        bob_hinge_cradle_outer_edge_length(
+            model_width,
+            corner_radius,
+            cradle_height),
+        plywood_thickness
+    ]);
+}
+
 module bob_door_frame_2d(door_width, door_height,
                          frame_width=5, corner_radius=5,
                          window_mode="open",
@@ -578,6 +652,38 @@ module bob_door_assembly(model_width, model_height,
                         plywood_thickness,
                         structural_radius,
                         cradle_height-veneer_thickness);
+
+    // The edge strip bends continuously around the outer left side, bottom,
+    // and right side, meeting the body's main veneer at the front-rib plane.
+    color([0.55, 0.28, 0.12])
+        rotate([90,0,0])
+            linear_extrude(plywood_thickness)
+                bob_hinge_cradle_edge_veneer_2d(
+                    model_width,
+                    model_height,
+                    plywood_thickness,
+                    veneer_thickness,
+                    corner_radius,
+                    cradle_height);
+
+    // The enlarged front face reaches the finished body outline and covers
+    // the front edge of the side/bottom strip. Its rear surface bonds to the
+    // cradle; the cradle's opposite face remains bare for the rib glue joint.
+    color([0.55, 0.28, 0.12])
+        translate([
+            0,
+            -plywood_thickness,
+            0
+        ])
+            rotate([90,0,0])
+                linear_extrude(veneer_thickness)
+                    bob_hinge_cradle_finished_2d(
+                        model_width,
+                        model_height,
+                        plywood_thickness,
+                        veneer_thickness,
+                        corner_radius,
+                        cradle_height);
 
     if (show_hinge) {
         color("silver")

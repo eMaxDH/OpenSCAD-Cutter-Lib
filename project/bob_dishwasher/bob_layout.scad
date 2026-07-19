@@ -56,7 +56,7 @@ module bob_layout_layer_info(material="all", operation="preview",
     echo(str("[BOB PART MANIFEST] plywood=", 17+rib_segments,
              " cut parts (including ", logical_ribs,
              " logical ribs / ", rib_segments,
-             " glued rib segments and coupon), veneer=4 cut parts, purchased hinge pin=1"));
+             " glued rib segments and coupon), veneer=5 cut parts, purchased hinge pin=1"));
 
     %translate([0, sheet_size[1]+7]) {
         color("black")
@@ -518,15 +518,34 @@ module bob_veneer_sheet(model_width, model_height, model_depth,
     tongue_width = bob_door_tongue_width(
         model_width, plywood_thickness,
         veneer_thickness, cradle_side_gap);
+    cradle_profile = [
+        model_width,
+        cradle_height
+    ];
+    cradle_edge_strip = [
+        bob_hinge_cradle_outer_edge_length(
+            model_width,
+            corner_radius,
+            cradle_height),
+        plywood_thickness
+    ];
     row2_y = margin+skin_depth+spacing;
+    cradle_x = margin+dw+spacing;
+    rear_x =
+        cradle_x+cradle_profile[0]+spacing;
+    edge_y =
+        row2_y+max(dh, model_height)+spacing;
 
     boxes = [
         [margin, margin, wrap, skin_depth],
         [margin, row2_y, dw, dh],
-        [margin+dw+spacing, row2_y,
+        [cradle_x, row2_y,
+         cradle_profile[0], cradle_profile[1]],
+        [rear_x, row2_y,
          model_width, model_height],
-        [margin+dw+spacing+model_width+spacing,
-         row2_y, model_width, model_height]
+        [margin, edge_y,
+         cradle_edge_strip[0],
+         cradle_edge_strip[1]]
     ];
 
     cl_validate_layout(
@@ -567,13 +586,14 @@ module bob_veneer_sheet(model_width, model_height, model_depth,
 
     if (operation != "engrave")
     cl_layout_part(
-        [margin+dw+spacing,row2_y],
-        [model_width,model_height],
-        "BOB-FRONT-VENEER-FRAME",
+        [cradle_x,row2_y],
+        cradle_profile,
+        "BOB-HINGE-CRADLE-VENEER",
         sheet_size=sheet_size, margin=margin)
         cl_operation_geometry("cut", operation)
-            bob_front_veneer_frame_2d(
-                model_width, model_height,
+            bob_hinge_cradle_finished_2d(
+                model_width,
+                model_height,
                 plywood_thickness,
                 veneer_thickness,
                 corner_radius,
@@ -581,8 +601,20 @@ module bob_veneer_sheet(model_width, model_height, model_depth,
 
     if (operation != "engrave")
     cl_layout_part(
-        [margin+dw+spacing+model_width+spacing,
-         row2_y],
+        [margin,edge_y],
+        cradle_edge_strip,
+        "BOB-HINGE-CRADLE-EDGE-VENEER",
+        sheet_size=sheet_size, margin=margin)
+        cl_operation_geometry("cut", operation)
+            bob_hinge_cradle_edge_strip_2d(
+                model_width,
+                plywood_thickness,
+                corner_radius,
+                cradle_height);
+
+    if (operation != "engrave")
+    cl_layout_part(
+        [rear_x,row2_y],
         [model_width,model_height],
         "BOB-REAR-VENEER",
         sheet_size=sheet_size, margin=margin)

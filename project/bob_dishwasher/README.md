@@ -128,8 +128,12 @@ lower door edge throughout the 0–90 degree sweep.
 In the front-to-back direction, the closed door and lower U-shaped cradle
 share the plywood layer immediately ahead of the complete front rib. The
 cradle's rear face is glued directly to the rib; there is no veneer trapped
-in that structural glue joint. The door veneer remains on the visible tongue
-but is subtracted anywhere the plywood cradle permanently covers it.
+in that structural glue joint. A separate body-veneer U covers the cradle's
+visible front face and expands to the finished body outline. A narrow veneer
+strip bends around the U's outer left side, rounded bottom, and right side,
+meeting the main body wrap at the rib plane. The door veneer remains on the
+visible tongue but is subtracted anywhere the veneered cradle permanently
+covers it.
 
 ## Output modes
 
@@ -225,10 +229,12 @@ footprint drops by about 59.1%.
 | Removable-rack back rail | 1 |
 | Calibration coupon | 1 |
 
-The veneer sheet contains four pieces: the main wrap, trimmed door fascia,
-front termination frame, and rear face. The hinge cradle is intentionally
-bare plywood at the front and glues directly to the front rib. The hinge pin
-is purchased hardware and is therefore reported in the manifest but is not a
+The veneer sheet contains five pieces: the main wrap, trimmed door fascia,
+expanded U-shaped hinge-cradle face, cradle outer-edge strip, and rear face.
+There is no full front cosmetic termination ring. The edge strip bends around
+the U's left side, bottom, rounded corners, and right side. The cradle rear
+remains bare plywood and glues directly to the front rib. The hinge pin is
+purchased hardware and is therefore reported in the manifest but is not a
 laser-cut part.
 
 ### Geometry source rule
@@ -338,8 +344,10 @@ stretch it into a compound curve.
 The flattened wrap uses straight sides and top plus two quarter-circle corner
 transitions. It is a practical constant-cross-section development. The
 default 8 mm radius is checked against a 5 mm recommended minimum, but the
-selected veneer still needs a physical bend test. A front veneer ring and rear
-veneer face terminate the wrap.
+selected veneer still needs a physical bend test. The wrap ends at the front
+rib without a cosmetic termination ring. An expanded U-shaped face and one
+bendable outer-edge strip cover the hinge cradle, and a rear veneer face
+terminates the other end.
 
 ## Suggested assembly order
 
@@ -360,10 +368,12 @@ veneer face terminate the wrap.
    the raised end of each profile is a rear travel stop.
 8. Assemble and test the removable tray-style rack.
 9. Laminate the trimmed door fascia onto its plywood frame, keeping the
-   window open. Confirm that the separate front-rib veneer leaves the cradle
-   glue footprint bare.
-10. Glue the bare plywood cradle directly to the plywood front termination
-    rib, with the closed door centered in the U. At the rack
+   window open. Pre-bend and glue the narrow cradle strip around its outer
+   left side, bottom corners, bottom, and right side. Laminate the expanded
+   U-shaped body-veneer face over the visible front and the strip's front
+   edge, while leaving the cradle's rear glue face bare.
+10. Glue the cradle's bare plywood rear directly to the plywood front
+    termination rib, with the closed door centered in the U. At the rack
     level, drill one continuous coaxial bore through the first cradle side,
     the centered lower door tongue, and the opposite cradle side. Use a
     backing block and the calibrated pin-hole diameter.
@@ -371,7 +381,7 @@ veneer face terminate the wrap.
     keep both chassis bores free.
 12. Test the door at 0, 45, and 90 degrees before adding cosmetic parts.
 13. Pre-form and glue the veneer wrap over the ribs.
-14. Add the front termination ring and rear veneer face.
+14. Add the rear veneer face.
 15. Sand lightly, mask moving areas, and paint or finish.
 
 Do not glue the rack. Pull it through the open door or lift it from its
