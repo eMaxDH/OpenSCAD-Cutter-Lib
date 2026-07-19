@@ -160,16 +160,7 @@ module bob_assembly(exploded=0, debug=false)
         veneer_opacity,
         hinge_pin_diameter,
         hinge_clearance,
-        false,
-        bob_hinge_cradle_height(
-            plywood_thickness,
-            veneer_thickness,
-            cradle_bottom_gap,
-            cradle_top_gap,
-            bob_hinge_cradle_inner_radius(
-                shell_corner_radius,
-                plywood_thickness,
-                veneer_thickness)));
+        false);
 
     if (show_chamber)
         bob_chamber_assembly(
