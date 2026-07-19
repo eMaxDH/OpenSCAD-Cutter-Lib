@@ -46,12 +46,59 @@ else
 
 function bob_inner_width(model_width, plywood_thickness) =
     model_width - 2*plywood_thickness;
+function bob_front_face_y(veneer_thickness) =
+    -veneer_thickness;
+function bob_front_plywood_y() = 0;
+function bob_front_stack_thickness(
+    plywood_thickness, veneer_thickness) =
+    plywood_thickness+veneer_thickness;
 function bob_structural_width(model_width, veneer_thickness) =
     model_width-2*veneer_thickness;
 function bob_structural_height(model_height, veneer_thickness) =
     model_height-2*veneer_thickness;
 function bob_structural_corner_radius(corner_radius, veneer_thickness) =
     corner_radius-veneer_thickness;
+
+// Cosmetic front ring with the structural cradle footprint removed. The
+// exposed plywood in this lower U-shaped region is the cradle's glue face.
+module bob_front_veneer_frame_2d(
+    model_width, model_height,
+    plywood_thickness=4,
+    veneer_thickness=0.6,
+    corner_radius=8,
+    cradle_height=0)
+{
+    difference() {
+        shell_rib(
+            model_width, model_height,
+            rib_width=plywood_thickness,
+            corner_radius=corner_radius);
+
+        if (cradle_height > 0)
+            translate([veneer_thickness,
+                       veneer_thickness])
+                intersection() {
+                    shell_rib(
+                        bob_structural_width(
+                            model_width,
+                            veneer_thickness),
+                        bob_structural_height(
+                            model_height,
+                            veneer_thickness),
+                        rib_width=plywood_thickness,
+                        corner_radius=
+                            bob_structural_corner_radius(
+                                corner_radius,
+                                veneer_thickness));
+                    square([
+                        bob_structural_width(
+                            model_width,
+                            veneer_thickness),
+                        cradle_height-veneer_thickness
+                    ]);
+                }
+    }
+}
 
 module bob_base_2d(model_width, model_depth, plywood_thickness=4)
 {
@@ -304,9 +351,15 @@ module bob_body_structure(model_width, model_height, model_depth,
                           veneer_opacity=0.58,
                           hinge_pin_diameter=2,
                           hinge_clearance=0.2,
-                          show_hinge_bores=true)
+                          show_hinge_bores=true,
+                          front_cradle_height=0)
 {
     usable_depth = model_depth-front_offset-rear_offset;
+    front_plywood_y = bob_front_plywood_y();
+    front_face_y = bob_front_face_y(
+        veneer_thickness);
+    front_stack_depth = bob_front_stack_thickness(
+        plywood_thickness, veneer_thickness);
     structural_width =
         bob_structural_width(model_width, veneer_thickness);
     structural_height =
@@ -321,6 +374,9 @@ module bob_body_structure(model_width, model_height, model_depth,
            "bob_body_structure: veneer leaves no room for the ribs");
     assert(structural_radius >= plywood_thickness,
            "bob_body_structure: veneer leaves too little rib corner radius");
+    assert(front_plywood_y+plywood_thickness-
+           front_face_y == front_stack_depth,
+           "bob_body_structure: invalid front veneer/rib stack");
 
     color([0.72, 0.56, 0.33])
     if (show_ribs) {
@@ -328,7 +384,11 @@ module bob_body_structure(model_width, model_height, model_depth,
         // chassis knuckles. Their coaxial bore is drilled along X after the
         // four frame segments have been glued.
         difference() {
-            translate([veneer_thickness, 0, veneer_thickness])
+            translate([
+                veneer_thickness,
+                front_plywood_y,
+                veneer_thickness
+            ])
                 bob_rib_at_y(
                     0, structural_width, structural_height,
                     plywood_thickness, structural_radius,
@@ -403,13 +463,15 @@ module bob_body_structure(model_width, model_height, model_depth,
     if (show_skin) {
         // Front cosmetic termination ring and rear cosmetic face.
         color([0.55, 0.28, 0.12])
-            translate([0, 0, 0])
+            translate([0, front_plywood_y, 0])
                 rotate([90,0,0])
                     linear_extrude(veneer_thickness)
-                        shell_rib(
+                        bob_front_veneer_frame_2d(
                             model_width, model_height,
-                            rib_width=plywood_thickness,
-                            corner_radius=corner_radius);
+                            plywood_thickness,
+                            veneer_thickness,
+                            corner_radius,
+                            front_cradle_height);
 
         color([0.55, 0.28, 0.12])
             translate([0, model_depth, 0])

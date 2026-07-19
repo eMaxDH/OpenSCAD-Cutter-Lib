@@ -53,7 +53,7 @@ module bob_layout_layer_info(material="all", operation="preview",
     echo(str("[BOB 2D LAYERS] material=", material,
              ", operation=", operation));
     echo("[BOB 2D LAYERS] plywood cut | plywood engraving | veneer cut | veneer engraving");
-    echo(str("[BOB PART MANIFEST] plywood=", 16+rib_segments,
+    echo(str("[BOB PART MANIFEST] plywood=", 17+rib_segments,
              " cut parts (including ", logical_ribs,
              " logical ribs / ", rib_segments,
              " glued rib segments and coupon), veneer=4 cut parts, purchased hinge pin=1"));
@@ -80,9 +80,9 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
                            kerf=0.5, fit_clearance=0.15,
                            rib_count=4,
                            corner_radius=8,
-                           door_side_gap=0.4,
-                           door_top_gap=0.5,
-                           door_bottom_gap=1.0,
+                           cradle_side_gap=0.6,
+                           cradle_bottom_gap=1.0,
+                           cradle_top_gap=0.5,
                            sheet_size=[300,300],
                            margin=5, spacing=3)
 {
@@ -94,16 +94,28 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
     structural_radius =
         bob_structural_corner_radius(
             corner_radius, veneer_thickness);
+    hinge_corner_radius =
+        bob_hinge_cradle_inner_radius(
+            corner_radius,
+            plywood_thickness,
+            veneer_thickness);
+    cradle_height = bob_hinge_cradle_height(
+        plywood_thickness,
+        veneer_thickness,
+        cradle_bottom_gap,
+        cradle_top_gap,
+        hinge_corner_radius);
     assert(rib_count >= 1,
            "bob_plywood_sheet_1: at least one internal rib is required");
 
-    dw = bob_door_width(
-        model_width, plywood_thickness,
-        door_side_gap, veneer_thickness);
+    dw = bob_door_width(model_width);
     dh = bob_door_height(
         model_height, plywood_thickness,
-        door_top_gap, door_bottom_gap,
-        veneer_thickness);
+        veneer_thickness,
+        cradle_bottom_gap);
+    tongue_width = bob_door_tongue_width(
+        model_width, plywood_thickness,
+        veneer_thickness, cradle_side_gap);
     base = [
         structural_width-2*plywood_thickness,
         model_depth-veneer_thickness-2*plywood_thickness
@@ -141,6 +153,11 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
     base_x = door_x+dw+spacing;
     cage_x = base_x+base[0]+spacing;
     cage_width = 2*plywood_thickness+spacing;
+    cradle_x = cage_x+cage_width+spacing;
+    cradle = [
+        structural_width,
+        cradle_height-veneer_thickness
+    ];
     stringer_length =
         model_depth-plywood_thickness-veneer_thickness;
 
@@ -148,7 +165,9 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
         [door_x, parts_y, dw, dh],
         [base_x, parts_y, base[0], base[1]],
         [cage_x, parts_y, cage_width,
-         stringer_length]
+         stringer_length],
+        [cradle_x, parts_y,
+         cradle[0], cradle[1]]
     ]);
 
     cl_validate_layout(
@@ -224,7 +243,11 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
             bob_door_frame_2d(
                 dw, dh,
                 max(5, plywood_thickness),
-                min(6, dw*0.12));
+                corner_radius,
+                plywood_thickness=plywood_thickness,
+                tongue_width=tongue_width,
+                tongue_corner_radius=
+                    hinge_corner_radius);
             bob_part_label("BOB-DOOR-FRAME");
         }
 
@@ -246,6 +269,19 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
             bob_stringer_2d(
                 stringer_length, plywood_thickness);
     bob_part_label("BOB-STRINGER x2", [cage_x, parts_y+1]);
+
+    cl_layout_part(
+        [cradle_x, parts_y], cradle,
+        "BOB-HINGE-CRADLE",
+        sheet_size=sheet_size, margin=margin) {
+            bob_hinge_cradle_2d(
+                structural_width,
+                structural_height,
+                plywood_thickness,
+                structural_radius,
+                cradle_height-veneer_thickness);
+            bob_part_label("BOB-HINGE-CRADLE");
+        }
 }
 
 module bob_plywood_sheet_2(model_width, model_height, model_depth,
@@ -444,9 +480,9 @@ module bob_plywood_sheet_2_engraving(
 module bob_veneer_sheet(model_width, model_height, model_depth,
                         plywood_thickness=4,
                         veneer_thickness=0.6,
-                        door_side_gap=0.4,
-                        door_top_gap=0.4,
-                        door_bottom_gap=0.4,
+                        cradle_side_gap=0.6,
+                        cradle_bottom_gap=1.0,
+                        cradle_top_gap=0.5,
                         corner_radius=8,
                         front_offset=4,
                         rear_offset=4,
@@ -460,13 +496,28 @@ module bob_veneer_sheet(model_width, model_height, model_depth,
     // Match the assembled wrap: cover the front rib completely and meet the
     // inner face of the rear veneer without overlapping that face sheet.
     skin_depth = model_depth-veneer_thickness;
-    dw = bob_door_width(
-        model_width, plywood_thickness,
-        door_side_gap, veneer_thickness);
+    dw = bob_door_width(model_width);
+    door_bottom = bob_door_bottom(
+        plywood_thickness, veneer_thickness,
+        cradle_bottom_gap);
     dh = bob_door_height(
         model_height, plywood_thickness,
-        door_top_gap, door_bottom_gap,
-        veneer_thickness);
+        veneer_thickness,
+        cradle_bottom_gap);
+    hinge_corner_radius =
+        bob_hinge_cradle_inner_radius(
+            corner_radius,
+            plywood_thickness,
+            veneer_thickness);
+    cradle_height = bob_hinge_cradle_height(
+        plywood_thickness,
+        veneer_thickness,
+        cradle_bottom_gap,
+        cradle_top_gap,
+        hinge_corner_radius);
+    tongue_width = bob_door_tongue_width(
+        model_width, plywood_thickness,
+        veneer_thickness, cradle_side_gap);
     row2_y = margin+skin_depth+spacing;
 
     boxes = [
@@ -499,10 +550,19 @@ module bob_veneer_sheet(model_width, model_height, model_depth,
         sheet_size=sheet_size, margin=margin)
         {
             cl_operation_geometry("cut", operation)
-                bob_door_fascia_2d(
-                    dw, dh, min(6,dw*0.12), window_mode);
+                bob_door_trimmed_fascia_2d(
+                    dw, dh,
+                    plywood_thickness,
+                    veneer_thickness,
+                    corner_radius,
+                    window_mode,
+                    tongue_width,
+                    hinge_corner_radius,
+                    corner_radius,
+                    cradle_height,
+                    door_bottom);
             cl_operation_geometry("engrave", operation)
-                bob_door_engraving_2d(dw, dh);
+            bob_door_engraving_2d(dw, dh);
         }
 
     if (operation != "engrave")
@@ -512,10 +572,12 @@ module bob_veneer_sheet(model_width, model_height, model_depth,
         "BOB-FRONT-VENEER-FRAME",
         sheet_size=sheet_size, margin=margin)
         cl_operation_geometry("cut", operation)
-            shell_rib(
+            bob_front_veneer_frame_2d(
                 model_width, model_height,
-                rib_width=plywood_thickness,
-                corner_radius=corner_radius);
+                plywood_thickness,
+                veneer_thickness,
+                corner_radius,
+                cradle_height);
 
     if (operation != "engrave")
     cl_layout_part(
@@ -539,9 +601,9 @@ module bob_cut_layout(model_width, model_height, model_depth,
                       rear_offset=4,
                       pin_diameter=2,
                       pin_clearance=0.2,
-                      door_side_gap=0.4,
-                      door_top_gap=0.5,
-                      door_bottom_gap=1.0,
+                      cradle_side_gap=0.6,
+                      cradle_bottom_gap=1.0,
+                      cradle_top_gap=0.5,
                       chamber_skeleton_gap=0.5,
                       sheet_size=[300,300],
                       margin=5, spacing=3,
@@ -569,9 +631,9 @@ module bob_cut_layout(model_width, model_height, model_depth,
         plywood_thickness, veneer_thickness,
         kerf, fit_clearance,
         rib_count, corner_radius,
-        door_side_gap,
-        door_top_gap,
-        door_bottom_gap,
+        cradle_side_gap,
+        cradle_bottom_gap,
+        cradle_top_gap,
         sheet_size, margin, spacing);
 
     if (material == "all" || material == "plywood_2")
@@ -606,9 +668,9 @@ module bob_cut_layout(model_width, model_height, model_depth,
         bob_veneer_sheet(
             model_width, model_height, model_depth,
             plywood_thickness, veneer_thickness,
-            door_side_gap,
-            door_top_gap,
-            door_bottom_gap,
+            cradle_side_gap,
+            cradle_bottom_gap,
+            cradle_top_gap,
             corner_radius, front_offset, rear_offset,
             sheet_size, margin, spacing, window_mode,
             operation);
