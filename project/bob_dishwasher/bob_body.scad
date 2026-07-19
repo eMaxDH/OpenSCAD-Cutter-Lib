@@ -67,6 +67,39 @@ module bob_base_2d(model_width, model_depth, plywood_thickness=4)
     ]);
 }
 
+function bob_base_front_bridge_depth(
+    plywood_thickness=4,
+    base_overlap=undef) =
+    plywood_thickness+
+    (is_undef(base_overlap)
+     ? plywood_thickness
+     : base_overlap);
+
+function bob_base_front_bridge_width(
+    model_width, corner_radius) =
+    model_width-2*corner_radius;
+
+// Radius-to-radius cleat between the rear face of the front rib and the
+// underside of the inset base. Its second plywood-thickness overlaps beneath
+// the base.
+module bob_base_front_bridge_2d(
+    model_width,
+    corner_radius=8,
+    plywood_thickness=4,
+    base_overlap=undef)
+{
+    assert(model_width > 2*corner_radius,
+           "bob_base_front_bridge_2d: rib radii consume the bridge");
+    square([
+        bob_base_front_bridge_width(
+            model_width,
+            corner_radius),
+        bob_base_front_bridge_depth(
+            plywood_thickness,
+            base_overlap)
+    ]);
+}
+
 module bob_stringer_2d(stringer_length, plywood_thickness=4)
 {
     square([
@@ -390,13 +423,29 @@ module bob_body_structure(model_width, model_height, model_depth,
 
         // Hidden structural base starts behind the front rib so the part of
         // the raised-hinge door below the pin has a clear opening sweep.
+        // Lift it above the bottom veneer so the bridge can laminate to its
+        // underside without intersecting the finished skin.
         translate([veneer_thickness+plywood_thickness,
                    2*plywood_thickness,
-                   plywood_thickness])
+                   veneer_thickness+plywood_thickness])
             linear_extrude(plywood_thickness)
                 bob_base_2d(
                     structural_width,
                     model_depth-veneer_thickness,
+                    plywood_thickness);
+
+        // The bridge remains entirely below the base/sweep plane. It butts
+        // against the rear face of the front rib, spans the one-thickness
+        // gap, and overlaps one thickness beneath the base.
+        translate([
+            corner_radius,
+            plywood_thickness,
+            veneer_thickness
+        ])
+            linear_extrude(plywood_thickness)
+                bob_base_front_bridge_2d(
+                    model_width,
+                    corner_radius,
                     plywood_thickness);
     }
 
