@@ -168,7 +168,7 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
         cradle_height-veneer_thickness
     ];
     stringer_length =
-        model_depth-plywood_thickness-veneer_thickness;
+        model_depth-veneer_thickness;
 
     boxes = concat(cap_boxes, side_boxes, [
         [door_x, parts_y, dw, dh],
@@ -287,8 +287,8 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
                 [1,1], 1.4);
         }
 
-    // Two upper stringers start one rib thickness behind the front face; the
-    // base replaces the redundant lower pair as longitudinal structure.
+    // Two upper stringers reach the front face of the front rib; the base
+    // replaces the redundant lower pair as longitudinal structure.
     for (i = [0:1])
         translate([cage_x+i*(plywood_thickness+spacing), parts_y])
             bob_stringer_2d(
