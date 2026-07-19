@@ -30,8 +30,8 @@ the first and last plywood ribs are not left exposed.
 
 ## Materials and hardware
 
-- 4 mm plywood for ribs, frames, base, chamber, door structure, stringers,
-  rack, and runners
+- 4 mm plywood for ribs, frames, base and its front bridge, chamber, door
+  structure, stringers, rack, and runners
 - approximately 0.6 mm wood veneer for the wrap and cosmetic faces
 - wood glue
 - a 2 mm rod, wire, dowel, or similarly sized pin for the hinge
@@ -123,7 +123,10 @@ two hinge curves match; the shoulders remain square. At larger scales the
 tongue height grows only as much as needed to contain that radius.
 The axis sits halfway through the forward plywood layer. The body base begins
 two plywood thicknesses behind the original front-rib plane, clearing the
-lower door edge throughout the 0–90 degree sweep.
+lower door edge throughout the 0–90 degree sweep. A plywood bridge runs
+between the two lower-corner tangent points beneath that base: it butts
+against the front rib, spans the gap, and overlaps one plywood thickness
+under the base without entering the sweep volume.
 
 In the front-to-back direction, the closed door and lower U-shaped cradle
 share the plywood layer immediately ahead of the complete front rib. The
@@ -205,7 +208,7 @@ The Bob entry module follows the lamp convention: `make_3d=true` assembles
 the model, while `make_3d=false` sends the manufactured components to
 deterministic XY sheet positions. No cut part remains rotated out of plane.
 
-The default plywood set contains 37 pieces. Each of the five logical shell
+The default plywood set contains 38 pieces. Each of the five logical shell
 ribs is cut as four compact pieces and glued together at broad stepped
 45-degree joints on the straight vertical runs beside the corners. This
 preserves the continuous rounded veneer-support surface while avoiding six
@@ -219,6 +222,7 @@ footprint drops by about 59.1%.
 | Rear-frame segments | 4 |
 | Upper stringers, front-rib inset | 2 |
 | Front-inset hidden base/lower structure | 1 |
+| Under-base bridge to front rib | 1 |
 | Door frame | 1 |
 | Forward lower hinge cradle | 1 |
 | Chamber rear, floor, and top | 3 |
@@ -359,9 +363,14 @@ terminates the other end.
 4. Dry-fit the assembled front frame, three internal ribs, rear frame, and two
    upper stringers. Each stringer starts flush with the rear face of the front
    rib and finishes flush with the outside face of the rear rib.
-5. Glue the rib cage square on the hidden base. Its front edge starts two
-   plywood thicknesses behind the front face and its rear edge remains flush
-   with the rear frame.
+5. Dry-fit the bridge behind the front rib and beneath the hidden base. Its
+   left and right ends align with the tangent points of the rib's lower
+   corner radii. Its front edge butts against the rib, it spans the gap, and
+   one plywood thickness overlaps the base underside. Glue the bridge to both
+   parts, then glue the rib cage square on the base. The base front remains
+   two plywood thicknesses behind the front face and its rear edge remains
+   flush with the rear frame. Keep the bridge below the base so the door
+   opening sweep stays clear.
 6. Assemble the chamber floor, top, rear, and sides with the hidden tabs and
    slots, then install it inside the cage.
 7. Glue the tray runners inside the chamber. They carry the removable rack;

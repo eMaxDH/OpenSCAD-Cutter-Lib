@@ -53,7 +53,7 @@ module bob_layout_layer_info(material="all", operation="preview",
     echo(str("[BOB 2D LAYERS] material=", material,
              ", operation=", operation));
     echo("[BOB 2D LAYERS] plywood cut | plywood engraving | veneer cut | veneer engraving");
-    echo(str("[BOB PART MANIFEST] plywood=", 17+rib_segments,
+    echo(str("[BOB PART MANIFEST] plywood=", 18+rib_segments,
              " cut parts (including ", logical_ribs,
              " logical ribs / ", rib_segments,
              " glued rib segments and coupon), veneer=5 cut parts, purchased hinge pin=1"));
@@ -120,6 +120,13 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
         structural_width-2*plywood_thickness,
         model_depth-veneer_thickness-2*plywood_thickness
     ];
+    base_bridge = [
+        bob_base_front_bridge_width(
+            model_width,
+            corner_radius),
+        bob_base_front_bridge_depth(
+            plywood_thickness)
+    ];
     cap_piece_h = bob_rib_cap_piece_height(
         structural_radius, plywood_thickness);
     side_length = bob_rib_side_length(
@@ -151,6 +158,8 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
         (2*total_ribs-1)*spacing;
     door_x = margin+side_band_width+spacing;
     base_x = door_x+dw+spacing;
+    base_bridge_y =
+        parts_y+base[1]+spacing;
     cage_x = base_x+base[0]+spacing;
     cage_width = 2*plywood_thickness+spacing;
     cradle_x = cage_x+cage_width+spacing;
@@ -164,6 +173,8 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
     boxes = concat(cap_boxes, side_boxes, [
         [door_x, parts_y, dw, dh],
         [base_x, parts_y, base[0], base[1]],
+        [base_x, base_bridge_y,
+         base_bridge[0], base_bridge[1]],
         [cage_x, parts_y, cage_width,
          stringer_length],
         [cradle_x, parts_y,
@@ -260,6 +271,20 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
                 model_depth-veneer_thickness,
                 plywood_thickness);
             bob_part_label("BOB-BASE");
+        }
+
+    cl_layout_part(
+        [base_x, base_bridge_y],
+        base_bridge,
+        "BOB-BASE-FRONT-BRIDGE",
+        sheet_size=sheet_size, margin=margin) {
+            bob_base_front_bridge_2d(
+                model_width,
+                corner_radius,
+                plywood_thickness);
+            bob_part_label(
+                "BOB-BASE-FRONT-BRIDGE",
+                [1,1], 1.4);
         }
 
     // Two upper stringers start one rib thickness behind the front face; the
