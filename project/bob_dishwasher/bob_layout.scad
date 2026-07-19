@@ -269,9 +269,14 @@ module bob_plywood_sheet_2(model_width, model_height, model_depth,
     rack = bob_rack_size(
         model_width, model_depth, plywood_thickness,
         veneer_thickness, chamber_skeleton_gap);
+    // Open-edge chamber notches need a visible, robust nesting channel.
+    // Ordinary part spacing makes their cutouts appear to merge with tabs
+    // and labels on adjacent parts in OpenSCAD's filled 2D preview.
+    chamber_layout_gap = max(
+        spacing, 2*plywood_thickness);
     row1_h = max(ch, cd);
-    row2_y = margin+row1_h+spacing;
-    row3_y = row2_y+ch+spacing;
+    row2_y = margin+row1_h+chamber_layout_gap;
+    row3_y = row2_y+ch+chamber_layout_gap;
     runner_cut_width = 2*plywood_thickness+spacing;
     rail_width = plywood_thickness/2;
     rack_corner_radius = bob_rack_corner_radius();
@@ -291,7 +296,7 @@ module bob_plywood_sheet_2(model_width, model_height, model_depth,
         [margin+cw+spacing+floor_bound[0]+spacing,
          margin, floor_bound[0], floor_bound[1]],
         [margin, row2_y, cd, ch],
-        [margin+cd+spacing, row2_y, cd, ch],
+        [margin+cd+chamber_layout_gap, row2_y, cd, ch],
         [margin, row3_y, rack[0], rack[1]],
         [margin+rack[0]+spacing, row3_y,
          runner_region[0], runner_region[1]],
@@ -336,7 +341,7 @@ module bob_plywood_sheet_2(model_width, model_height, model_depth,
             fit_clearance, kerf);
 
     cl_layout_part(
-        [margin+cd+spacing,row2_y], [cd,ch],
+        [margin+cd+chamber_layout_gap,row2_y], [cd,ch],
         "BOB-CHAMBER-SIDE-R",
         sheet_size=sheet_size, margin=margin)
         bob_chamber_side_2d(
