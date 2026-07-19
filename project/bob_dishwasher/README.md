@@ -220,7 +220,7 @@ footprint drops by about 59.1%.
 | Front-frame segments | 4 |
 | Internal shell-rib segments | 12 |
 | Rear-frame segments | 4 |
-| Upper stringers, front-rib inset | 2 |
+| Upper stringers, front-face flush | 2 |
 | Front-inset hidden base/lower structure | 1 |
 | Under-base bridge to front rib | 1 |
 | Door frame | 1 |
@@ -361,8 +361,8 @@ terminates the other end.
    joints; they are guides rather than narrow structural tabs.
 3. Glue these joints on a flat surface, keeping each completed rib square.
 4. Dry-fit the assembled front frame, three internal ribs, rear frame, and two
-   upper stringers. Each stringer starts flush with the rear face of the front
-   rib and finishes flush with the outside face of the rear rib.
+   upper stringers. Each stringer starts flush with the front face of the
+   front rib and finishes flush with the outside face of the rear rib.
 5. Dry-fit the bridge behind the front rib and beneath the hidden base. Its
    left and right ends align with the tangent points of the rib's lower
    corner radii. Its front edge butts against the rib, it spans the gap, and

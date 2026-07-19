@@ -307,19 +307,19 @@ module bob_stringer_cage(model_width, model_height, model_depth,
         model_width-veneer_thickness-3*plywood_thickness
     ];
     stringer_length =
-        model_depth-plywood_thickness-veneer_thickness;
+        model_depth-veneer_thickness;
 
     assert(stringer_length > 0,
            "bob_stringer_cage: model is too shallow");
 
     // The hidden base supplies the lower longitudinal structure behind the
     // front door-sweep clearance.
-    // The upper stringers start behind the front rib and end against the
-    // inner face of the rear veneer.
+    // The upper stringers reach the front face of the front rib and end
+    // against the inner face of the rear veneer.
     for (x = x_positions)
         translate([
             x,
-            plywood_thickness,
+            0,
             model_height-veneer_thickness-
             2*plywood_thickness
         ])
