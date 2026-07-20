@@ -44,7 +44,12 @@ else
         example_plywood_thickness,
         bob_structural_corner_radius(
             example_corner_radius, example_veneer_thickness),
-        0.15, 0.5);
+        0.15, 0.5, 3,
+        bob_stringer_x_positions(
+            bob_structural_width(
+                example_model_width,
+                example_veneer_thickness),
+            example_plywood_thickness));
 
 function bob_inner_width(model_width, plywood_thickness) =
     model_width - 2*plywood_thickness;
@@ -63,6 +68,10 @@ function bob_structural_corner_radius(corner_radius, veneer_thickness) =
 
 function bob_base_front_y(plywood_thickness=4) =
     2*plywood_thickness;
+function bob_base_side_inset(plywood_thickness=4) =
+    plywood_thickness/2;
+function bob_base_width(structural_width, plywood_thickness=4) =
+    structural_width-2*bob_base_side_inset(plywood_thickness);
 
 function bob_internal_rib_y(
     model_depth, plywood_thickness,
@@ -86,10 +95,33 @@ function bob_base_rib_positions(
         [model_depth-plywood_thickness-veneer_thickness-
          bob_base_front_y(plywood_thickness)]);
 
+function bob_all_rib_positions(
+    model_depth, plywood_thickness=4,
+    veneer_thickness=0.6,
+    rib_count=4,
+    front_offset=4,
+    rear_offset=4) =
+    concat(
+        [0],
+        [for (i = [0:rib_count-1])
+            bob_internal_rib_y(
+                model_depth, plywood_thickness,
+                rib_count, front_offset, rear_offset, i)],
+        [model_depth-plywood_thickness-veneer_thickness]);
+
+function bob_stringer_x_positions(
+    model_width, plywood_thickness=4,
+    veneer_thickness=0) = [
+        veneer_thickness+2*plywood_thickness,
+        model_width-veneer_thickness-3*plywood_thickness
+    ];
+
 module bob_base_2d(model_width, model_depth, plywood_thickness=4,
                    rib_positions=[], rib_spacing=0.2,
-                   rib_corner_radius=undef)
+                   rib_corner_radius=undef,
+                   side_inset=0)
 {
+    base_width = model_width-2*side_inset;
     base_depth = model_depth-2*plywood_thickness;
     resolved_rib_corner_radius =
         is_undef(rib_corner_radius)
@@ -99,18 +131,22 @@ module bob_base_2d(model_width, model_depth, plywood_thickness=4,
     // At the base plane the inner edge of the rounded rib is still at the
     // corner-radius tangent, not at the straight side rail. Reach that
     // tangent so the base can sit flat on the lower cap without collision.
-    notch_depth = resolved_rib_corner_radius+rib_spacing;
+    notch_depth =
+        resolved_rib_corner_radius-side_inset+rib_spacing;
     epsilon = 0.01;
 
     assert(rib_spacing >= 0,
            "bob_base_2d: rib spacing must be non-negative");
+    assert(side_inset >= 0 &&
+           side_inset < resolved_rib_corner_radius,
+           "bob_base_2d: side inset misses the lower rib cap");
     assert(resolved_rib_corner_radius >= plywood_thickness,
            "bob_base_2d: rib corner radius is below material thickness");
-    assert(2*notch_depth < model_width,
+    assert(2*notch_depth < base_width,
            "bob_base_2d: rib notches consume the base width");
 
     difference() {
-        square([model_width, base_depth]);
+        square([base_width, base_depth]);
 
         for (y = rib_positions) {
             // The rear rib ends flush with the base, so its added clearance
@@ -123,7 +159,7 @@ module bob_base_2d(model_width, model_depth, plywood_thickness=4,
             translate([-epsilon, y-rib_spacing])
                 square([notch_depth+epsilon, notch_width]);
             translate([
-                model_width-notch_depth,
+                base_width-notch_depth,
                 y-rib_spacing
             ])
                 square([notch_depth+epsilon, notch_width]);
@@ -164,12 +200,34 @@ module bob_base_front_bridge_2d(
     ]);
 }
 
-module bob_stringer_2d(stringer_length, plywood_thickness=4)
+module bob_stringer_2d(stringer_length, plywood_thickness=4,
+                       rib_positions=[], fit_clearance=0.15)
 {
-    square([
-        plywood_thickness,
-        stringer_length
-    ]);
+    slot_width = plywood_thickness+fit_clearance;
+    epsilon = 0.01;
+
+    assert(fit_clearance >= 0,
+           "bob_stringer_2d: fit clearance must be non-negative");
+
+    difference() {
+        square([
+            plywood_thickness,
+            stringer_length
+        ]);
+
+        // Downward half-depth slots mate with slots opening from the
+        // underside of each rib cap. The stringer can be raised into the
+        // cage while the rib preserves the exterior top surface.
+        for (y = rib_positions)
+            translate([
+                plywood_thickness/2,
+                y-fit_clearance/2
+            ])
+                square([
+                    plywood_thickness/2+epsilon,
+                    slot_width
+                ]);
+    }
 }
 
 // Bob-specific canonical rounded shell silhouette.
@@ -219,7 +277,8 @@ module bob_rib_cap_2d(model_width, model_height,
                       corner_radius=8,
                       top=false,
                       fit_clearance=0.15,
-                      kerf=0.5)
+                      kerf=0.5,
+                      stringer_positions=[])
 {
     cap_h = bob_rib_cap_height(
         corner_radius, plywood_thickness);
@@ -245,22 +304,36 @@ module bob_rib_cap_2d(model_width, model_height,
                         plywood_thickness, "cap");
         }
     else
-        union() {
-            translate([0, cap_h-model_height])
-                intersection() {
-                    bob_shell_rib_2d(
-                        model_width, model_height,
-                        plywood_thickness, corner_radius,
-                        fit_clearance, kerf);
-                    translate([0, model_height-curve_h])
-                        square([model_width, curve_h]);
-                }
-            for (x = [0, model_width-plywood_thickness])
-                translate([x, plywood_thickness])
-                    mirror([0,1])
-                        bob_rib_triangle_joint_2d(
-                            plywood_thickness, "cap");
+        difference() {
+            union() {
+                translate([0, cap_h-model_height])
+                    intersection() {
+                        bob_shell_rib_2d(
+                            model_width, model_height,
+                            plywood_thickness, corner_radius,
+                            fit_clearance, kerf);
+                        translate([0, model_height-curve_h])
+                            square([model_width, curve_h]);
+                    }
+                for (x = [0, model_width-plywood_thickness])
+                    translate([x, plywood_thickness])
+                        mirror([0,1])
+                            bob_rib_triangle_joint_2d(
+                                plywood_thickness, "cap");
             }
+
+            // Slots open from the underside, leaving the exterior top edge
+            // uninterrupted. The stringers are inserted upward from inside.
+            for (x = stringer_positions)
+                translate([
+                    x-fit_clearance/2,
+                    cap_h-plywood_thickness-0.01
+                ])
+                    square([
+                        plywood_thickness+fit_clearance,
+                        plywood_thickness/2+0.01
+                    ]);
+        }
 }
 
 module bob_rib_side_2d(model_height,
@@ -292,7 +365,8 @@ module bob_segmented_shell_rib_2d(
     plywood_thickness=4,
     corner_radius=8,
     fit_clearance=0.15,
-    kerf=0)
+    kerf=0,
+    stringer_positions=[])
 {
     bob_rib_cap_2d(
         model_width, model_height,
@@ -306,7 +380,8 @@ module bob_segmented_shell_rib_2d(
         bob_rib_cap_2d(
             model_width, model_height,
             plywood_thickness, corner_radius,
-            true, fit_clearance, kerf);
+            true, fit_clearance, kerf,
+            stringer_positions);
     for (x = [0, model_width-plywood_thickness])
         translate([x, corner_radius])
             bob_rib_side_2d(
@@ -320,7 +395,8 @@ module bob_segmented_rib_compact_2d(
     corner_radius=8,
     fit_clearance=0.15,
     kerf=0.5,
-    spacing=3)
+    spacing=3,
+    stringer_positions=[])
 {
     cap_piece_h = bob_rib_cap_piece_height(
         corner_radius, plywood_thickness);
@@ -335,7 +411,8 @@ module bob_segmented_rib_compact_2d(
         bob_rib_cap_2d(
             model_width, model_height,
             plywood_thickness, corner_radius,
-            true, fit_clearance, kerf);
+            true, fit_clearance, kerf,
+            stringer_positions);
     for (i = [0:1])
         translate([
             model_width+spacing+
@@ -351,7 +428,8 @@ module bob_rib_at_y(y, model_width, model_height,
                     plywood_thickness=4,
                     corner_radius=8,
                     fit_clearance=0.15,
-                    kerf=0.5)
+                    kerf=0.5,
+                    stringer_positions=[])
 {
     translate([0, y+plywood_thickness, 0])
         rotate([90,0,0])
@@ -359,17 +437,25 @@ module bob_rib_at_y(y, model_width, model_height,
                 bob_segmented_shell_rib_2d(
                     model_width, model_height,
                     plywood_thickness, corner_radius,
-                    fit_clearance, kerf=0);
+                    fit_clearance, kerf=0,
+                    stringer_positions=stringer_positions);
 }
 
 module bob_stringer_cage(model_width, model_height, model_depth,
                          plywood_thickness=4,
-                         veneer_thickness=0.6)
+                         veneer_thickness=0.6,
+                         rib_count=4,
+                         front_offset=4,
+                         rear_offset=4,
+                         fit_clearance=0.15)
 {
-    x_positions = [
-        veneer_thickness+2*plywood_thickness,
-        model_width-veneer_thickness-3*plywood_thickness
-    ];
+    x_positions = bob_stringer_x_positions(
+        model_width, plywood_thickness,
+        veneer_thickness);
+    rib_positions = bob_all_rib_positions(
+        model_depth, plywood_thickness,
+        veneer_thickness, rib_count,
+        front_offset, rear_offset);
     stringer_length =
         model_depth-veneer_thickness;
 
@@ -380,16 +466,19 @@ module bob_stringer_cage(model_width, model_height, model_depth,
     // front door-sweep clearance.
     // The upper stringers reach the front face of the front rib and end
     // against the inner face of the rear veneer.
+    // Rotate the cut profiles upright. Raise their top-opening half-slots
+    // into the underside-opening half-slots in every rib cap.
     for (x = x_positions)
         translate([
-            x,
+            x+plywood_thickness,
             0,
-            model_height-veneer_thickness-
-            2*plywood_thickness
+            model_height-veneer_thickness-plywood_thickness
         ])
-            linear_extrude(plywood_thickness)
-                bob_stringer_2d(
-                    stringer_length, plywood_thickness);
+            rotate([0,-90,0])
+                linear_extrude(plywood_thickness)
+                    bob_stringer_2d(
+                        stringer_length, plywood_thickness,
+                        rib_positions, fit_clearance);
 }
 
 module bob_body_structure(model_width, model_height, model_depth,
@@ -423,6 +512,9 @@ module bob_body_structure(model_width, model_height, model_depth,
     structural_radius =
         bob_structural_corner_radius(
             corner_radius, veneer_thickness);
+    rib_stringer_positions =
+        bob_stringer_x_positions(
+            structural_width, plywood_thickness);
 
     assert(rib_count >= 1, "bob_body_structure: at least one rib is required");
     assert(structural_width > 2*plywood_thickness &&
@@ -448,7 +540,8 @@ module bob_body_structure(model_width, model_height, model_depth,
                 bob_rib_at_y(
                     0, structural_width, structural_height,
                     plywood_thickness, structural_radius,
-                    fit_clearance, kerf);
+                    fit_clearance, kerf,
+                    rib_stringer_positions);
             if (show_hinge_bores)
                 translate([
                     -0.01,
@@ -468,7 +561,8 @@ module bob_body_structure(model_width, model_height, model_depth,
                 model_depth-plywood_thickness-veneer_thickness,
                 structural_width, structural_height,
                 plywood_thickness, structural_radius,
-                fit_clearance, kerf);
+                fit_clearance, kerf,
+                rib_stringer_positions);
 
         // Internal silhouette ribs.
         for (i = [0:rib_count-1])
@@ -481,17 +575,21 @@ module bob_body_structure(model_width, model_height, model_depth,
                     bob_rib_at_y(
                         y, structural_width, structural_height,
                         plywood_thickness, structural_radius,
-                        fit_clearance, kerf);
+                        fit_clearance, kerf,
+                        rib_stringer_positions);
 
         bob_stringer_cage(
             model_width, model_height, model_depth,
-            plywood_thickness, veneer_thickness);
+            plywood_thickness, veneer_thickness,
+            rib_count, front_offset, rear_offset,
+            fit_clearance);
 
         // Hidden structural base starts behind the front rib so the part of
         // the raised-hinge door below the pin has a clear opening sweep.
         // Lift it above the bottom veneer so the bridge can laminate to its
         // underside without intersecting the finished skin.
-        translate([veneer_thickness,
+        translate([veneer_thickness+
+                   bob_base_side_inset(plywood_thickness),
                    bob_base_front_y(plywood_thickness),
                    veneer_thickness+plywood_thickness])
             linear_extrude(plywood_thickness)
@@ -504,7 +602,9 @@ module bob_body_structure(model_width, model_height, model_depth,
                         veneer_thickness, rib_count,
                         front_offset, rear_offset),
                     base_rib_spacing,
-                    structural_radius);
+                    structural_radius,
+                    bob_base_side_inset(
+                        plywood_thickness));
 
         // The bridge remains entirely below the base/sweep plane. It butts
         // against the rear face of the front rib, spans the one-thickness

@@ -97,6 +97,14 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
     structural_radius =
         bob_structural_corner_radius(
             corner_radius, veneer_thickness);
+    rib_stringer_positions =
+        bob_stringer_x_positions(
+            structural_width, plywood_thickness);
+    stringer_rib_positions =
+        bob_all_rib_positions(
+            model_depth, plywood_thickness,
+            veneer_thickness, rib_count,
+            front_offset, rear_offset);
     hinge_corner_radius =
         bob_hinge_cradle_inner_radius(
             corner_radius,
@@ -120,7 +128,8 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
         model_width, plywood_thickness,
         veneer_thickness, cradle_side_gap);
     base = [
-        structural_width,
+        bob_base_width(
+            structural_width, plywood_thickness),
         model_depth-veneer_thickness-2*plywood_thickness
     ];
     base_rib_positions = bob_base_rib_positions(
@@ -233,7 +242,8 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
                 bob_rib_cap_2d(
                     structural_width, structural_height,
                     plywood_thickness, structural_radius,
-                    top, fit_clearance, kerf);
+                    top, fit_clearance, kerf,
+                    rib_stringer_positions);
                 bob_part_label(
                     segment_id,
                     [plywood_thickness+1,
@@ -280,7 +290,9 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
                 plywood_thickness,
                 base_rib_positions,
                 base_rib_spacing,
-                structural_radius);
+                structural_radius,
+                bob_base_side_inset(
+                    plywood_thickness));
             bob_part_label("BOB-BASE");
         }
 
@@ -303,7 +315,9 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
     for (i = [0:1])
         translate([cage_x+i*(plywood_thickness+spacing), parts_y])
             bob_stringer_2d(
-                stringer_length, plywood_thickness);
+                stringer_length, plywood_thickness,
+                stringer_rib_positions,
+                fit_clearance);
     bob_part_label("BOB-STRINGER x2", [cage_x, parts_y+1]);
 
     cl_layout_part(

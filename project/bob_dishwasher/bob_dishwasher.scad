@@ -281,7 +281,11 @@ module bob_dishwasher(make_3d=true, output_mode="automatic")
                 plywood_thickness,
                 bob_structural_corner_radius(
                     shell_corner_radius, veneer_thickness),
-                fit_clearance, kerf);
+                fit_clearance, kerf, part_spacing,
+                bob_stringer_x_positions(
+                    bob_structural_width(
+                        model_width, veneer_thickness),
+                    plywood_thickness));
         else if (single_part_id == "BOB-CAL-01")
             ccal_laser_coupon(
                 plywood_thickness, kerf,
