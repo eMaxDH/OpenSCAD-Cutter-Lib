@@ -435,7 +435,10 @@ The rack base keeps rounded corners only at its front grip edge. Its rear
 corners are square: the side rails run from the front corner tangencies into a
 full-width rear rail. The rack is one plywood thickness wider than the
 original runner span, giving it a half-thickness overhang on each side while
-the chamber runners retain their established positions.
+the chamber runners retain their established positions. Front clearance is
+one plywood thickness, while rear clearance is half a plywood thickness. With
+the default 4 mm material, the rack uses all but 6 mm of the chamber depth:
+4 mm remains at the front and 2 mm before the chamber rear panel.
 
 ## Validation
 
