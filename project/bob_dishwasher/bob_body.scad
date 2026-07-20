@@ -249,6 +249,8 @@ function bob_rib_cap_piece_height(corner_radius, plywood_thickness) =
 function bob_rib_side_length(model_height, corner_radius,
                              plywood_thickness) =
     model_height-2*corner_radius;
+function bob_rib_lower_u_height(model_height, corner_radius) =
+    model_height-corner_radius;
 
 // The library's stepped 45-degree pair partitions a full material-width
 // square. It is deliberately only an alignment guide for a broad glued scarf,
@@ -360,6 +362,28 @@ module bob_rib_side_2d(model_height,
     }
 }
 
+// One continuous lower U replaces the former bottom cap plus two separately
+// glued side rails. Only the two upper stepped joints remain for assembly.
+module bob_rib_lower_u_2d(
+    model_width, model_height,
+    plywood_thickness=4,
+    corner_radius=8,
+    fit_clearance=0.15,
+    kerf=0.5)
+{
+    union() {
+        bob_rib_cap_2d(
+            model_width, model_height,
+            plywood_thickness, corner_radius,
+            false, fit_clearance, kerf);
+        for (x = [0, model_width-plywood_thickness])
+            translate([x, corner_radius])
+                bob_rib_side_2d(
+                    model_height, plywood_thickness,
+                    corner_radius, fit_clearance, kerf);
+    }
+}
+
 module bob_segmented_shell_rib_2d(
     model_width, model_height,
     plywood_thickness=4,
@@ -368,10 +392,10 @@ module bob_segmented_shell_rib_2d(
     kerf=0,
     stringer_positions=[])
 {
-    bob_rib_cap_2d(
+    bob_rib_lower_u_2d(
         model_width, model_height,
         plywood_thickness, corner_radius,
-        false, fit_clearance, kerf);
+        fit_clearance, kerf);
     translate([
         0,
         model_height-bob_rib_cap_piece_height(
@@ -382,11 +406,6 @@ module bob_segmented_shell_rib_2d(
             plywood_thickness, corner_radius,
             true, fit_clearance, kerf,
             stringer_positions);
-    for (x = [0, model_width-plywood_thickness])
-        translate([x, corner_radius])
-            bob_rib_side_2d(
-                model_height, plywood_thickness,
-                corner_radius, fit_clearance, kerf);
 }
 
 module bob_segmented_rib_compact_2d(
@@ -400,28 +419,17 @@ module bob_segmented_rib_compact_2d(
 {
     cap_piece_h = bob_rib_cap_piece_height(
         corner_radius, plywood_thickness);
-    side_length = bob_rib_side_length(
-        model_height, corner_radius, plywood_thickness);
 
-    bob_rib_cap_2d(
+    bob_rib_lower_u_2d(
         model_width, model_height,
         plywood_thickness, corner_radius,
-        false, fit_clearance, kerf);
-    translate([0, cap_piece_h+spacing])
+        fit_clearance, kerf);
+    translate([model_width+spacing, 0])
         bob_rib_cap_2d(
             model_width, model_height,
             plywood_thickness, corner_radius,
             true, fit_clearance, kerf,
             stringer_positions);
-    for (i = [0:1])
-        translate([
-            model_width+spacing+
-            i*(plywood_thickness+spacing),
-            0
-        ])
-            bob_rib_side_2d(
-                model_height, plywood_thickness,
-                corner_radius, fit_clearance, kerf);
 }
 
 module bob_rib_at_y(y, model_width, model_height,

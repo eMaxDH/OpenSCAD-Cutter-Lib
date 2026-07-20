@@ -217,18 +217,19 @@ The Bob entry module follows the lamp convention: `make_3d=true` assembles
 the model, while `make_3d=false` sends the manufactured components to
 deterministic XY sheet positions. No cut part remains rotated out of plane.
 
-The default plywood set contains 38 pieces. Each of the five logical shell
-ribs is cut as four compact pieces and glued together at broad stepped
-45-degree joints on the straight vertical runs beside the corners. This
-preserves the continuous rounded veneer-support surface while avoiding six
-large rectangular nesting areas. At the default scale, the allocated rib
-footprint drops by about 59.1%.
+The default plywood set contains 28 pieces. Each of the five logical shell
+ribs is cut as two pieces: one continuous large lower U containing the bottom
+curve and both side legs, plus one small top cap. Two broad stepped 45-degree
+joints beside the upper corners align the parts for gluing. This removes the
+two lower-corner glue joints from the former four-piece design. The simpler
+two-piece construction uses about 5.1% more allocated rib nesting area at the
+default scale.
 
 | Part | Quantity |
 | --- | ---: |
-| Front-frame segments | 4 |
-| Internal shell-rib segments | 12 |
-| Rear-frame segments | 4 |
+| Front-frame segments | 2 |
+| Internal shell-rib segments | 6 |
+| Rear-frame segments | 2 |
 | Upper stringers, front-face flush | 2 |
 | Front-inset hidden base/lower structure | 1 |
 | Under-base bridge to front rib | 1 |
@@ -365,10 +366,11 @@ terminates the other end.
 ## Suggested assembly order
 
 1. Cut and evaluate the calibration coupon.
-2. Dry-fit each logical rib from one top cap, one bottom cap, and two side
-   pieces. The broad stepped 45-degree connectors align the glued scarf
-   joints; they are guides rather than narrow structural tabs.
-3. Glue these joints on a flat surface, keeping each completed rib square.
+2. Dry-fit each logical rib from one continuous lower U and one small top cap.
+   The two broad stepped 45-degree connectors beside the upper corners align
+   the glued scarf joints; they are guides rather than narrow structural tabs.
+3. Glue the two upper joints on a flat surface, keeping each completed rib
+   square. The lower corners are continuous and require no glue joint.
 4. Dry-fit the assembled front frame, three internal ribs, rear frame, and two
    upper stringers. Each stringer starts flush with the front face of the
    front rib and finishes flush with the outside face of the rear rib. Stand
