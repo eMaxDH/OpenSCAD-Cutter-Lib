@@ -1,6 +1,27 @@
 use <../materials/cm_manufacturing.scad>
 use <../hinges/ch_pin_hinge.scad>
 
+/* [Output] */
+make_3d = true; // [false:true]
+
+/* [Material] */
+material_thickness = 4; // [1:0.1:10]
+kerf = 0.15;            // [0:0.01:1]
+
+/* [Example] */
+pin_diameter = 2; // [0.5:0.1:8]
+
+/* [Hidden] */
+$fn = $preview ? 32 : 96;
+
+if (make_3d)
+    linear_extrude(height=material_thickness)
+        ccal_laser_coupon(material_thickness=material_thickness,
+                          kerf=kerf, pin_diameter=pin_diameter);
+else
+    ccal_laser_coupon(material_thickness=material_thickness,
+                      kerf=kerf, pin_diameter=pin_diameter);
+
 // Combined slot-fit, kerf-line, and pin-hole calibration coupon.
 // Clearance values describe the desired finished fit around the nominal
 // material or pin. Cut and label this before committing the model sheets.
@@ -49,4 +70,3 @@ module ccal_laser_coupon(material_thickness=4,
             text(str(clearances[i]), size=label_size,
                  halign="center");
 }
-

@@ -1,5 +1,35 @@
 use <../materials/cm_manufacturing.scad>
 
+/* [Output] */
+make_3d = true; // [false:true]
+
+/* [Material] */
+material_thickness = 4; // [1:0.1:10]
+fit_clearance = 0.15;   // [0:0.05:1]
+kerf = 0.15;            // [0:0.01:1]
+
+/* [Example] */
+example_size = [80, 35];
+example_tab_count = 3; // [1:1:8]
+
+/* [Hidden] */
+
+if (make_3d)
+    linear_extrude(height=material_thickness)
+        cj_hidden_tabbed_panel_2d(
+            size=example_size,
+            tab_depth=material_thickness,
+            count=example_tab_count,
+            fit_clearance=fit_clearance,
+            kerf=kerf);
+else
+    cj_hidden_tabbed_panel_2d(
+        size=example_size,
+        tab_depth=material_thickness,
+        count=example_tab_count,
+        fit_clearance=fit_clearance,
+        kerf=kerf);
+
 // Positions `count` equally spaced features along an edge. Children must be
 // 2D geometry centred on their local X origin and extending in +Y.
 module cj_edge_pattern(edge_length, count=3, edge_margin=4)

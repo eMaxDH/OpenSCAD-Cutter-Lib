@@ -2,8 +2,10 @@ use <../layer/cl_layer.scad>
 use <../surfaces/cs_test_surface.scad>
 use <../shapes/cshape_array.scad>
 
+/* [Output] */
 make_3d=true;
 
+/* [Example] */
 width = 100; //[10:100]
 height = 10; //[5:30]
 ticks = 11; //[2:20]

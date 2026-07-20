@@ -7,8 +7,10 @@ use <../shapes/cshape_box.scad>
 use <ct_tower_wall.scad>
 
 
+/* [Output] */
 make_3d=true;
 
+/* [Example] */
 floor_size = [200,100,50];
 
 wall_depth=4;
@@ -132,5 +134,4 @@ function get_ct_tower_floor_2d_size(width, height, depth, wall_depth, spacing_2d
                                 depth=depth,
                                 thickness=wall_depth,
                                 spacing_2d=spacing_2d);
-
 

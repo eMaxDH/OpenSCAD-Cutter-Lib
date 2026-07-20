@@ -8,14 +8,16 @@ OpenSCAD renders.
 ```sh
 tests/governance.sh
 tests/render_examples.sh
+tests/export_acceptance.sh
 tests/bob_acceptance.sh
 ```
 
 `governance.sh` checks the declared entry-file inventory, required Customizer
-controls, documentation, and forbidden generated artifacts. `render_examples.sh`
+controls, documentation, and reusable-code import discipline. `render_examples.sh`
 opens every governed entry file in both modes and checks for non-empty CSG/SVG
-output. Project acceptance scripts exercise parameters, layouts, and regression
-properties that generic rendering cannot prove.
+output. `export_acceptance.sh` verifies separate operation exports and the
+colour-classified composite SVG. Project acceptance scripts exercise parameters,
+layouts, and regression properties that generic rendering cannot prove.
 
 Outputs are written below `${TMPDIR:-/tmp}`.
 

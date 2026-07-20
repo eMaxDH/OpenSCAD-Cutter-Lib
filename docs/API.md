@@ -166,6 +166,17 @@ pin clearances.
 - `visibile_layers` and `element_hight` are intentional documentation
   spellings because they match the current source API.
 
+Every governed entry file listed in `tests/public_files.txt` also provides a
+standalone `[Example]` Customizer section and non-empty defaults in both modes.
+Files ending in `_2d.scad` are profile primitives and are exercised through a
+wrapper or acceptance fixture. New APIs use the canonical-profile structure in
+`docs/DESIGN_STANDARD.md`; the historical spellings above are scheduled for
+cleanup before version 1.0 in `docs/API_MIGRATION_V1.md`.
+
+Operation-specific SVGs and the colour-classified LightBurn convenience SVG can
+be produced with `scripts/export_lightburn_svg.sh`. Separate operation SVGs are
+the authoritative fabrication files.
+
 ## Shapes
 
 ### Box

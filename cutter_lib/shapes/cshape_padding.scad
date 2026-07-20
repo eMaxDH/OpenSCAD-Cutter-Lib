@@ -2,8 +2,10 @@ use <../layer/cl_layer.scad>
 
 use <../surfaces/cs_test_surface.scad>
 
+/* [Output] */
 make_3d=true;
 
+/* [Example] */
 width = 20; //[10:40]
 height = 30; //[10:40]
 thickness = 5; //[3:10]
@@ -45,7 +47,10 @@ module cshape_padding_tutorial(padding=0, text="cshape_padding_tutorial",
     // height = 15;
     // thickness = 2;
 
-    linear_extrude(1)
+    if (make_3d)
+        linear_extrude(height=1)
+            text(text, size=4);
+    else
         text(text, size=4);
 
     translate([0,10,0])
@@ -79,12 +84,12 @@ module cshape_padding(padding, new_size=undef, show_placeholder=false) {
                         {
                             translate([padding/2, (new_size[1])/2, 0])
                             rotate([0, 0, 90])
-                            linear_extrude(padding, v=[0,0,1])
+                            linear_extrude(height=padding)
                                 text("padding", valign="center", halign="center", size=padding/3);
 
                             translate([new_size[0] + 3/2*padding, (new_size[1])/2, 0])
                             rotate([0, 0, -90])
-                            linear_extrude(padding, v=[0,0,1])
+                            linear_extrude(height=padding)
                                 text("padding", valign="center", halign="center", size=padding/3);
                         }
                     }
@@ -99,12 +104,12 @@ module cshape_padding(padding, new_size=undef, show_placeholder=false) {
                         {
                             translate([padding[0]/2, (new_size[1])/2, 0])
                             rotate([0, 0, 90])
-                            linear_extrude(padding[0], v=[0,0,1])
+                            linear_extrude(height=padding[0])
                                 text("padding", valign="center", halign="center", size=padding[0]/3);
 
                             translate([new_size[0] + 3/2*padding[0], (new_size[1])/2, 0])
                             rotate([0, 0, -90])
-                            linear_extrude(padding[0], v=[0,0,1])
+                            linear_extrude(height=padding[0])
                                 text("padding", valign="center", halign="center", size=padding[0]/3);
                         }
                     }
@@ -120,23 +125,23 @@ module cshape_padding(padding, new_size=undef, show_placeholder=false) {
                             // left
                             translate([padding[0]/2, new_size[1]/2 + padding[1], 0])
                             rotate([0, 0, 90])
-                            linear_extrude(padding[0], v=[0,0,1])
+                            linear_extrude(height=padding[0])
                                 text("padding", valign="center", halign="center", size=padding[0]/3);
 
                             // right
                             translate([new_size[0] + 3/2*padding[0], new_size[1]/2 + padding[1], 0])
                             rotate([0, 0, -90])
-                            linear_extrude(padding[0], v=[0,0,1])
+                            linear_extrude(height=padding[0])
                                 text("padding", valign="center", halign="center", size=padding[0]/3);
 
                             // top
                             translate([new_size[0]/2 + padding[0], new_size[1] + 3/2*padding[1], 0])
-                            linear_extrude(padding[0], v=[0,0,1])
+                            linear_extrude(height=padding[0])
                                 text("padding", valign="center", halign="center", size=padding[0]/3);
 
                             // bottom
                             translate([new_size[0]/2 + padding[0], padding[1]/2, 0])
-                            linear_extrude(padding[0], v=[0,0,1])
+                            linear_extrude(height=padding[0])
                                 text("padding", valign="center", halign="center", size=padding[0]/3);
                         }
                     }
@@ -157,23 +162,23 @@ module cshape_padding(padding, new_size=undef, show_placeholder=false) {
                             // left
                             translate([padding[0]/2, new_size[1]/2 + padding[1], -padding[2]])
                             rotate([0, 0, 90])
-                            linear_extrude(4*padding[2] + new_size[2], v=[0,0,1])
+                            linear_extrude(height=4*padding[2] + new_size[2])
                                 text("padding", valign="center", halign="center", size=padding[0]/3);
 
                             // right
                             translate([new_size[0] + 3/2*padding[0], new_size[1]/2 + padding[1], -padding[2]])
                             rotate([0, 0, -90])
-                            linear_extrude(4*padding[2] + new_size[2], v=[0,0,1])
+                            linear_extrude(height=4*padding[2] + new_size[2])
                                 text("padding", valign="center", halign="center", size=padding[0]/3);
 
                             // top
                             translate([new_size[0]/2 + padding[0], new_size[1] + 3/2*padding[1], -padding[2]])
-                            linear_extrude(4*padding[2] + new_size[2], v=[0,0,1])
+                            linear_extrude(height=4*padding[2] + new_size[2])
                                 text("padding", valign="center", halign="center", size=padding[0]/3);
 
                             // bottom
                             translate([new_size[0]/2 + padding[0], padding[1]/2, -padding[2]])
-                            linear_extrude(4*padding[2] + new_size[2], v=[0,0,1])
+                            linear_extrude(height=4*padding[2] + new_size[2])
                                 text("padding", valign="center", halign="center", size=padding[0]/3);
                         }
                     }

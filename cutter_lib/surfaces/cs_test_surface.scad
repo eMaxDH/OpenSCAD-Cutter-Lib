@@ -2,8 +2,10 @@ use <../layer/cl_layer.scad>
 
 use <cs_test_surface_2d.scad>
 
+/* [Output] */
 make_3d=false;
 
+/* [Example] */
 width = 10; //[10:100]
 height = 15; //[10:100]
 thickness = 2; //[1:5]
@@ -48,4 +50,3 @@ module cs_test_surface(width, height, thickness=1, number=0, face_color="",
             cs_test_surface_2d(width=width, height=height, number=number, face_color=face_color);
     }
 }
-

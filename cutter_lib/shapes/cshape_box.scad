@@ -77,8 +77,10 @@ use <../surfaces/cs_test_surface.scad>
 //    |     | /    /
 //    x----- /    --> x
 
+/* [Output] */
 make_3d=false;
 
+/* [Example] */
 width= 15;
 height= 12;
 depth= 10;

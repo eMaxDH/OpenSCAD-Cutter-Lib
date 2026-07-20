@@ -1,5 +1,40 @@
 use <../materials/cm_manufacturing.scad>
 
+/* [Output] */
+make_3d = true; // [false:true]
+
+/* [Dimensions] */
+example_width = 14;
+example_height = 25;
+example_thickness = 4;
+example_pin_diameter = 3;
+
+/* [Example] */
+example_pin_clearance = 0.2;
+
+/* [Hidden] */
+$fn = $preview ? 32 : 96;
+
+if (make_3d) {
+    linear_extrude(height=example_thickness)
+        ch_pin_hinge_cheek_2d(
+            width=example_width,
+            height=example_height,
+            pin_diameter=example_pin_diameter,
+            pin_clearance=example_pin_clearance);
+    ch_hinge_pin_preview(
+        length=example_thickness,
+        diameter=example_pin_diameter,
+        axis_origin=[example_width/2,
+                     example_height-example_width/2,
+                     0]);
+} else
+    ch_pin_hinge_cheek_2d(
+        width=example_width,
+        height=example_height,
+        pin_diameter=example_pin_diameter,
+        pin_clearance=example_pin_clearance);
+
 // Apply a rotation around an arbitrary hinge axis passing through
 // `axis_origin`.
 module ch_rotate_about_axis(axis_origin=[0,0,0], angle=0, axis=[1,0,0])
@@ -66,4 +101,3 @@ module ch_motion_sweep(angle_start=0, angle_end=90, samples=7,
             %ch_rotate_about_axis(axis_origin, a, axis)
                 children();
 }
-

@@ -75,6 +75,10 @@ show_engraving = true; // [false:true]
 show_chamber = true; // [false:true]
 chamber_skeleton_gap = 0.5; // [0:0.1:2]
 
+/* [Example] */
+
+// The standalone configuration example shows the derived model envelope.
+
 /* [Hidden] */
 
 scale_factor = model_height / source_height;
@@ -92,11 +96,18 @@ if (is_undef($bob_config_embedded)) {
     echo(str("Bob configured envelope [W,D,H]: ",
              [model_width, model_depth, model_height]));
     color([0.72, 0.45, 0.20, 0.35])
-        difference() {
-            cube([model_width, model_depth, model_height]);
-            translate([1, 1, 1])
-                cube([model_width-2,
-                      model_depth-2,
-                      model_height-2]);
-        }
+        if (make_3d)
+            difference() {
+                cube([model_width, model_depth, model_height]);
+                translate([1, 1, 1])
+                    cube([model_width-2,
+                          model_depth-2,
+                          model_height-2]);
+            }
+        else
+            difference() {
+                square([model_width, model_depth]);
+                translate([1, 1])
+                    square([model_width-2, model_depth-2]);
+            }
 }
