@@ -13,17 +13,17 @@ thickness = 2; //[1:5]
 number=10;
 
 layer=0;
-visibile_layers=[0];
+visible_layers=[0];
 
-cl_layer_info(visibile_layers);
+cl_layer_info(visible_layers);
 
 cs_test_surface(width=width, height=height, thickness=thickness, number=number,
-             layer=layer, visibile_layers=visibile_layers,
+             layer=layer, visible_layers=visible_layers,
              make_3d=make_3d);
 
 module cs_test_surface(width, height, thickness=1, number=0, face_color="",
-                    layer=0, visibile_layers=[], make_3d=false) {
-    apply_cl_layer_visibility(layer, visibile_layers)
+                    layer=0, visible_layers=[], make_3d=false) {
+    apply_cl_layer_visibility(layer, visible_layers)
     {
         if (make_3d)
         {

@@ -54,7 +54,7 @@ make_3d = true;
 floor_size = [294, 244, 228];
 frame_width = 10;
 wall_depth = 4;
-visibile_layers = [0, 1, 2];
+visible_layers = [0, 1, 2];
 spacing_2d = 1;
 use_construction_color = true;
 ```
@@ -84,7 +84,7 @@ For all layers in a flat layout:
 ```sh
 openscad -o lamp.svg \
   -D 'make_3d=false' \
-  -D 'visibile_layers=[0,1,2]' \
+  -D 'visible_layers=[0,1,2]' \
   project/lamp/lamp.scad
 ```
 
@@ -111,17 +111,17 @@ Example layer previews:
 ```sh
 openscad -o lamp-layer-0.svg \
   -D 'make_3d=false' \
-  -D 'visibile_layers=[0]' \
+  -D 'visible_layers=[0]' \
   project/lamp/lamp.scad
 
 openscad -o lamp-layer-1.svg \
   -D 'make_3d=false' \
-  -D 'visibile_layers=[1]' \
+  -D 'visible_layers=[1]' \
   project/lamp/lamp.scad
 
 openscad -o lamp-layer-2.svg \
   -D 'make_3d=false' \
-  -D 'visibile_layers=[2]' \
+  -D 'visible_layers=[2]' \
   project/lamp/lamp.scad
 ```
 

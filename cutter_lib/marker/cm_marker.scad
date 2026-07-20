@@ -12,11 +12,11 @@ ticks = 11; //[2:20]
 
 number=1;
 
-visibile_layers=[0,1,2];
+visible_layers=[0,1,2];
 
-cl_layer_info(visibile_layers);
+cl_layer_info(visible_layers);
 
-apply_cl_layer_visibility(layer=-1, visibile_layers=visibile_layers)
+apply_cl_layer_visibility(layer=-1, visible_layers=visible_layers)
 translate([0,0,-1])
 square([width,height*1.2]);
 
@@ -29,7 +29,7 @@ module cm_marker_ruler(width, height, ticks, tick_width=0.1, tick_height=10,
     element_size = get_cshape_array_element_size(width=width, height=height,
                                                 no_elements_sum=ticks-1, no_elements_x=ticks-1);
     color("green")
-    apply_cl_layer_visibility(layer=layer, visibile_layers=visibile_layers)
+    apply_cl_layer_visibility(layer=layer, visible_layers=visible_layers)
     cshape_array_repeat(width+element_size[0], height,
                         repeat=ticks,
                         no_elements_x=ticks,

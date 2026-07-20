@@ -167,12 +167,12 @@ material thickness extends along local Z.
 ### Layers
 
 Layer-aware modules accept a layer number and a list named
-`visibile_layers`. If the list is empty, all layers render. If it is non-empty,
+`visible_layers`. If the list is empty, all layers render. If it is non-empty,
 listed layers render normally and other layers become OpenSCAD background
 geometry (`%`).
 
-The historical misspelling `visibile_layers` is still present in the pre-1.0
-API. It is scheduled to become `visible_layers`; see
+The pre-1.0 spelling cleanup renamed the historical `visibile_layers` argument
+to `visible_layers`. This is intentionally breaking; see
 [`docs/API_MIGRATION_V1.md`](docs/API_MIGRATION_V1.md).
 
 ### Naming
@@ -186,8 +186,8 @@ Prefixes indicate the component family:
 - `cl_*`: layer helpers
 - `cm_*`: markers
 
-The array API currently contains `element_hight`. It is scheduled to become
-`element_height` before version 1.0.
+The pre-1.0 spelling cleanup renamed `element_hight` to `element_height` and
+fixed the element-height-only sizing branch.
 
 ## Repository layout
 
@@ -256,6 +256,8 @@ colour-classified `_all.svg` convenience file.
 ```sh
 tests/governance.sh
 tests/render_examples.sh
+tests/array_acceptance.sh
+tests/lamp_acceptance.sh
 tests/export_acceptance.sh
 tests/bob_acceptance.sh
 ```
@@ -268,16 +270,12 @@ Architecture Decision Records, and GitHub Actions. See
 
 - There is no tagged package or central include file; import the required
   `.scad` files directly.
-- Some pre-1.0 names contain historical spelling errors; their cleanup is
-  tracked in `docs/API_MIGRATION_V1.md`.
-- The array size helper has an unresolved branch when only
-  `element_hight` is supplied; provide both element dimensions or neither.
+- The pre-1.0 API cleanup is intentionally breaking; update named arguments as
+  described in `docs/API_MIGRATION_V1.md`.
 - Fit and kerf must still be calibrated for the actual material and machine.
 - Separate operation SVGs are authoritative because OpenSCAD 2021.01 does not
   provide a portable SVG layer contract.
 
 ## License
 
-No license file is currently included. Until the repository owner adds one,
-do not assume permission to copy, modify, or redistribute the project beyond
-what applicable law permits.
+OpenSCAD Cutter Lib is distributed under the [MIT License](LICENSE).

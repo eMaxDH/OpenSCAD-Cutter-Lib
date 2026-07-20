@@ -8,6 +8,8 @@ OpenSCAD renders.
 ```sh
 tests/governance.sh
 tests/render_examples.sh
+tests/array_acceptance.sh
+tests/lamp_acceptance.sh
 tests/export_acceptance.sh
 tests/bob_acceptance.sh
 ```
@@ -15,7 +17,9 @@ tests/bob_acceptance.sh
 `governance.sh` checks the declared entry-file inventory, required Customizer
 controls, documentation, and reusable-code import discipline. `render_examples.sh`
 opens every governed entry file in both modes and checks for non-empty CSG/SVG
-output. `export_acceptance.sh` verifies separate operation exports and the
+output. `array_acceptance.sh` covers automatic, width-only, height-only, and
+fully fixed array sizing. `lamp_acceptance.sh` verifies that renamed parameters
+remain valid in saved presets. `export_acceptance.sh` verifies separate operation exports and the
 colour-classified composite SVG. Project acceptance scripts exercise parameters,
 layouts, and regression properties that generic rendering cannot prove.
 

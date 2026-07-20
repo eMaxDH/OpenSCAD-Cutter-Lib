@@ -34,9 +34,9 @@ cc_connector_triangle_45(size, type, connector_factor, thickness, make_3d);
 
 
 module cc_connector_triangle_45(size, type="f", connector_factor=0.3, thickness=1,
-                                layer=0, visibile_layers=[], make_3d=false)
+                                layer=0, visible_layers=[], make_3d=false)
 {
-    apply_cl_layer_visibility(layer=layer, visibile_layers=visibile_layers)
+    apply_cl_layer_visibility(layer=layer, visible_layers=visible_layers)
     {
         if (make_3d)
         {

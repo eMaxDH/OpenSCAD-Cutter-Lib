@@ -13,19 +13,19 @@ frame_width = 15;
 
 frame_overlap = false;
 
-visibile_layers = [0];
-cl_layer_info(visibile_layers);
+visible_layers = [0];
+cl_layer_info(visible_layers);
 
 spacing_2d=1;
 
 ct_tower_example(width=floor_size[0], height=floor_size[2], depth=floor_size[1],
                  wall_depth=wall_depth,
                 frame_width = frame_width,
-                 visibile_layers=visibile_layers, make_3d=make_3d, spacing_2d=spacing_2d);
+                 visible_layers=visible_layers, make_3d=make_3d, spacing_2d=spacing_2d);
 
 module ct_tower_example(width, height, depth, wall_depth=wall_depth,
                           frame_width = frame_width,
-                        visibile_layers=[], make_3d=false, spacing_2d=1)
+                        visible_layers=[], make_3d=false, spacing_2d=1)
 {
     ct_tower_arrange(width=width, height=height, depth=depth, wall_depth=wall_depth,
                      make_3d=make_3d, spacing_2d=spacing_2d)
@@ -36,14 +36,14 @@ module ct_tower_example(width, height, depth, wall_depth=wall_depth,
                                frame_width = frame_width,
                                frame_overlap=frame_overlap,
                                test_faces=true,
-                               visibile_layers=visibile_layers, make_3d=make_3d);
+                               visible_layers=visible_layers, make_3d=make_3d);
         // first floor
         ct_tower_floor_example(width=width, height=height, depth=depth,
                                wall_depth=wall_depth,
                                frame_width = frame_width,
                                frame_overlap=frame_overlap,
                                test_faces=false,
-                               visibile_layers=visibile_layers, make_3d=make_3d);
+                               visible_layers=visible_layers, make_3d=make_3d);
     }
 }
 

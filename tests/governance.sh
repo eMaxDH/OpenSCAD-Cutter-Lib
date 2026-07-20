@@ -18,7 +18,7 @@ if ! cmp -s "$work_dir/discovered.txt" "$work_dir/registered.txt"; then
 fi
 
 required_docs=(
-    GOVERNANCE.md CONTRIBUTING.md CHANGELOG.md
+    LICENSE GOVERNANCE.md CONTRIBUTING.md CHANGELOG.md
     docs/ARCHITECTURE.md docs/DESIGN_STANDARD.md
     docs/CUSTOMIZER_STANDARD.md docs/MANUFACTURING_STANDARD.md
     docs/EXPORT_STANDARD.md docs/TESTING.md docs/API.md
@@ -42,6 +42,13 @@ while IFS= read -r relative; do
         exit 1
     }
 done < "$registry"
+
+if rg -n '\bvisibile_layers\b|\belement_hight\b|cshape_array_arange_example' \
+    "$repo_root/cutter_lib" "$repo_root/project" "$repo_root/templates" \
+    -g '*.scad' -g '*.json'; then
+    echo "ERROR: a removed pre-1.0 API spelling remains in source." >&2
+    exit 1
+fi
 
 if rg -n 'include[[:space:]]*<' "$repo_root/cutter_lib" "$repo_root/templates"; then
     echo "ERROR: reusable library/template code must import with use, not include." >&2
