@@ -48,7 +48,7 @@ module bob_layout_layer_info(material="all", operation="preview",
                              sheet_size=[300,300], rib_count=4)
 {
     logical_ribs = rib_count+2;
-    rib_segments = 4*logical_ribs;
+    rib_segments = 2*logical_ribs;
 
     echo(str("[BOB 2D LAYERS] material=", material,
              ", operation=", operation));
@@ -145,41 +145,45 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
     ];
     cap_piece_h = bob_rib_cap_piece_height(
         structural_radius, plywood_thickness);
-    side_length = bob_rib_side_length(
-        structural_height, structural_radius,
-        plywood_thickness);
-    cap_columns = 4;
-    cap_rows = ceil(2*total_ribs/cap_columns);
-    cap_boxes = [
-        for (i = [0:2*total_ribs-1])
+    lower_u_height = bob_rib_lower_u_height(
+        structural_height, structural_radius);
+    lower_u_columns = 3;
+    lower_u_rows = ceil(total_ribs/lower_u_columns);
+    lower_u_boxes = [
+        for (i = [0:total_ribs-1])
             [
-                margin+(i%cap_columns)*(structural_width+spacing),
-                margin+floor(i/cap_columns)*(cap_piece_h+spacing),
+                margin+(i%lower_u_columns)*
+                    (structural_width+spacing),
+                margin+floor(i/lower_u_columns)*
+                    (lower_u_height+spacing),
+                structural_width, lower_u_height
+            ]
+    ];
+    cap_x = margin+lower_u_columns*
+            (structural_width+spacing);
+    cap_boxes = [
+        for (i = [0:total_ribs-1])
+            [
+                cap_x,
+                margin+i*(cap_piece_h+spacing),
                 structural_width, cap_piece_h
             ]
     ];
 
-    parts_y = margin+cap_rows*cap_piece_h+
-              cap_rows*spacing;
-    side_boxes = [
-        for (i = [0:2*total_ribs-1])
-            [
-                margin+i*(plywood_thickness+spacing),
-                parts_y,
-                plywood_thickness, side_length
-            ]
-    ];
-    side_band_width =
-        2*total_ribs*plywood_thickness+
-        (2*total_ribs-1)*spacing;
-    door_x = margin+side_band_width+spacing;
+    rib_region_height = max(
+        lower_u_rows*lower_u_height+
+        (lower_u_rows-1)*spacing,
+        total_ribs*cap_piece_h+
+        (total_ribs-1)*spacing);
+    parts_y = margin+rib_region_height+spacing;
+    door_x = margin;
     base_x = door_x+dw+spacing;
     base_bridge_y =
         parts_y+base[1]+spacing;
     cage_x = base_x+base[0]+spacing;
     cage_width = 2*plywood_thickness+spacing;
-    cradle_x = base_x;
-    cradle_y = base_bridge_y+base_bridge[1]+spacing;
+    cradle_x = cage_x+cage_width+spacing;
+    cradle_y = parts_y;
     cradle = [
         structural_width,
         cradle_height-veneer_thickness
@@ -187,7 +191,7 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
     stringer_length =
         model_depth-veneer_thickness;
 
-    boxes = concat(cap_boxes, side_boxes, [
+    boxes = concat(lower_u_boxes, cap_boxes, [
         [door_x, parts_y, dw, dh],
         [base_x, parts_y, base[0], base[1]],
         [base_x, base_bridge_y,
@@ -205,17 +209,17 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
 
     old_rib_box_area =
         total_ribs*structural_width*structural_height;
-    segmented_rib_box_area =
+    two_part_rib_box_area =
         total_ribs*(
-            2*structural_width*cap_piece_h+
-            2*plywood_thickness*side_length);
+            structural_width*lower_u_height+
+            structural_width*cap_piece_h);
     echo(str(
-        "[BOB RIB NESTING] allocated rib footprint ",
-        old_rib_box_area, " -> ", segmented_rib_box_area,
+        "[BOB RIB NESTING] two-part allocated footprint ",
+        old_rib_box_area, " -> ", two_part_rib_box_area,
         " mm^2 (",
-        100*(old_rib_box_area-segmented_rib_box_area)/
+        100*(two_part_rib_box_area-old_rib_box_area)/
             old_rib_box_area,
-        "% reduction)"));
+        "% change)"));
 
     rib_ids = concat(
         ["BOB-FRONT-FRAME"],
@@ -225,15 +229,28 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
         ],
         ["BOB-REAR-FRAME"]);
 
-    // Each logical rib is split on its straight vertical runs, immediately
-    // beside the rounded corners. Broad complementary 45-degree faces carry
-    // the glue; the library connector's small step only aligns the pieces.
-    for (i = [0:2*total_ribs-1]) {
-        rib_index = floor(i/2);
-        top = i%2 == 1;
-        segment_id = str(
-            rib_ids[rib_index],
-            top ? "-TOP" : "-BOTTOM");
+    // Each logical rib consists of one continuous lower U and one small top
+    // cap. Only the two stepped joints beside the upper corners require glue.
+    for (i = [0:total_ribs-1]) {
+        segment_id = str(rib_ids[i], "-LOWER-U");
+        cl_layout_part(
+            [lower_u_boxes[i][0], lower_u_boxes[i][1]],
+            [structural_width, lower_u_height],
+            segment_id,
+            sheet_size=sheet_size, margin=margin) {
+                bob_rib_lower_u_2d(
+                    structural_width, structural_height,
+                    plywood_thickness, structural_radius,
+                    fit_clearance, kerf);
+                bob_part_label(
+                    segment_id,
+                    [plywood_thickness+1,
+                     plywood_thickness+1]);
+            }
+    }
+
+    for (i = [0:total_ribs-1]) {
+        segment_id = str(rib_ids[i], "-TOP");
         cl_layout_part(
             [cap_boxes[i][0], cap_boxes[i][1]],
             [structural_width, cap_piece_h],
@@ -242,27 +259,13 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
                 bob_rib_cap_2d(
                     structural_width, structural_height,
                     plywood_thickness, structural_radius,
-                    top, fit_clearance, kerf,
+                    true, fit_clearance, kerf,
                     rib_stringer_positions);
                 bob_part_label(
                     segment_id,
                     [plywood_thickness+1,
                      plywood_thickness+1]);
             }
-    }
-
-    for (i = [0:2*total_ribs-1]) {
-        rib_index = floor(i/2);
-        side = i%2 == 0 ? "LEFT" : "RIGHT";
-        segment_id = str(rib_ids[rib_index], "-", side);
-        cl_layout_part(
-            [side_boxes[i][0], side_boxes[i][1]],
-            [plywood_thickness, side_length],
-            segment_id,
-            sheet_size=sheet_size, margin=margin)
-                bob_rib_side_2d(
-                    structural_height, plywood_thickness,
-                    structural_radius, fit_clearance, kerf);
     }
 
     cl_layout_part(
