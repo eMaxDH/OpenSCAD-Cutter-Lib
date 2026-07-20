@@ -1,5 +1,23 @@
 use <../shells/csh_ribbed_veneer.scad>
 
+/* [Output] */
+make_3d = true; // [false:true]
+
+/* [Dimensions] */
+example_size = [70, 85];
+material_thickness = 4; // [1:0.5:10]
+
+/* [Example] */
+example_dish_slots = 4; // [1:1:8]
+
+/* [Hidden] */
+$fn = $preview ? 32 : 96;
+
+removable_tray(size=example_size,
+               thickness=material_thickness,
+               dish_slots=example_dish_slots,
+               make_3d=make_3d);
+
 module finger_grip_2d(width=16, depth=5)
 {
     assert(width > depth && depth > 0,

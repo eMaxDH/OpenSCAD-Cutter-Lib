@@ -1,8 +1,10 @@
 use <../layer/cl_layer.scad>
 use <cc_connector_triangle_45_2d.scad>
 
+/* [Output] */
 make_3d=false;
 
+/* [Example] */
 size = 100;//[10:100]
 type = "f"; //["f", "m"]
 connector_factor = 0.4; //[0.1:0.1:1]

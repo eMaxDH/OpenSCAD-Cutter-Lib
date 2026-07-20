@@ -77,6 +77,10 @@ show_engraving = true; // [false:true]
 show_chamber = true; // [false:true]
 chamber_skeleton_gap = 0.5; // [0:0.1:2]
 
+/* [Example] */
+
+// Defaults form the complete reference assembly/cutting-layout example.
+
 /* [Hidden] */
 
 scale_factor = model_height / source_height;

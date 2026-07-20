@@ -15,6 +15,7 @@ Run the checks from the repository root:
 ```sh
 tests/governance.sh
 tests/render_examples.sh
+tests/export_acceptance.sh
 tests/bob_acceptance.sh
 ```
 

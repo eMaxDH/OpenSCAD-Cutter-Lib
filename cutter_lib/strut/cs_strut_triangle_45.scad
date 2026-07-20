@@ -13,8 +13,10 @@
 use <../layer/cl_layer.scad>
 use <cs_strut_triangle_45_2d.scad>
 
+/* [Output] */
 make_3d = false; // [false:true]
 
+/* [Example] */
 width = 293; //[10:10:300]
 height = 5; //[5:5:100]
 thickness = 4; //[1:1:20]

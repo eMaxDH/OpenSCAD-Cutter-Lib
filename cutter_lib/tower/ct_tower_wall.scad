@@ -6,8 +6,10 @@ use <../shapes/cshape_frame.scad>
 use <../shapes/cshape_array.scad>
 use <../shapes/cshape_padding.scad>
 
+/* [Output] */
 make_3d=true;
 
+/* [Example] */
 wall_width = 200;
 wall_height = 50;
 wall_depth=1;

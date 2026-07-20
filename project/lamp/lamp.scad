@@ -9,8 +9,10 @@ use <lamp_floor.scad>
 
 $fn = $preview ? 32 : 128;
 
+/* [Output] */
 make_3d=true;
 
+/* [Example] */
 floor_size = [294,244,228];
 
 frame_width = 10;

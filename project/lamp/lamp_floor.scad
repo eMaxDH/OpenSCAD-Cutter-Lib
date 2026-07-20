@@ -9,8 +9,10 @@ use <../../cutter_lib/tower/ct_tower_floor.scad>
 use <lamp_wall.scad>
 
 
+/* [Output] */
 make_3d=true;
 
+/* [Example] */
 floor_size = [300,250,230];
 
 //wall_depth=10; // frame thinkness

@@ -42,11 +42,12 @@ return values, and constraints.
 
 ## Requirements
 
-- OpenSCAD
+- OpenSCAD 2021.01
 - Git, if cloning the repository
+- Python 3 for composite operation-colour SVG exports
 
-There are no external OpenSCAD library dependencies. A minimum OpenSCAD
-version has not yet been established by automated testing.
+There are no external OpenSCAD library dependencies. OpenSCAD 2021.01 is the
+tested compatibility baseline used by continuous integration.
 
 ## Getting started
 
@@ -149,8 +150,8 @@ path may be used instead.
 
 ### Dimensions
 
-Dimensions are unitless, as in all OpenSCAD models. Use one unit consistently;
-the example project is designed as if values are millimetres.
+OpenSCAD itself treats dimensions as unitless. This repository's documented
+dimensions and manufacturing interfaces use millimetres.
 
 `width` maps to X, `depth` to Y, and assembled `height` to Z. Flat layouts lie
 in the XY plane.
@@ -170,8 +171,9 @@ Layer-aware modules accept a layer number and a list named
 listed layers render normally and other layers become OpenSCAD background
 geometry (`%`).
 
-The misspelling `visibile_layers` is part of the current API and must be used
-exactly as written.
+The historical misspelling `visibile_layers` is still present in the pre-1.0
+API. It is scheduled to become `visible_layers`; see
+[`docs/API_MIGRATION_V1.md`](docs/API_MIGRATION_V1.md).
 
 ### Naming
 
@@ -184,8 +186,8 @@ Prefixes indicate the component family:
 - `cl_*`: layer helpers
 - `cm_*`: markers
 
-The array API also uses the existing parameter name `element_hight`. Keep this
-spelling in named arguments.
+The array API currently contains `element_hight`. It is scheduled to become
+`element_height` before version 1.0.
 
 ## Repository layout
 
@@ -206,6 +208,13 @@ project/
 docs/
   API.md       module and function reference
   LAMP.md      example-project walkthrough
+  *_STANDARD.md
+               governed design, Customizer, manufacturing, and export rules
+templates/
+  component/   canonical 2D/3D component starting point
+  assembly/    configurable assembly, layout, and acceptance-test example
+tests/         governed file inventory and OpenSCAD acceptance checks
+scripts/       SVG/LightBurn export helpers
 ```
 
 ## Example project
@@ -222,18 +231,50 @@ exporting individual layers.
 For a manufacturing-focused example, read the
 [Bob project guide](project/bob_dishwasher/README.md).
 
+## Starting a new component or assembly
+
+Copy the closest directory under [`templates/`](templates), rename its `tpl_`
+symbols, and register each new entry file in
+[`tests/public_files.txt`](tests/public_files.txt). The governing geometry and
+Customizer rules are in the [design standard](docs/DESIGN_STANDARD.md) and
+[Customizer standard](docs/CUSTOMIZER_STANDARD.md).
+
+For operation-specific and LightBurn-ready SVG files:
+
+```sh
+scripts/export_lightburn_svg.sh \
+  project/bob_dishwasher/bob_dishwasher.scad \
+  /tmp/bob_veneer cut,engrave \
+  -D 'layout_material="veneer"'
+```
+
+This produces authoritative `_cut.svg` and `_engrave.svg` files plus a
+colour-classified `_all.svg` convenience file.
+
+## Tests and governance
+
+```sh
+tests/governance.sh
+tests/render_examples.sh
+tests/export_acceptance.sh
+tests/bob_acceptance.sh
+```
+
+The project uses maintainer-led governance, a declared public-file inventory,
+Architecture Decision Records, and GitHub Actions. See
+[`GOVERNANCE.md`](GOVERNANCE.md) and [`CONTRIBUTING.md`](CONTRIBUTING.md).
+
 ## Current limitations
 
-- There is no automated test or continuous-integration setup.
 - There is no tagged package or central include file; import the required
   `.scad` files directly.
-- Some names contain historical spelling errors retained for compatibility.
+- Some pre-1.0 names contain historical spelling errors; their cleanup is
+  tracked in `docs/API_MIGRATION_V1.md`.
 - The array size helper has an unresolved branch when only
   `element_hight` is supplied; provide both element dimensions or neither.
-- Cutter kerf, tolerances, nesting optimization, and material checks remain
-  the caller's responsibility.
-- The checked-in OpenSCAD parameter-set JSON files contain older parameter
-  names. Treat the `.scad` defaults as authoritative.
+- Fit and kerf must still be calibrated for the actual material and machine.
+- Separate operation SVGs are authoritative because OpenSCAD 2021.01 does not
+  provide a portable SVG layer contract.
 
 ## License
 

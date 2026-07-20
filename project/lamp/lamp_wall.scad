@@ -7,8 +7,10 @@ use <../../cutter_lib/shapes/cshape_padding.scad>
 use <../../cutter_lib/strut/cs_strut_triangle_45.scad>
 use <../../cutter_lib/tower/ct_tower_wall.scad>
 
+/* [Output] */
 make_3d=true;
 
+/* [Example] */
 wall_width = 300;
 wall_height = 200;
 wall_depth=4;
@@ -44,8 +46,7 @@ if (only_front_back_layer)
 else
 {
     translate([-20,wall_height,0])
-    linear_extrude(1)
-        text("lamp_wall", halign="right", size = 8);
+    lamp_wall_example_label("lamp_wall", make_3d);
     lamp_wall(width=wall_width, height=wall_height,
                         wall_depth=wall_depth, frame_width=frame_width,
                         front_elements_ratio = front_elements_ratio, front_element_width = front_element_width,
@@ -56,8 +57,7 @@ else
     translate([0, wall_height * 1.2,0])
     {
         translate([-20,wall_height,0])
-        linear_extrude(1)
-            text("lamp_wall_middle_part", halign="right", size = 8);
+        lamp_wall_example_label("lamp_wall_middle_part", make_3d);
         lamp_wall_middle_part(width=wall_width, height=wall_height,
                             wall_depth=wall_depth, frame_width=frame_width,
                             front_elements_ratio = front_elements_ratio, front_element_width = front_element_width,
@@ -69,8 +69,7 @@ else
     translate([0, 2*wall_height * 1.2,0])
     {
         translate([-20,wall_height,0])
-        linear_extrude(1)
-            text("lamp_wall_top", halign="right", size = 8);
+        lamp_wall_example_label("lamp_wall_top", make_3d);
         lamp_wall_top(width=wall_width, height=wall_height,
                             wall_depth=wall_depth, frame_width=frame_width,
                             front_elements_ratio = front_elements_ratio, front_element_width = front_element_width,
@@ -78,6 +77,15 @@ else
                             visibile_layers=visibile_layers, 
                             use_construction_color=use_construction_color, make_3d=make_3d);
     }
+}
+
+module lamp_wall_example_label(label, make_3d=false)
+{
+    if (make_3d)
+        linear_extrude(height=1)
+            text(label, halign="right", size=8);
+    else
+        text(label, halign="right", size=8);
 }
 
 

@@ -1,6 +1,52 @@
 // Deterministic sheet-layout helpers. Placement remains explicit because
 // OpenSCAD cannot query arbitrary child bounds reliably.
 
+/* [Output] */
+make_3d = true; // [false:true]
+
+/* [2D Layout] */
+example_sheet_size = [120, 70];
+example_margin = 5;
+example_spacing = 5;
+
+/* [Example] */
+example_part_size = [45, 25];
+example_thickness = 3;
+
+/* [Hidden] */
+
+cl_cut_layout_example(
+    sheet_size=example_sheet_size,
+    margin=example_margin,
+    spacing=example_spacing,
+    part_size=example_part_size,
+    thickness=example_thickness,
+    make_3d=make_3d);
+
+module cl_cut_layout_example(sheet_size=[120, 70], margin=5, spacing=5,
+                             part_size=[45, 25], thickness=3,
+                             make_3d=false)
+{
+    positions = [[margin, margin],
+                 [margin+part_size[0]+spacing, margin]];
+    boxes = [[positions[0][0], positions[0][1],
+              part_size[0], part_size[1]],
+             [positions[1][0], positions[1][1],
+              part_size[0], part_size[1]]];
+    cl_validate_layout(boxes, sheet_size, margin, spacing, "example sheet");
+
+    if (!make_3d)
+        cl_sheet_boundary(sheet_size, "LAYOUT EXAMPLE");
+
+    for (p = positions)
+        translate([p[0], p[1], 0])
+            if (make_3d)
+                linear_extrude(height=thickness)
+                    square(part_size);
+            else
+                square(part_size);
+}
+
 function cl_boxes_overlap(a, b, spacing=0) =
     !(a[0]+a[2]+spacing <= b[0] ||
       b[0]+b[2]+spacing <= a[0] ||

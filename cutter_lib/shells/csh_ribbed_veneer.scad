@@ -1,5 +1,45 @@
 // Rib-supported shell primitives for veneer that bends in one direction.
 
+/* [Output] */
+make_3d = true; // [false:true]
+
+/* [Dimensions] */
+example_width = 70;
+example_height = 55;
+example_depth = 80;
+example_corner_radius = 8;
+
+/* [Material] */
+example_rib_thickness = 4;
+example_veneer_thickness = 0.6;
+
+/* [Example] */
+example_rib_count = 4; // [2:1:8]
+
+/* [Hidden] */
+$fn = $preview ? 32 : 96;
+
+if (make_3d)
+    ribbed_veneer_shell(
+        width=example_width,
+        height=example_height,
+        depth=example_depth,
+        rib_count=example_rib_count,
+        rib_thickness=example_rib_thickness,
+        veneer_thickness=example_veneer_thickness,
+        corner_radius=example_corner_radius);
+else {
+    shell_rib(example_width, example_height,
+              rib_width=example_rib_thickness,
+              corner_radius=example_corner_radius);
+    translate([example_width+10, 0])
+        veneer_skin_layout(
+            width=example_width,
+            height=example_height,
+            depth=example_depth,
+            corner_radius=example_corner_radius);
+}
+
 function csh_wrap_length(width, height, corner_radius) =
     assert(width > 2*corner_radius,
            "csh_wrap_length: width must exceed twice the corner radius")

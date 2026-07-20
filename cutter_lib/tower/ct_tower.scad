@@ -2,8 +2,10 @@ use <../layer/cl_layer.scad>
 
 use <ct_tower_floor.scad>
 
+/* [Output] */
 make_3d=true;
 
+/* [Example] */
 floor_size = [200,100,50];
 
 wall_depth = 4; 
@@ -77,4 +79,3 @@ module ct_tower_arrange(width, height, depth, wall_depth,
         }
     }
 }
-
