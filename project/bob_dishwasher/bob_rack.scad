@@ -49,7 +49,12 @@ function bob_rack_size(model_width, model_depth, plywood_thickness,
      bob_chamber_depth(
          model_depth, plywood_thickness,
          veneer_thickness, chamber_skeleton_gap)-
-     4*plywood_thickness];
+     bob_rack_front_clearance(plywood_thickness)-
+     bob_rack_rear_clearance(plywood_thickness)];
+function bob_rack_front_clearance(plywood_thickness=4) =
+    plywood_thickness;
+function bob_rack_rear_clearance(plywood_thickness=4) =
+    plywood_thickness/2;
 function bob_rack_runner_span(
     model_width, plywood_thickness,
     veneer_thickness=0,
@@ -151,7 +156,9 @@ module bob_rack_assembly(model_width, model_height, model_depth,
         model_width, plywood_thickness,
         veneer_thickness, chamber_skeleton_gap);
     runner_x0 = (model_width-runner_span)/2;
-    y0 = 2*plywood_thickness+2*plywood_thickness-pullout;
+    y0 = 2*plywood_thickness+
+         bob_rack_front_clearance(plywood_thickness)-
+         pullout;
     chamber_floor_top = 3*plywood_thickness;
     runner_height = plywood_thickness/2;
     runner_z = chamber_floor_top+exploded;
