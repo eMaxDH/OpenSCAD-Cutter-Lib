@@ -352,6 +352,8 @@ module bob_plywood_sheet_2(model_width, model_height, model_depth,
     cd = bob_chamber_depth(
         model_depth, plywood_thickness,
         veneer_thickness, chamber_skeleton_gap);
+    rear_width = bob_chamber_rear_width(
+        cw, plywood_thickness);
     rack = bob_rack_size(
         model_width, model_depth, plywood_thickness,
         veneer_thickness, chamber_skeleton_gap);
@@ -377,9 +379,10 @@ module bob_plywood_sheet_2(model_width, model_height, model_depth,
 
     floor_bound = [cw+2*plywood_thickness, cd];
     boxes = [
-        [margin, margin, cw, ch],
-        [margin+cw+spacing, margin, floor_bound[0], floor_bound[1]],
-        [margin+cw+spacing+floor_bound[0]+spacing,
+        [margin, margin, rear_width, ch],
+        [margin+rear_width+spacing,
+         margin, floor_bound[0], floor_bound[1]],
+        [margin+rear_width+spacing+floor_bound[0]+spacing,
          margin, floor_bound[0], floor_bound[1]],
         [margin, row2_y, cd, ch],
         [margin+cd+chamber_layout_gap, row2_y, cd, ch],
@@ -396,12 +399,12 @@ module bob_plywood_sheet_2(model_width, model_height, model_depth,
     cl_sheet_boundary(sheet_size, "BOB plywood 4 mm - sheet 2");
 
     cl_layout_part(
-        [margin,margin], [cw,ch], "BOB-CHAMBER-REAR",
+        [margin,margin], [rear_width,ch], "BOB-CHAMBER-REAR",
         sheet_size=sheet_size, margin=margin)
-        bob_chamber_rear_2d(cw, ch);
+        bob_chamber_rear_2d(rear_width, ch);
 
     cl_layout_part(
-        [margin+cw+spacing,margin], floor_bound,
+        [margin+rear_width+spacing,margin], floor_bound,
         "BOB-CHAMBER-FLOOR",
         sheet_size=sheet_size, margin=margin)
         translate([plywood_thickness,0])
@@ -410,7 +413,7 @@ module bob_plywood_sheet_2(model_width, model_height, model_depth,
                 fit_clearance, kerf);
 
     cl_layout_part(
-        [margin+cw+spacing+floor_bound[0]+spacing,
+        [margin+rear_width+spacing+floor_bound[0]+spacing,
          margin], floor_bound,
         "BOB-CHAMBER-TOP",
         sheet_size=sheet_size, margin=margin)

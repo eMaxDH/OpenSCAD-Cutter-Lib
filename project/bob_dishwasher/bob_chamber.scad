@@ -51,6 +51,16 @@ else {
             example_chamber_depth,
             example_chamber_height,
             example_plywood_thickness);
+    translate([
+        example_chamber_width+
+        2*example_plywood_thickness+5,
+        example_chamber_height+5
+    ])
+        bob_chamber_rear_2d(
+            bob_chamber_rear_width(
+                example_chamber_width,
+                example_plywood_thickness),
+            example_chamber_height);
 }
 
 function bob_chamber_width(model_width, plywood_thickness,
@@ -71,6 +81,8 @@ function bob_chamber_depth(model_depth, plywood_thickness,
                            skeleton_gap=0) =
     model_depth - 4*plywood_thickness -
     veneer_thickness-skeleton_gap;
+function bob_chamber_rear_width(chamber_width, plywood_thickness=4) =
+    chamber_width+2*plywood_thickness;
 
 module bob_chamber_rear_2d(width, height)
 {
@@ -154,6 +166,8 @@ module bob_chamber_assembly(model_width, model_height, model_depth,
     cd = bob_chamber_depth(
         model_depth, plywood_thickness,
         veneer_thickness, skeleton_gap);
+    rear_width = bob_chamber_rear_width(
+        cw, plywood_thickness);
     x0 = (model_width-cw)/2;
     y0 = 2*plywood_thickness;
     z0 = 2*plywood_thickness;
@@ -179,13 +193,14 @@ module bob_chamber_assembly(model_width, model_height, model_depth,
                     cw, cd, plywood_thickness,
                     fit_clearance=0.15, kerf=0);
 
-        // The rear closes the outside of the chamber instead of occupying
-        // the last plywood thickness of its interior.
-        translate([x0, y0+cd+plywood_thickness+exploded,
+        // The rear closes the outside of the chamber and spans across both
+        // side-wall ends instead of fitting only between their inner faces.
+        translate([x0-plywood_thickness,
+                   y0+cd+plywood_thickness+exploded,
                    z0])
             rotate([90,0,0])
                 linear_extrude(plywood_thickness)
-                    bob_chamber_rear_2d(cw, ch);
+                    bob_chamber_rear_2d(rear_width, ch);
 
         // Side walls lie outside the clear chamber width. Their real slot
         // profiles receive the floor and top tabs without solid collisions.

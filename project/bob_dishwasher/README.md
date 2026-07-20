@@ -424,6 +424,8 @@ between the chamber and the skeleton at both sides, below the upper stringers,
 and ahead of the rear rib. The chamber floor remains seated on the structural
 base. The floor and top tabs enter open-edge notches in the chamber sides,
 avoiding fragile plywood strips between a slot and the panel perimeter.
+The rear panel spans the chamber's complete outside width, covering the rear
+ends of both side panels rather than fitting only between their inner faces.
 
 The two brown strips near the chamber floor are the rack runners, not part of
 the floor. They support the rack above the chamber floor and stop it at the
