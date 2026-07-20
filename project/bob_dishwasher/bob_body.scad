@@ -9,6 +9,7 @@ example_model_height = 80; // [70:1:160]
 example_plywood_thickness = 4; // [1:0.5:8]
 example_veneer_thickness = 0.6; // [0.1:0.1:2]
 example_rib_count = 4; // [1:1:10]
+example_base_rib_spacing = 0.2; // [0:0.05:1]
 example_show_veneer = true; // [false:true]
 example_show_skeleton = true; // [false:true]
 
@@ -32,7 +33,8 @@ if (make_3d)
         0.15, 0.5,
         example_show_skeleton,
         example_show_veneer,
-        5, 0.58);
+        5, 0.58,
+        base_rib_spacing=example_base_rib_spacing);
 else
     bob_segmented_rib_compact_2d(
         bob_structural_width(
@@ -59,12 +61,74 @@ function bob_structural_height(model_height, veneer_thickness) =
 function bob_structural_corner_radius(corner_radius, veneer_thickness) =
     corner_radius-veneer_thickness;
 
-module bob_base_2d(model_width, model_depth, plywood_thickness=4)
+function bob_base_front_y(plywood_thickness=4) =
+    2*plywood_thickness;
+
+function bob_internal_rib_y(
+    model_depth, plywood_thickness,
+    rib_count, front_offset, rear_offset, i) =
+    front_offset+
+    (model_depth-front_offset-rear_offset-plywood_thickness)*
+    (i+1)/(rib_count+1);
+
+function bob_base_rib_positions(
+    model_depth, plywood_thickness=4,
+    veneer_thickness=0.6,
+    rib_count=4,
+    front_offset=4,
+    rear_offset=4) =
+    concat(
+        [for (i = [0:rib_count-1])
+            bob_internal_rib_y(
+                model_depth, plywood_thickness,
+                rib_count, front_offset, rear_offset, i)-
+            bob_base_front_y(plywood_thickness)],
+        [model_depth-plywood_thickness-veneer_thickness-
+         bob_base_front_y(plywood_thickness)]);
+
+module bob_base_2d(model_width, model_depth, plywood_thickness=4,
+                   rib_positions=[], rib_spacing=0.2,
+                   rib_corner_radius=undef)
 {
-    square([
-        bob_inner_width(model_width, plywood_thickness),
-        model_depth-2*plywood_thickness
-    ]);
+    base_depth = model_depth-2*plywood_thickness;
+    resolved_rib_corner_radius =
+        is_undef(rib_corner_radius)
+        ? plywood_thickness
+        : rib_corner_radius;
+    notch_width = plywood_thickness+2*rib_spacing;
+    // At the base plane the inner edge of the rounded rib is still at the
+    // corner-radius tangent, not at the straight side rail. Reach that
+    // tangent so the base can sit flat on the lower cap without collision.
+    notch_depth = resolved_rib_corner_radius+rib_spacing;
+    epsilon = 0.01;
+
+    assert(rib_spacing >= 0,
+           "bob_base_2d: rib spacing must be non-negative");
+    assert(resolved_rib_corner_radius >= plywood_thickness,
+           "bob_base_2d: rib corner radius is below material thickness");
+    assert(2*notch_depth < model_width,
+           "bob_base_2d: rib notches consume the base width");
+
+    difference() {
+        square([model_width, base_depth]);
+
+        for (y = rib_positions) {
+            // The rear rib ends flush with the base, so its added clearance
+            // may intentionally extend beyond the part boundary and be
+            // clipped by the difference.
+            assert(y >= -epsilon &&
+                   y+plywood_thickness <=
+                   base_depth+epsilon,
+                   "bob_base_2d: rib notch is outside base");
+            translate([-epsilon, y-rib_spacing])
+                square([notch_depth+epsilon, notch_width]);
+            translate([
+                model_width-notch_depth,
+                y-rib_spacing
+            ])
+                square([notch_depth+epsilon, notch_width]);
+        }
+    }
 }
 
 function bob_base_front_bridge_depth(
@@ -343,7 +407,8 @@ module bob_body_structure(model_width, model_height, model_depth,
                           veneer_opacity=0.58,
                           hinge_pin_diameter=2,
                           hinge_clearance=0.2,
-                          show_hinge_bores=true)
+                          show_hinge_bores=true,
+                          base_rib_spacing=0.2)
 {
     usable_depth = model_depth-front_offset-rear_offset;
     front_plywood_y = bob_front_plywood_y();
@@ -407,8 +472,9 @@ module bob_body_structure(model_width, model_height, model_depth,
 
         // Internal silhouette ribs.
         for (i = [0:rib_count-1])
-            let(y = front_offset +
-                    (usable_depth-plywood_thickness)*(i+1)/(rib_count+1))
+            let(y = bob_internal_rib_y(
+                    model_depth, plywood_thickness,
+                    rib_count, front_offset, rear_offset, i))
                 translate([
                     veneer_thickness, 0, veneer_thickness
                 ])
@@ -425,14 +491,20 @@ module bob_body_structure(model_width, model_height, model_depth,
         // the raised-hinge door below the pin has a clear opening sweep.
         // Lift it above the bottom veneer so the bridge can laminate to its
         // underside without intersecting the finished skin.
-        translate([veneer_thickness+plywood_thickness,
-                   2*plywood_thickness,
+        translate([veneer_thickness,
+                   bob_base_front_y(plywood_thickness),
                    veneer_thickness+plywood_thickness])
             linear_extrude(plywood_thickness)
                 bob_base_2d(
                     structural_width,
                     model_depth-veneer_thickness,
-                    plywood_thickness);
+                    plywood_thickness,
+                    bob_base_rib_positions(
+                        model_depth, plywood_thickness,
+                        veneer_thickness, rib_count,
+                        front_offset, rear_offset),
+                    base_rib_spacing,
+                    structural_radius);
 
         // The bridge remains entirely below the base/sweep plane. It butts
         // against the rear face of the front rib, spans the one-thickness

@@ -84,7 +84,10 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
                            cradle_bottom_gap=1.0,
                            cradle_top_gap=0.5,
                            sheet_size=[300,300],
-                           margin=5, spacing=3)
+                           margin=5, spacing=3,
+                           base_rib_spacing=0.2,
+                           front_offset=4,
+                           rear_offset=4)
 {
     total_ribs = rib_count+2;
     structural_width =
@@ -117,9 +120,13 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
         model_width, plywood_thickness,
         veneer_thickness, cradle_side_gap);
     base = [
-        structural_width-2*plywood_thickness,
+        structural_width,
         model_depth-veneer_thickness-2*plywood_thickness
     ];
+    base_rib_positions = bob_base_rib_positions(
+        model_depth, plywood_thickness,
+        veneer_thickness, rib_count,
+        front_offset, rear_offset);
     base_bridge = [
         bob_base_front_bridge_width(
             model_width,
@@ -162,7 +169,8 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
         parts_y+base[1]+spacing;
     cage_x = base_x+base[0]+spacing;
     cage_width = 2*plywood_thickness+spacing;
-    cradle_x = cage_x+cage_width+spacing;
+    cradle_x = base_x;
+    cradle_y = base_bridge_y+base_bridge[1]+spacing;
     cradle = [
         structural_width,
         cradle_height-veneer_thickness
@@ -177,7 +185,7 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
          base_bridge[0], base_bridge[1]],
         [cage_x, parts_y, cage_width,
          stringer_length],
-        [cradle_x, parts_y,
+        [cradle_x, cradle_y,
          cradle[0], cradle[1]]
     ]);
 
@@ -269,7 +277,10 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
             bob_base_2d(
                 structural_width,
                 model_depth-veneer_thickness,
-                plywood_thickness);
+                plywood_thickness,
+                base_rib_positions,
+                base_rib_spacing,
+                structural_radius);
             bob_part_label("BOB-BASE");
         }
 
@@ -296,7 +307,7 @@ module bob_plywood_sheet_1(model_width, model_height, model_depth,
     bob_part_label("BOB-STRINGER x2", [cage_x, parts_y+1]);
 
     cl_layout_part(
-        [cradle_x, parts_y], cradle,
+        [cradle_x, cradle_y], cradle,
         "BOB-HINGE-CRADLE",
         sheet_size=sheet_size, margin=margin) {
             bob_hinge_cradle_2d(
@@ -666,7 +677,8 @@ module bob_cut_layout(model_width, model_height, model_depth,
                       margin=5, spacing=3,
                       window_mode="open",
                       material="all",
-                      operation="cut")
+                      operation="cut",
+                      base_rib_spacing=0.2)
 {
     sheet_gap = 20;
     assert(material == "all" ||
@@ -691,7 +703,9 @@ module bob_cut_layout(model_width, model_height, model_depth,
         cradle_side_gap,
         cradle_bottom_gap,
         cradle_top_gap,
-        sheet_size, margin, spacing);
+        sheet_size, margin, spacing,
+        base_rib_spacing,
+        front_offset, rear_offset);
 
     if (material == "all" || material == "plywood_2")
     translate(material == "all"

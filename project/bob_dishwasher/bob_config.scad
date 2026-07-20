@@ -58,6 +58,7 @@ shell_mode = "ribbed_veneer"; // [ribbed_veneer]
 shell_corner_radius = model_height * 0.10;
 shell_front_offset = plywood_thickness;
 shell_rear_offset = plywood_thickness;
+base_rib_spacing = 0.2; // [0:0.05:1]
 minimum_veneer_bend_radius = 5; // [1:0.5:20]
 
 show_veneer = true; // [false:true]

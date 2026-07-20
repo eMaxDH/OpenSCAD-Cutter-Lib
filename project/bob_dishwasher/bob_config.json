@@ -1,6 +1,7 @@
 {
     "parameterSets": {
         "test": {
+            "base_rib_spacing": "0.2",
             "cradle_side_gap": "0.6",
             "cradle_bottom_gap": "1.0",
             "cradle_top_gap": "0.5",

@@ -103,11 +103,7 @@ function bob_door_tongue_width(model_width,
 function bob_door_tongue_height(
     plywood_thickness=4,
     tongue_corner_radius=undef) =
-    max(
-        2.5*plywood_thickness,
-        is_undef(tongue_corner_radius)
-        ? 0
-        : 2*tongue_corner_radius);
+    2.5*plywood_thickness;
 function bob_hinge_cradle_height(
     plywood_thickness=4,
     veneer_thickness=0.6,
@@ -179,8 +175,8 @@ module bob_bottom_rounded_rect_2d(size, radius)
 }
 
 // Broad upper panel plus the narrower centered hinge tongue used by the
-// original Bob mechanism. The broad-panel shoulders remain square; the
-// latest front reference rounds the outer top and tongue-bottom corners.
+// original Bob mechanism. Only the two outer top corners are rounded; the
+// broad-panel shoulders and lower hinge-tongue corners remain square.
 module bob_door_outline_2d(door_width, door_height,
                            plywood_thickness=4,
                            corner_radius=5,
@@ -190,15 +186,8 @@ module bob_door_outline_2d(door_width, door_height,
     resolved_tongue_width = is_undef(tongue_width)
         ? 0.80*door_width
         : tongue_width;
-    resolved_tongue_corner_radius =
-        is_undef(tongue_corner_radius)
-        ? min(corner_radius,
-              1.25*plywood_thickness)
-        : tongue_corner_radius;
     tongue_height =
-        bob_door_tongue_height(
-            plywood_thickness,
-            resolved_tongue_corner_radius);
+        bob_door_tongue_height(plywood_thickness);
     tongue_x = (door_width-resolved_tongue_width)/2;
 
     assert(door_height >
@@ -206,11 +195,6 @@ module bob_door_outline_2d(door_width, door_height,
            "bob_door_outline_2d: hinge tongue consumes door height");
     assert(resolved_tongue_width > 2*plywood_thickness,
            "bob_door_outline_2d: hinge tongue is too narrow");
-    assert(resolved_tongue_corner_radius > 0 &&
-           resolved_tongue_corner_radius <=
-           tongue_height/2,
-           "bob_door_outline_2d: invalid hinge corner radius");
-
     union() {
         translate([0, tongue_height])
             bob_top_rounded_rect_2d(
@@ -219,9 +203,7 @@ module bob_door_outline_2d(door_width, door_height,
                 corner_radius);
 
         translate([tongue_x, 0])
-            bob_bottom_rounded_rect_2d(
-                [resolved_tongue_width, tongue_height],
-                resolved_tongue_corner_radius);
+            square([resolved_tongue_width, tongue_height]);
     }
 }
 

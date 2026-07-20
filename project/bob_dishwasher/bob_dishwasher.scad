@@ -60,6 +60,7 @@ shell_mode = "ribbed_veneer"; // [ribbed_veneer]
 shell_corner_radius = model_height * 0.10;
 shell_front_offset = plywood_thickness;
 shell_rear_offset = plywood_thickness;
+base_rib_spacing = 0.2; // [0:0.05:1]
 minimum_veneer_bend_radius = 5; // [1:0.5:20]
 
 show_veneer = true; // [false:true]
@@ -131,6 +132,8 @@ module bob_validate_configuration()
            "Door/cradle gaps must be non-negative");
     assert(chamber_skeleton_gap >= 0,
            "chamber_skeleton_gap must be non-negative");
+    assert(base_rib_spacing >= 0,
+           "base_rib_spacing must be non-negative");
 
     if (model_height < minimum_supported_height ||
         model_height > maximum_supported_height)
@@ -160,7 +163,8 @@ module bob_assembly(exploded=0, debug=false)
         veneer_opacity,
         hinge_pin_diameter,
         hinge_clearance,
-        false);
+        false,
+        base_rib_spacing);
 
     if (show_chamber)
         bob_chamber_assembly(
@@ -242,7 +246,8 @@ module bob_dishwasher(make_3d=true, output_mode="automatic")
             chamber_skeleton_gap,
             sheet_size, sheet_margin, part_spacing,
             window_mode, layout_material,
-            layout_operation);
+            layout_operation,
+            base_rib_spacing);
     else if (selected_output_mode == "calibration")
         ccal_laser_coupon(
             plywood_thickness, kerf,

@@ -68,6 +68,7 @@ hinge_pin_vertical_offset = 0;
 hinge_pin_front_back_offset = 0;
 
 shell_rib_count = 3;
+base_rib_spacing = 0.2;
 window_mode = "open";
 rack_enabled = true;
 rack_pullout = 0;
@@ -111,22 +112,29 @@ position. `hinge_pin_front_back_offset` moves it through the plywood
 thickness: positive values move it toward the body and negative values move
 it toward the front. Both are constrained by assertions that preserve enough
 plywood around the bore.
+The gray cylinder shown in the 3D preview is the purchased hinge pin; it is
+reference hardware rather than another laser-cut part.
 The hinge pin is bonded through the door approximately one plywood thickness
 below the rack base and turns directly in coaxial bores through the two sides
 of the forward U-shaped cradle. The resulting order along the pin is chassis
 knuckle, centered door knuckle, chassis knuckle. Like the original mechanism,
 the broad door panel steps inward to a centered lower hinge tongue. The pin
-crosses that tongue and remains visible in the two side gaps. The upper door
-corners use the same finished radius as the veneer-covered body. The
-tongue-bottom corners use the U-shaped cradle's inner plywood radius, so the
-two hinge curves match; the shoulders remain square. At larger scales the
-tongue height grows only as much as needed to contain that radius.
+crosses that tongue and remains visible in the two side gaps. Only the upper
+door corners are rounded, using the same finished radius as the
+veneer-covered body; the shoulders and both lower tongue corners are square.
 The axis sits halfway through the forward plywood layer. The body base begins
 two plywood thicknesses behind the original front-rib plane, clearing the
 lower door edge throughout the 0–90 degree sweep. A plywood bridge runs
 between the two lower-corner tangent points beneath that base: it butts
 against the front rib, spans the gap, and overlaps one plywood thickness
 under the base without entering the sweep volume.
+
+The base spans the inner veneer envelope and rests on the lower rib caps.
+Paired edge notches clear the side rails of every internal rib and the rear
+frame, positively locating the base on the skeleton. Each notch extends to
+the inner tangent of the rib's rounded lower corner so the base can sit flat
+on the cap. `base_rib_spacing` adds clearance around each notch; increase it
+for a looser dry fit or additional glue space.
 
 In the front-to-back direction, the closed door and lower U-shaped cradle
 share the plywood layer immediately ahead of the complete front rib. The
@@ -367,7 +375,8 @@ terminates the other end.
    left and right ends align with the tangent points of the rib's lower
    corner radii. Its front edge butts against the rib, it spans the gap, and
    one plywood thickness overlaps the base underside. Glue the bridge to both
-   parts, then glue the rib cage square on the base. The base front remains
+   parts. Seat every pair of base notches over its rib, then glue the rib cage
+   square on the base. The base front remains
    two plywood thicknesses behind the front face and its rear edge remains
    flush with the rear frame. Keep the bridge below the base so the door
    opening sweep stays clear.

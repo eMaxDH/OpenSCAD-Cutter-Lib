@@ -2,6 +2,7 @@
     "fileFormatVersion": "1",
     "parameterSets": {
         "Default 80 mm assembly": {
+            "base_rib_spacing": "0.2",
             "chamber_skeleton_gap": "0.5",
             "cradle_side_gap": "0.6",
             "cradle_bottom_gap": "1.0",
@@ -18,6 +19,7 @@
             "veneer_opacity": "0.58"
         },
         "Default cutting layout": {
+            "base_rib_spacing": "0.2",
             "chamber_skeleton_gap": "0.5",
             "cradle_side_gap": "0.6",
             "cradle_bottom_gap": "1.0",
@@ -31,6 +33,7 @@
             "output_mode": "automatic"
         },
         "Skeleton inspection": {
+            "base_rib_spacing": "0.2",
             "chamber_skeleton_gap": "0.5",
             "cradle_side_gap": "0.6",
             "cradle_bottom_gap": "1.0",
@@ -44,6 +47,7 @@
             "show_veneer": "false"
         },
         "design default values": {
+            "base_rib_spacing": "0.2",
             "chamber_skeleton_gap": "0.5",
             "cradle_bottom_gap": "0.9",
             "cradle_side_gap": "0.6",

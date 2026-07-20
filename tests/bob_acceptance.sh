@@ -94,6 +94,26 @@ if cmp -s \
     exit 1
 fi
 
+# Base-to-rib clearance must alter the canonical base cut profile. The same
+# profile is extruded in the assembly, so its notches stay synchronized with
+# the laser layout.
+for spacing in 0 0.6; do
+    openscad \
+        -o "$output_dir/bob-base-rib-spacing-${spacing}mm.svg" \
+        -D 'output_mode="cut_layout"' \
+        -D 'layout_material="plywood_1"' \
+        -D 'layout_operation="cut"' \
+        -D "base_rib_spacing=$spacing" \
+        "$model"
+done
+
+if cmp -s \
+    "$output_dir/bob-base-rib-spacing-0mm.svg" \
+    "$output_dir/bob-base-rib-spacing-0.6mm.svg"; then
+    echo "ERROR: plywood base ignores base_rib_spacing." >&2
+    exit 1
+fi
+
 # Saved presets must not override live Customizer door-angle changes.
 for angle in 30 90; do
     openscad \
