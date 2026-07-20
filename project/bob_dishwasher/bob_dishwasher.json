@@ -49,10 +49,10 @@
         "design default values": {
             "base_rib_spacing": "0.2",
             "chamber_skeleton_gap": "0.5",
-            "cradle_bottom_gap": "0.9",
+            "cradle_bottom_gap": "1",
             "cradle_side_gap": "0.6",
-            "cradle_top_gap": "1",
-            "door_angle": "0",
+            "cradle_top_gap": "0.6",
+            "door_angle": "90",
             "fit_clearance": "0.15",
             "hinge_clearance": "0.2",
             "hinge_pin_diameter": "2",
@@ -65,7 +65,7 @@
             "maximum_supported_height": "160",
             "minimum_supported_height": "70",
             "minimum_veneer_bend_radius": "5",
-            "model_height": "80",
+            "model_height": "100",
             "output_mode": "automatic",
             "part_spacing": "3",
             "plywood_thickness": "4",
@@ -86,7 +86,7 @@
             "source_depth": "490",
             "source_height": "490",
             "source_width": "340",
-            "veneer_opacity": "0.58",
+            "veneer_opacity": "1",
             "veneer_thickness": "0.6",
             "window_mode": "open"
         }
