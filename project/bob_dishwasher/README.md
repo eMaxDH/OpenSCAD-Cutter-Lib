@@ -129,12 +129,13 @@ between the two lower-corner tangent points beneath that base: it butts
 against the front rib, spans the gap, and overlaps one plywood thickness
 under the base without entering the sweep volume.
 
-The base spans the inner veneer envelope and rests on the lower rib caps.
-Paired edge notches clear the side rails of every internal rib and the rear
-frame, positively locating the base on the skeleton. Each notch extends to
-the inner tangent of the rib's rounded lower corner so the base can sit flat
-on the cap. `base_rib_spacing` adds clearance around each notch; increase it
-for a looser dry fit or additional glue space.
+The base ends at the centerline of the left and right lower rib caps, so it
+overlaps only half of each rib rather than spanning to the veneer. Paired edge
+notches clear the side rails of every internal rib and the rear frame,
+positively locating the base on the skeleton. Each notch extends from that
+half-rib edge to the inner tangent of the rounded lower corner so the base can
+sit flat on the cap. `base_rib_spacing` adds clearance around each notch;
+increase it for a looser dry fit or additional glue space.
 
 In the front-to-back direction, the closed door and lower U-shaped cradle
 share the plywood layer immediately ahead of the complete front rib. The
@@ -370,7 +371,12 @@ terminates the other end.
 3. Glue these joints on a flat surface, keeping each completed rib square.
 4. Dry-fit the assembled front frame, three internal ribs, rear frame, and two
    upper stringers. Each stringer starts flush with the front face of the
-   front rib and finishes flush with the outside face of the rear rib.
+   front rib and finishes flush with the outside face of the rear rib. Stand
+   the stringers vertically and raise them from inside the cage. Their
+   top-opening half-depth slots engage the underside-opening slots in every
+   rib top cap. The ribs remain continuous across the exterior top surface,
+   while the assembled stringer edges stay flush with the rib tops. Adjust
+   `fit_clearance` if the comb joints bind.
 5. Dry-fit the bridge behind the front rib and beneath the hidden base. Its
    left and right ends align with the tangent points of the rib's lower
    corner radii. Its front edge butts against the rib, it spans the gap, and
