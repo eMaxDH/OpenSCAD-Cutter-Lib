@@ -10,7 +10,7 @@ height= 100;
 thickness = 4;//[1:10]
 
 element_width = 10;//[10:20]
-element_hight = 15;//[10:20]
+element_height = 15;//[10:20]
 
 no_elements_x = 2;//[1:10]
 
@@ -24,7 +24,7 @@ only_padding = false;
 
 if (only_padding)
 {
-    cshape_array_arange_example(width=width, height=height,
+    cshape_array_arrange_example(width=width, height=height,
                             no_elements_sum=7,
                             no_elements_x=no_elements_x,
                             element_padding=element_padding);
@@ -35,32 +35,32 @@ if (only_padding)
 }
 else
 {
-    cshape_array_arange_example(width=width, height=height,
+    cshape_array_arrange_example(width=width, height=height,
                                 no_elements_sum=7,
                                 no_elements_x=no_elements_x,
                                 element_padding=element_padding,
-                                element_width=element_width, element_hight=element_hight);
+                                element_width=element_width, element_height=element_height);
     rotate([0,-180,0])
     cshape_array_repeat_example(width=width, height=height,
                                 repeat=repeat, no_elements_x=repeat,
                                 element_padding=element_padding,
-                                element_width=element_width, element_hight=element_hight);
+                                element_width=element_width, element_height=element_height);
 }
 
-module cshape_array_arange_example(width, height, no_elements_sum,
+module cshape_array_arrange_example(width, height, no_elements_sum,
                             no_elements_x=0, element_padding=0,
-                            element_width=0, element_hight=0)
+                            element_width=0, element_height=0)
 {
     element_size = get_cshape_array_element_size(width=width, height=height,
                                                 no_elements_sum=no_elements_sum, no_elements_x=no_elements_x,
                                                 element_padding=element_padding,
-                                                element_width=element_width, element_hight=element_hight);
+                                                element_width=element_width, element_height=element_height);
 
-    // element_size = [element_width-element_padding, element_hight-element_padding];
+    // element_size = [element_width-element_padding, element_height-element_padding];
 
     cshape_array_arrange(width, height,
                         no_elements_x=no_elements_x,
-                        element_width=element_size[0], element_hight=element_size[1],
+                        element_width=element_size[0], element_height=element_size[1],
                         element_padding=element_padding,
                         array_plane=array_plane,
                         make_3d=make_3d, spacing_2d=1)
@@ -84,17 +84,17 @@ module cshape_array_arange_example(width, height, no_elements_sum,
 
 module cshape_array_repeat_example(width, height, repeat,
                                   no_elements_x=0, element_padding=0,
-                                  element_width=0, element_hight=0)
+                                  element_width=0, element_height=0)
 {
     element_size = get_cshape_array_element_size(width=width, height=height,
                                                 no_elements_sum=repeat, no_elements_x=no_elements_x,
                                                 element_padding=element_padding,
-                                                element_width=element_width, element_hight=element_hight);
+                                                element_width=element_width, element_height=element_height);
 
     cshape_array_repeat(width, height,
                         repeat=repeat,
                         no_elements_x=no_elements_x,
-                        element_width=element_size[0], element_hight=element_size[1],
+                        element_width=element_size[0], element_height=element_size[1],
                         element_padding=element_padding,
                         array_plane=array_plane,
                         make_3d=make_3d, spacing_2d=1)
@@ -169,7 +169,7 @@ module cshape_array_repeat_example(width, height, repeat,
 //         -----------------------------|
 module cshape_array_arrange(width, height,
                             no_elements_x=0,
-                            element_width=0, element_hight=0,
+                            element_width=0, element_height=0,
                             element_padding=0,
                             array_plane="xy",
                             make_3d=false, spacing_2d=1)
@@ -182,7 +182,7 @@ module cshape_array_arrange(width, height,
                               element_size=element_width);
     d_y = get_cshape_array_dx(width=height, 
                               no_elements_x=no_elements[1],
-                              element_size=element_hight);
+                              element_size=element_height);
     // echo("d_x: ", d_x);
     // echo("d_y: ", d_y);
     // echo("element_padding: ", element_padding);
@@ -190,7 +190,7 @@ module cshape_array_arrange(width, height,
     element_size = get_cshape_array_element_size(width=width, height=height,
                         no_elements_sum=no_childen, no_elements_x=no_elements_x,
                         element_padding=element_padding,
-                        element_width=element_width, element_hight=element_hight);
+                        element_width=element_width, element_height=element_height);
 
     for (i_y = [0:(no_elements[1]-1)])
     {
@@ -283,7 +283,7 @@ module cshape_array_arrange(width, height,
 //  |          |   |   |          |
 //   -----------------------------|
 module cshape_array_repeat(width, height, repeat,
-                           element_width=0, element_hight=0,
+                           element_width=0, element_height=0,
                            no_elements_x=0,
                            element_padding=0,
                            array_plane="xy",
@@ -296,18 +296,18 @@ module cshape_array_repeat(width, height, repeat,
                               element_size=element_width);
     d_y = get_cshape_array_dx(width=height, 
                               no_elements_x=no_elements[1],
-                              element_size=element_hight);
+                              element_size=element_height);
 
     element_size = get_cshape_array_element_size(width=width, height=height,
                         no_elements_sum=repeat, no_elements_x=no_elements_x,
                         element_padding=element_padding,
-                        element_width=element_width, element_hight=element_hight);
+                        element_width=element_width, element_height=element_height);
     
     // echo("no_elements: ", no_elements);
     // echo("d_x: ", d_x);
     // echo("d_y: ", d_y);
     // echo("element_padding: ", element_padding);
-    // echo("element_width, element_hight", element_width, element_hight);
+    // echo("element_width, element_height", element_width, element_height);
     // echo(str("element_size: ", element_size));
 
     for (i_y = [0:(no_elements[1]-1)])
@@ -368,19 +368,16 @@ function get_cshape_no_elements(width, height, no_elements, no_elements_x) =
 
 function get_cshape_array_element_size(width, height, no_elements_sum, no_elements_x,
                                        element_padding=0,
-                                       element_width=0, element_hight=0) =
+                                       element_width=0, element_height=0) =
     let (array_size = get_cshape_no_elements(width, height, no_elements_sum, no_elements_x))
-    let (dx_no_element_width = width / array_size[0] - element_padding * (array_size[0]-1)/array_size[0])
-    let (dx_no_element_height = height / array_size[1] - element_padding * (array_size[1]-1)/array_size[1])
-    let (dx_elment_width = element_width-element_padding)
-    let (dx_elment_height = element_hight-element_padding)
-    (element_width > 0)
-    ?   (element_hight > 0)
-        ?   [dx_elment_width, dx_elment_height]
-        :   [dx_elment_width, dx_no_element_height]
-    :   (element_hight > 0)
-        ?   [dx_no_elment_width, dx_element_height]
-        :   [dx_no_element_width, dx_no_element_height];
+    let (calculated_width = width / array_size[0]
+                            - element_padding * (array_size[0]-1)/array_size[0])
+    let (calculated_height = height / array_size[1]
+                             - element_padding * (array_size[1]-1)/array_size[1])
+    let (fixed_width = element_width-element_padding)
+    let (fixed_height = element_height-element_padding)
+    [element_width > 0 ? fixed_width : calculated_width,
+     element_height > 0 ? fixed_height : calculated_height];
 
 
 // get_cshape_array_dx

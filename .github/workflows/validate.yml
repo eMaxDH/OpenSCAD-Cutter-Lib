@@ -28,6 +28,10 @@ jobs:
           openscad --version 2>&1 | grep '2021.01'
       - name: Render governed examples
         run: tests/render_examples.sh
+      - name: Test array API sizing branches
+        run: tests/array_acceptance.sh
+      - name: Test Lamp presets
+        run: tests/lamp_acceptance.sh
       - name: Test assembly template
         run: templates/assembly/acceptance.sh
       - name: Test operation SVG exports

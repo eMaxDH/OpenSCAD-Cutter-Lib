@@ -13,9 +13,9 @@ thickness = 5; //[3:10]
 number=1;
 
 layer=0;
-visibile_layers=[0];
+visible_layers=[0];
 
-cl_layer_info(visibile_layers);
+cl_layer_info(visible_layers);
 
 padding_x = 2;//[0:5]
 padding_y = 2;//[0:5]
@@ -23,25 +23,25 @@ padding_z = 2;//[0:5]
 
 // num example
 padding_num = padding_x;
-cshape_padding_tutorial(padding_num, str("padding: ", padding_num), layer, visibile_layers, make_3d);
+cshape_padding_tutorial(padding_num, str("padding: ", padding_num), layer, visible_layers, make_3d);
 
 // 1d example
 padding_1d = [padding_x];
 translate([50, 0, 0])
-cshape_padding_tutorial(padding_1d, str("padding: ", padding_1d), layer, visibile_layers, make_3d);
+cshape_padding_tutorial(padding_1d, str("padding: ", padding_1d), layer, visible_layers, make_3d);
 
 // 2d example
 padding_2d = [padding_x, padding_y];
 translate([50, 50, 0])
-cshape_padding_tutorial(padding_2d, str("padding: ", padding_2d), layer, visibile_layers, make_3d);
+cshape_padding_tutorial(padding_2d, str("padding: ", padding_2d), layer, visible_layers, make_3d);
 
 // 3d example
 padding_3d = [padding_x, padding_y, padding_z];
 translate([0, 50, 0])
-cshape_padding_tutorial(padding_3d, str("padding: ", padding_3d), layer, visibile_layers, make_3d);
+cshape_padding_tutorial(padding_3d, str("padding: ", padding_3d), layer, visible_layers, make_3d);
 
 module cshape_padding_tutorial(padding=0, text="cshape_padding_tutorial", 
-                              layer=0, visibile_layers=[], make_3d=false)
+                              layer=0, visible_layers=[], make_3d=false)
 {
     // width = 10;
     // height = 15;
@@ -60,7 +60,7 @@ module cshape_padding_tutorial(padding=0, text="cshape_padding_tutorial",
         echo(str("[cshape_padding_tutorial] ", text, " new_size = ", new_size));
         cshape_padding(padding, new_size=new_size, show_placeholder=true)
         cs_test_surface(width=new_size[0], height=new_size[1], thickness=new_size[2], number=number,
-                    layer=layer, visibile_layers=visibile_layers,
+                    layer=layer, visible_layers=visible_layers,
                     make_3d=make_3d);
     }
 }

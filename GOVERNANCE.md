@@ -70,6 +70,5 @@ unsafe fabrication should be handled before cosmetic or convenience changes.
 
 ## License authority
 
-Only the repository owner may select or change the project license. A license
-must be chosen before the 1.0 release; contributors must not infer a license
-from source availability.
+Only the repository owner may change the project license. The repository is
+distributed under the MIT License in `LICENSE`.

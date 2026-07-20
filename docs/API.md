@@ -163,15 +163,14 @@ pin clearances.
 - `spacing_2d=1` controls separation between parts in a flat layout.
 - Dimensions are unitless.
 - Child order is positional and significant.
-- `visibile_layers` and `element_hight` are intentional documentation
-  spellings because they match the current source API.
+- `visible_layers` and `element_height` are the corrected pre-1.0 API names.
 
 Every governed entry file listed in `tests/public_files.txt` also provides a
 standalone `[Example]` Customizer section and non-empty defaults in both modes.
 Files ending in `_2d.scad` are profile primitives and are exercised through a
 wrapper or acceptance fixture. New APIs use the canonical-profile structure in
-`docs/DESIGN_STANDARD.md`; the historical spellings above are scheduled for
-cleanup before version 1.0 in `docs/API_MIGRATION_V1.md`.
+`docs/DESIGN_STANDARD.md`. Historical spellings and their breaking replacements
+are recorded in `docs/API_MIGRATION_V1.md`.
 
 Operation-specific SVGs and the colour-classified LightBurn convenience SVG can
 be produced with `scripts/export_lightburn_svg.sh`. Separate operation SVGs are
@@ -302,7 +301,7 @@ cshape_array_arrange(
     width, height,
     no_elements_x=0,
     element_width=0,
-    element_hight=0,
+    element_height=0,
     element_padding=0,
     array_plane="xy",
     make_3d=false,
@@ -318,7 +317,7 @@ chooses an approximately square grid. In assembled mode, `array_plane` may be
 cshape_array_repeat(
     width, height, repeat,
     element_width=0,
-    element_hight=0,
+    element_height=0,
     no_elements_x=0,
     element_padding=0,
     array_plane="xy",
@@ -343,13 +342,13 @@ get_cshape_array_element_size(
     width, height, no_elements_sum, no_elements_x,
     element_padding=0,
     element_width=0,
-    element_hight=0
+    element_height=0
 )
 ```
 
-Returns `[element_width, element_height]`. If both dimensions are zero, the
-available area determines the result. If both are supplied, padding is
-subtracted from each.
+Returns `[element_width, element_height]`. All four combinations are supported:
+automatic width and height, fixed width only, fixed height only, or both fixed.
+Padding is subtracted from explicitly supplied dimensions.
 
 ```scad
 get_cshape_array_dx(width, no_elements_x, element_size)
@@ -357,10 +356,6 @@ get_cshape_array_dx(width, no_elements_x, element_size)
 
 Returns the distance from one element origin to the next. When a non-zero
 element size is supplied, at least two elements are required.
-
-Known constraint: the helper's branch for supplying only `element_hight`
-references misspelled internal variables. Supply both explicit dimensions or
-leave both at zero.
 
 ### Padding
 
@@ -410,7 +405,7 @@ use <cutter_lib/layer/cl_layer.scad>
 ```
 
 ```scad
-apply_cl_layer_visibility(layer=0, visibile_layers=[])
+apply_cl_layer_visibility(layer=0, visible_layers=[])
     children();
 ```
 
@@ -419,7 +414,7 @@ whose `layer` is present render normally; all others are marked as background
 geometry with `%`. This is a preview control, not a boolean geometry filter.
 
 ```scad
-cl_layer_info(visibile_layers=[], name="obeject", size=10);
+cl_layer_info(visible_layers=[], name="object", size=10);
 ```
 
 Displays preview-only text listing the rendered layers. The `name` parameter
@@ -441,7 +436,7 @@ cs_test_surface(
     number=0,
     face_color="",
     layer=0,
-    visibile_layers=[],
+    visible_layers=[],
     make_3d=false
 );
 ```
@@ -481,7 +476,7 @@ cc_connector_triangle_45(
     connector_factor=0.3,
     thickness=1,
     layer=0,
-    visibile_layers=[],
+    visible_layers=[],
     make_3d=false
 );
 ```
@@ -522,7 +517,7 @@ cs_strut_triangle_45(
     hole_distance=10,
     hole_length=0,
     layer=0,
-    visibile_layers=[],
+    visible_layers=[],
     make_3d=false
 );
 ```
@@ -580,7 +575,7 @@ cm_marker_ruler(
 ```
 
 Creates `ticks` evenly spaced tick marks across `width`. The current
-implementation refers to a file-scope `visibile_layers` variable rather than
+implementation refers to a file-scope `visible_layers` variable rather than
 the `layer_visibility` parameter, so layer filtering should be treated as
 experimental.
 

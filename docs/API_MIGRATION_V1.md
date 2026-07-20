@@ -1,9 +1,9 @@
 # API migration toward version 1.0
 
 The project is in a pre-1.0 cleanup period. This document records intentional
-breaking changes before the stable public API is declared.
+breaking changes made before the stable public API is declared.
 
-## Planned naming corrections
+## Completed naming corrections
 
 | Historical name | Version 1.0 name |
 | --- | --- |
@@ -11,9 +11,10 @@ breaking changes before the stable public API is declared.
 | `element_hight` | `element_height` |
 | `cshape_array_arange_example` | `cshape_array_arrange_example` |
 
-Migration should update library declarations, examples, projects, and API
-documentation together. Temporary aliases may be provided when they do not
-make named-argument behaviour ambiguous.
+The repository source, reference projects, templates, and documentation now use
+the version 1.0 names. No compatibility aliases are provided: callers using
+named arguments must update them. The `element_height`-only sizing branch was
+also repaired as part of this change.
 
 ## Stable conventions being introduced
 
@@ -24,5 +25,5 @@ make named-argument behaviour ambiguous.
 - OpenSCAD 2021.01 is the compatibility baseline;
 - SVG is the portable export source for LightBurn.
 
-The final 1.0 release must remove this document's unresolved items from the
-public API reference and record their final disposition in the changelog.
+The final 1.0 release should retain this file as the migration record and verify
+that no historical spelling remains outside the changelog and this table.
