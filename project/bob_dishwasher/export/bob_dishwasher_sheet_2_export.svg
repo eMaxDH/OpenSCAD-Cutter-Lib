@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="184mm"
+   height="265mm"
+   viewBox="5 -270 184 265"
+   version="1.1"
+   id="svg251"
+   sodipodi:docname="bob_dishwasher_sheet_2_export.svg"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <defs
+     id="defs255" />
+  <sodipodi:namedview
+     id="namedview253"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="1.0253852"
+     inkscape:cx="348.16184"
+     inkscape:cy="501.76264"
+     inkscape:window-width="1452"
+     inkscape:window-height="1233"
+     inkscape:window-x="336"
+     inkscape:window-y="99"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg251" />
+  <title
+     id="title247">OpenSCAD Model</title>
+  <path
+     d="M 64.1877,-87.9 H 5 V -5 h 59.1877 z"
+     id="path303"
+     style="fill:none;stroke:#ff0000" />
+  <path
+     d="m 122.375,-17.3083 h 4 v -8.35 h -4 V -42.275 h 4 v -8.35 h -4 v -16.6167 h 4 v -8.35 h -4 V -87.9 H 71.1877 v 12.3083 h -4 v 8.35 h 4 v 16.6167 h -4 v 8.35 h 4 v 16.6167 h -4 v 8.35 h 4 V -5 h 51.1873 z"
+     id="path301"
+     style="fill:none;stroke:#ff0000" />
+  <path
+     d="m 184.563,-17.3083 h 4 v -8.35 h -4 V -42.275 h 4 v -8.35 h -4 v -16.6167 h 4 v -8.35 h -4 V -87.9 h -51.187 v 12.3083 h -4 v 8.35 h 4 v 16.6167 h -4 v 8.35 h 4 v 16.6167 h -4 v 8.35 h 4 V -5 h 51.187 z"
+     id="path299"
+     style="fill:none;stroke:#ff0000" />
+  <path
+     d="m 108.558,-99.8 h 7.65 v 3.9 h 17.317 v -3.9 h 7.65 v 3.9 h 17.317 v -3.9 h 7.65 v 3.9 H 178.8 v -82.9 h -12.658 v 3.9 h -7.65 v -3.9 h -17.317 v 3.9 h -7.65 v -3.9 h -17.317 v 3.9 h -7.65 v -3.9 H 95.9 v 82.9 h 12.658 z"
+     id="path297"
+     style="fill:none;stroke:#ff0000" />
+  <path
+     d="m 17.6583,-99.8 h 7.65 v 3.9 H 42.625 v -3.9 h 7.65 v 3.9 h 17.3167 v -3.9 h 7.65 v 3.9 H 87.9 v -82.9 H 75.2417 v 3.9 h -7.65 v -3.9 H 50.275 v 3.9 h -7.65 v -3.9 H 25.3083 v 3.9 h -7.65 v -3.9 H 5 v 82.9 h 12.6583 z"
+     id="path295"
+     style="fill:none;stroke:#ff0000" />
+  <metadata
+     id="metadata273">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:title>OpenSCAD Model</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+</svg>
