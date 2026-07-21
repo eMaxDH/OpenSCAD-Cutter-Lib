@@ -1,0 +1,471 @@
+# Bob countertop dishwasher scale model
+
+This project is a parametric, laser-cut miniature inspired by the proportions
+and recognisable front appearance of the Bob countertop dishwasher. It uses a
+4 mm plywood rib cage, a single-direction veneer shell, glued hidden joints,
+and a simple purchased pin.
+
+It is a fabrication-oriented approximation, not a scan-derived replica.
+Compound production-plastic curves are represented by a constant rounded
+cross-section that veneer can realistically wrap.
+
+![Bob miniature assembled with the door open](img/bob_preview.png)
+
+## Reference size and scale
+
+| Dimension | Source | 80 mm model |
+| --- | ---: | ---: |
+| Width | 340 mm | 55.51 mm |
+| Height | 490 mm | 80.00 mm |
+| Depth | 490 mm | 80.00 mm |
+
+The default scale is approximately 1:6.125. `model_width` and `model_depth`
+are always derived from `model_height`. These dimensions describe the
+finished outside of the veneer, not the plywood skeleton. The rib width,
+height, and corner radius are inset by `veneer_thickness` on every wrapped
+edge, so the plywood supports the veneer's inner face without protruding
+through or sharing its exterior plane. The main wrap covers the complete
+front termination rib and continues to the inner face of the rear veneer, so
+the first and last plywood ribs are not left exposed.
+
+## Materials and hardware
+
+- 4 mm plywood for ribs, frames, base and its front bridge, chamber, door
+  structure, stringers, rack, and runners
+- approximately 0.6 mm wood veneer for the wrap and cosmetic faces
+- wood glue
+- a 2 mm rod, wire, dowel, or similarly sized pin for the hinge
+- paint or clear finish as desired
+
+The nominal `kerf=0.5` mm is provisional. It must be calibrated for the exact
+material, focus, power, speed, and machine condition.
+
+## Main parameters
+
+Open `bob_dishwasher.scad` to edit these values in OpenSCAD's Customizer, or
+override them with `-D` options. `bob_config.scad` mirrors the defaults as a
+standalone configuration reference, but the main file owns the active
+Customizer controls.
+
+```scad
+model_height = 80;
+plywood_thickness = 4;
+veneer_thickness = 0.6;
+kerf = 0.5;
+fit_clearance = 0.15;
+
+sheet_size = [300, 300];
+sheet_margin = 5;
+part_spacing = 3;
+
+door_angle = 90;
+cradle_side_gap = 0.6;
+cradle_bottom_gap = 1.0;
+cradle_top_gap = 0.5;
+hinge_pin_diameter = 2;
+hinge_clearance = 0.2;
+hinge_pin_vertical_offset = 0;
+hinge_pin_front_back_offset = 0;
+
+shell_rib_count = 3;
+base_rib_spacing = 0.2;
+window_mode = "open";
+rack_enabled = true;
+rack_pullout = 0;
+chamber_skeleton_gap = 0.5;
+show_veneer = true;
+show_rib_cage = true;
+veneer_opacity = 0.58;
+
+make_3d = true;
+output_mode = "automatic";
+layout_material = "all";
+layout_operation = "preview";
+```
+
+In OpenSCAD's Customizer, leave `output_mode="automatic"` to use the
+`make_3d` checkbox:
+
+- checked: assembled 3D model;
+- unchecked: flat cutting layout.
+
+The saved `bob_dishwasher.json` presets provide default assembly, cutting
+layout, and skeleton-inspection configurations. They intentionally do not
+store `door_angle`, so changing the angle in the Customizer is not overwritten
+when Automatic Preview refreshes.
+
+If the panel is hidden, enable the **Customizer** panel from OpenSCAD's
+Window/View menu, then save or select a parameter set from the panel.
+
+The validated door range is 0–90 degrees. Positive motion opens the door
+outward and downward. At 0 degrees the door is a front overlay covering the
+full termination rib except for its forward lower hinge cradle.
+The door now follows the complete finished front outline; the former
+`door_side_gap`, `door_top_gap`, and `door_bottom_gap` controls have been
+removed. `cradle_side_gap` sets the clearance beside the centered lower
+tongue, `cradle_bottom_gap` sets its clearance above the inside floor of the
+U, and `cradle_top_gap` sets the vertical clearance between the tops of the
+U-shaped cradle and the two door shoulders.
+
+`hinge_pin_vertical_offset` moves the pin up or down from its nominal
+position. `hinge_pin_front_back_offset` moves it through the plywood
+thickness: positive values move it toward the body and negative values move
+it toward the front. Both are constrained by assertions that preserve enough
+plywood around the bore.
+The gray cylinder shown in the 3D preview is the purchased hinge pin; it is
+reference hardware rather than another laser-cut part.
+The hinge pin is bonded through the door approximately one plywood thickness
+below the rack base and turns directly in coaxial bores through the two sides
+of the forward U-shaped cradle. The resulting order along the pin is chassis
+knuckle, centered door knuckle, chassis knuckle. Like the original mechanism,
+the broad door panel steps inward to a centered lower hinge tongue. The pin
+crosses that tongue and remains visible in the two side gaps. Only the upper
+door corners are rounded, using the same finished radius as the
+veneer-covered body; the shoulders and both lower tongue corners are square.
+The axis sits halfway through the forward plywood layer. The body base begins
+two plywood thicknesses behind the original front-rib plane, clearing the
+lower door edge throughout the 0–90 degree sweep. A plywood bridge runs
+between the two lower-corner tangent points beneath that base: it butts
+against the front rib, spans the gap, and overlaps one plywood thickness
+under the base without entering the sweep volume.
+
+The base ends at the centerline of the left and right lower rib caps, so it
+overlaps only half of each rib rather than spanning to the veneer. Paired edge
+notches clear the side rails of every internal rib and the rear frame,
+positively locating the base on the skeleton. Each notch extends from that
+half-rib edge to the inner tangent of the rounded lower corner so the base can
+sit flat on the cap. `base_rib_spacing` adds clearance around each notch;
+increase it for a looser dry fit or additional glue space.
+
+In the front-to-back direction, the closed door and lower U-shaped cradle
+share the plywood layer immediately ahead of the complete front rib. The
+cradle's rear face is glued directly to the rib; there is no veneer trapped
+in that structural glue joint. A separate body-veneer U covers the cradle's
+visible front face and expands to the finished body outline. A narrow veneer
+strip bends around the U's outer left side, rounded bottom, and right side,
+meeting the main body wrap at the rib plane. The door veneer remains on the
+visible tongue but is subtracted anywhere the veneered cradle permanently
+covers it.
+
+## Output modes
+
+Run commands from the repository root.
+
+Assembled model:
+
+```sh
+openscad -o bob.csg \
+  -D 'output_mode="assembly"' \
+  project/bob_dishwasher/bob_dishwasher.scad
+```
+
+Open door at 45 degrees:
+
+```sh
+openscad -o bob-45deg.csg \
+  -D 'output_mode="assembly"' \
+  -D 'door_angle=45' \
+  project/bob_dishwasher/bob_dishwasher.scad
+```
+
+All cutting sheets:
+
+```sh
+openscad -o bob-layout.svg \
+  -D 'output_mode="cut_layout"' \
+  -D 'layout_material="all"' \
+  -D 'layout_operation="cut"' \
+  project/bob_dishwasher/bob_dishwasher.scad
+```
+
+The composite layout places two plywood sheets and one veneer sheet side by
+side. Export individual sheets at the origin for machine preparation:
+
+```sh
+openscad -o bob-plywood-1.svg \
+  -D 'output_mode="cut_layout"' \
+  -D 'layout_material="plywood_1"' \
+  -D 'layout_operation="cut"' \
+  project/bob_dishwasher/bob_dishwasher.scad
+
+openscad -o bob-plywood-2.svg \
+  -D 'output_mode="cut_layout"' \
+  -D 'layout_material="plywood_2"' \
+  -D 'layout_operation="cut"' \
+  project/bob_dishwasher/bob_dishwasher.scad
+
+openscad -o bob-veneer.svg \
+  -D 'output_mode="cut_layout"' \
+  -D 'layout_material="veneer"' \
+  -D 'layout_operation="cut"' \
+  project/bob_dishwasher/bob_dishwasher.scad
+```
+
+Other modes are `exploded`, `debug`, `calibration`, and `single_part`.
+`debug` adds the nominal envelope, hinge reference, and sampled door sweep.
+`single_part` supports `BOB-DOOR-FRAME`, `BOB-RIB-01`, and `BOB-CAL-01`.
+Set `show_veneer=false` and `show_rib_cage=true` for structural inspection.
+
+Every Bob `.scad` file can also be opened directly. `bob_body.scad`,
+`bob_door.scad`, `bob_chamber.scad`, `bob_rack.scad`, and `bob_layout.scad`
+contain standalone 2D/3D examples; `bob_config.scad` shows the configured
+outer envelope.
+
+## Complete flat part manifest
+
+The Bob entry module follows the lamp convention: `make_3d=true` assembles
+the model, while `make_3d=false` sends the manufactured components to
+deterministic XY sheet positions. No cut part remains rotated out of plane.
+
+The default plywood set contains 28 pieces. Each of the five logical shell
+ribs is cut as two pieces: one continuous large lower U containing the bottom
+curve and both side legs, plus one small top cap. Two broad stepped 45-degree
+joints beside the upper corners align the parts for gluing. This removes the
+two lower-corner glue joints from the former four-piece design. The simpler
+two-piece construction uses about 5.1% more allocated rib nesting area at the
+default scale.
+
+| Part | Quantity |
+| --- | ---: |
+| Front-frame segments | 2 |
+| Internal shell-rib segments | 6 |
+| Rear-frame segments | 2 |
+| Upper stringers, front-face flush | 2 |
+| Front-inset hidden base/lower structure | 1 |
+| Under-base bridge to front rib | 1 |
+| Door frame | 1 |
+| Forward lower hinge cradle | 1 |
+| Chamber rear, floor, and top | 3 |
+| Chamber sides | 2 |
+| Rack base | 1 |
+| Chamber tray runners | 2 |
+| Removable-rack side rails | 2 |
+| Removable-rack back rail | 1 |
+| Calibration coupon | 1 |
+
+The veneer sheet contains five pieces: the main wrap, trimmed door fascia,
+expanded U-shaped hinge-cradle face, cradle outer-edge strip, and rear face.
+There is no full front cosmetic termination ring. The edge strip bends around
+the U's left side, bottom, rounded corners, and right side. The cradle rear
+remains bare plywood and glues directly to the front rib. The hinge pin is
+purchased hardware and is therefore reported in the manifest but is not a
+laser-cut part.
+
+### Geometry source rule
+
+Every rigid manufactured Bob part has one canonical 2D profile. The 3D
+assembly positions, rotates, and extrudes that same module; it does not redraw
+the part as an unrelated cube or polygon. Kerf compensation is enabled for
+laser-export geometry and disabled for the physical 3D preview, while fit
+clearance remains represented.
+
+The integrated hinge adds one explicit post-laser operation: its X-axis bore
+passes through the plywood edges of the assembled cradle sides and the door
+tongue, so it cannot be represented as a through-cut in their flat XY
+profiles. The 3D model shows the bore at its drilled position, and the
+assembly instructions call for all three knuckles to be drilled coaxially.
+
+The veneer wrap is the intentional exception to literal extrusion: its flat
+rectangular development is bent around the same constant rounded
+cross-section used by the 3D shell. The transparent window insert, hinge pin,
+and engraving previews are not laser-cut structural parts.
+
+## Cut and engrave operations
+
+Set `layout_operation="preview"` to inspect both operations:
+
+- red is cutting geometry;
+- blue is engraving geometry;
+- grey/background geometry is a sheet boundary, identifier, or orientation
+  arrow and should not be manufactured.
+
+The 2D preview reports the active material and operation in both the OpenSCAD
+console and an on-canvas legend. If only one part is visible, check whether
+`layout_material="veneer"` and `layout_operation="engrave"` are selected:
+that filter intentionally shows only the engraved door fascia. Select
+`layout_material="all"` and `layout_operation="preview"` to see every sheet
+and operation. Because the three sheets span much farther than the assembled
+model, use OpenSCAD's **View All / Zoom to fit** command after changing to 2D.
+
+The Bob-style door fascia includes a circular viewing port, an upper display,
+three controls, a circular port border, and the lower `Bob.` mark. Its cut
+outline uses the same broad-panel/centered-hinge-tongue profile as the plywood
+door frame, minus any area permanently hidden by the U-shaped plywood cradle.
+The broad panel follows the finished rib width, so it hides the front rib at
+the top and sides when closed; only the lower cradle is visible around the
+rounded tongue. OpenSCAD SVG export does not reliably
+preserve preview colours, so produce separate files at matching coordinates:
+
+```sh
+openscad -o bob-veneer-cut.svg \
+  -D 'output_mode="cut_layout"' \
+  -D 'layout_material="veneer"' \
+  -D 'layout_operation="cut"' \
+  project/bob_dishwasher/bob_dishwasher.scad
+
+openscad -o bob-veneer-engrave.svg \
+  -D 'output_mode="cut_layout"' \
+  -D 'layout_material="veneer"' \
+  -D 'layout_operation="engrave"' \
+  project/bob_dishwasher/bob_dishwasher.scad
+```
+
+The chamber spray-arm engraving is registered to the chamber floor on
+plywood sheet 2:
+
+```sh
+openscad -o bob-plywood-2-engrave.svg \
+  -D 'output_mode="cut_layout"' \
+  -D 'layout_material="plywood_2"' \
+  -D 'layout_operation="engrave"' \
+  project/bob_dishwasher/bob_dishwasher.scad
+```
+
+Import both without changing their origin and assign the appropriate machine
+operation in the laser software.
+
+## Calibration procedure
+
+```sh
+openscad -o bob-calibration.svg \
+  -D 'output_mode="calibration"' \
+  project/bob_dishwasher/bob_dishwasher.scad
+```
+
+The coupon supplies slot and pin-hole samples at:
+
+```text
+-0.20, -0.10, 0.00, +0.10, +0.20, +0.30 mm
+```
+
+1. Cut it from the same plywood and with the same machine setup.
+2. Measure the cut width if possible.
+3. Test scrap plywood in every slot without forcing it.
+4. Test the intended hinge pin in every hole.
+5. Choose a glue-fit clearance and a freely rotating pin clearance.
+6. Update `kerf`, `fit_clearance`, and `hinge_clearance`.
+7. Regenerate the cutting sheets.
+
+There is no universal best clearance. Grain, glue, humidity, and machine
+settings affect the result.
+
+## Veneer
+
+The main skin bends around the side/top/bottom cross-section and stays
+straight along depth. This is the expected grain/bending direction. Do not
+stretch it into a compound curve.
+
+The flattened wrap uses straight sides and top plus two quarter-circle corner
+transitions. It is a practical constant-cross-section development. The
+default 8 mm radius is checked against a 5 mm recommended minimum, but the
+selected veneer still needs a physical bend test. The wrap ends at the front
+rib without a cosmetic termination ring. An expanded U-shaped face and one
+bendable outer-edge strip cover the hinge cradle, and a rear veneer face
+terminates the other end.
+
+## Suggested assembly order
+
+1. Cut and evaluate the calibration coupon.
+2. Dry-fit each logical rib from one continuous lower U and one small top cap.
+   The two broad stepped 45-degree connectors beside the upper corners align
+   the glued scarf joints; they are guides rather than narrow structural tabs.
+3. Glue the two upper joints on a flat surface, keeping each completed rib
+   square. The lower corners are continuous and require no glue joint.
+4. Dry-fit the assembled front frame, three internal ribs, rear frame, and two
+   upper stringers. Each stringer starts flush with the front face of the
+   front rib and finishes flush with the outside face of the rear rib. Stand
+   the stringers vertically and raise them from inside the cage. Their
+   top-opening half-depth slots engage the underside-opening slots in every
+   rib top cap. The ribs remain continuous across the exterior top surface,
+   while the assembled stringer edges stay flush with the rib tops. Adjust
+   `fit_clearance` if the comb joints bind.
+5. Dry-fit the bridge behind the front rib and beneath the hidden base. Its
+   left and right ends align with the tangent points of the rib's lower
+   corner radii. Its front edge butts against the rib, it spans the gap, and
+   one plywood thickness overlaps the base underside. Glue the bridge to both
+   parts. Seat every pair of base notches over its rib, then glue the rib cage
+   square on the base. The base front remains
+   two plywood thicknesses behind the front face and its rear edge remains
+   flush with the rear frame. Keep the bridge below the base so the door
+   opening sweep stays clear.
+6. Assemble the chamber floor, top, rear, and sides with the hidden tabs and
+   slots, then install it inside the cage.
+7. Glue the tray runners inside the chamber. They carry the removable rack;
+   the raised end of each profile is a rear travel stop.
+8. Assemble and test the removable tray-style rack.
+9. Laminate the trimmed door fascia onto its plywood frame, keeping the
+   window open. Pre-bend and glue the narrow cradle strip around its outer
+   left side, bottom corners, bottom, and right side. Laminate the expanded
+   U-shaped body-veneer face over the visible front and the strip's front
+   edge, while leaving the cradle's rear glue face bare.
+10. Glue the cradle's bare plywood rear directly to the plywood front
+    termination rib, with the closed door centered in the U. At the rack
+    level, drill one continuous coaxial bore through the first cradle side,
+    the centered lower door tongue, and the opposite cradle side. Use a
+    backing block and the calibrated pin-hole diameter.
+11. Slide the pin through all three knuckles. Bond it only inside the door;
+    keep both chassis bores free.
+12. Test the door at 0, 45, and 90 degrees before adding cosmetic parts.
+13. Pre-form and glue the veneer wrap over the ribs.
+14. Add the rear veneer face.
+15. Sand lightly, mask moving areas, and paint or finish.
+
+Do not glue the rack. Pull it through the open door or lift it from its
+runners. Keep paint, glue, and finish out of pin holes and runners.
+
+## Window and chamber
+
+`window_mode="open"` leaves the circular aperture empty. The optional
+`"transparent_insert"` mode adds a preview insert, but no transparent sheet is
+included in the cutting layout.
+
+The box-like chamber contains only structural panels, ledges, and a simplified
+spray-arm mark. There is no tank, pump, plumbing, heater, lighting, or rear
+service compartment. `chamber_skeleton_gap` leaves the configured clearance
+between the chamber and the skeleton at both sides, below the upper stringers,
+and ahead of the rear rib. The chamber floor remains seated on the structural
+base. The floor and top tabs enter open-edge notches in the chamber sides,
+avoiding fragile plywood strips between a slot and the panel perimeter.
+The rear panel spans the chamber's complete outside width, covering the rear
+ends of both side panels rather than fitting only between their inner faces.
+
+The two brown strips near the chamber floor are the rack runners, not part of
+the floor. They support the rack above the chamber floor and stop it at the
+rear. They remain visible when the removable rack is pulled out.
+
+The rack base keeps rounded corners only at its front grip edge. Its rear
+corners are square: the side rails run from the front corner tangencies into a
+full-width rear rail. The rack is one plywood thickness wider than the
+original runner span, giving it a half-thickness overhang on each side while
+the chamber runners retain their established positions. Front clearance is
+one plywood thickness, while rear clearance is half a plywood thickness. With
+the default 4 mm material, the rack uses all but 6 mm of the chamber depth:
+4 mm remains at the front and 2 mm before the chamber rear panel.
+
+## Validation
+
+The model warns outside the initially recommended 70–160 mm height range. The
+deterministic layouts are exercised at 70, 80, and 100 mm. Larger models may
+need more sheets even if their assembly geometry remains valid.
+
+```sh
+tests/bob_acceptance.sh
+```
+
+The script covers three heights, door angles 0/45/90, cradle and pin offsets,
+veneer and chamber-gap variants, kerf values 0.15/0.5, assembly layouts, and
+calibration output.
+
+## Known limitations
+
+- The exterior uses supplied envelope proportions and visual interpretation,
+  not measured scan data.
+- The constant cross-section omits subtle front-to-back compound curvature.
+- Physical hinge play and veneer spring-back still require a dry fit.
+- The deterministic layout derives its rib pieces from `shell_rib_count` and
+  rejects configurations that no longer fit the selected sheet.
+- Transparent-window mode is preview-only.
+- Labels and orientation arrows are reference geometry, not engraving.
+- Kerf, fit, pin clearance, and bend radius require physical calibration.
+- This decorative miniature is not waterproof, food-safe, or child-safety
+  certified.

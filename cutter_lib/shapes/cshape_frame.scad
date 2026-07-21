@@ -1,8 +1,10 @@
 use <../surfaces/cs_test_surface.scad>
 
 
+/* [Output] */
 make_3d=false;
 
+/* [Example] */
 width= 150;
 height= 120;
 thickness = 4;

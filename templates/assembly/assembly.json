@@ -1,0 +1,15 @@
+{
+  "parameterSets": {
+    "Default assembly": {
+      "make_3d": "true",
+      "output_mode": "assembly",
+      "material_thickness": "3"
+    },
+    "Default cut sheet": {
+      "make_3d": "false",
+      "output_mode": "cut_layout",
+      "layout_operation": "cut"
+    }
+  },
+  "fileFormatVersion": "1"
+}
